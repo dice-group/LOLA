@@ -1,0 +1,7 @@
+archive/
+bert-large-uncased-vocab.txt*
+*.bak
+logs/
+screenlog.*
+slurm-*.out
+

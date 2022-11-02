@@ -91,7 +91,7 @@ if __name__ == '__main__':
     # Estimated max storage usage would be around 1.6 TB (or 780GB if skip the
     # final merge). Memory usage is proportional to the num_workers below (can
     # be as high as O(300GB) if num_workers is around 20).
-    file_path = "/blob/data/the_pile_bert/"
+    file_path = "."
     # The raw Pile data has 30 compressed .zst chunks. To run on single
     # machine for all chunks, run "python prepare_pile_data.py range 0 30".
     # You can also split and run on multiple machines to speed up, since
@@ -113,7 +113,7 @@ if __name__ == '__main__':
             selected_chunk = [int(x) for x in sys.argv[1:]]
         print("selected_chunk: ", selected_chunk)
         # Number of process. Adjust based on your CPU/Memory.
-        num_workers = 20
+        num_workers = 15
         # Where the raw Pile data can be downloaded. The url may change in
         # future. Contact EleutherAI (https://github.com/EleutherAI/the-pile)
         # if this url does not work.
