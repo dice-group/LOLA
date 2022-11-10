@@ -113,7 +113,7 @@ if __name__ == '__main__':
             selected_chunk = [int(x) for x in sys.argv[1:]]
         print("selected_chunk: ", selected_chunk)
         # Number of process. Adjust based on your CPU/Memory.
-        num_workers = 4
+        num_workers = int(os.environ.get('SLURM_CPUS_PER_TASK', 1))
         # Where the raw Pile data can be downloaded. The url may change in
         # future. Contact EleutherAI (https://github.com/EleutherAI/the-pile)
         # if this url does not work.
