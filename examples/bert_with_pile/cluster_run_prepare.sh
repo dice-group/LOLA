@@ -10,12 +10,4 @@
 #SBATCH -t 15:00:00
 
 module load mpi/OpenMPI/4.1.4-GCC-11.3.0
-
-TOTAL_TASKS=$SLURM_NNODES
-echo "Total nodes: ${TOTAL_TASKS}"
-TOTAL_CHUNKS=30
-CHUNK_OFFSET=$((TOTAL_CHUNKS / TOTAL_TASKS))
-echo "Chunk offset: ${CHUNK_OFFSET}"
-export CHUNK_OFFSET
-export TOTAL_TASKS
-srun ./run_prepare.sh
+srun ./run_prepare.py
