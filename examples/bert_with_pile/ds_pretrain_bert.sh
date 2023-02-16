@@ -77,10 +77,22 @@ no_pp="true"
 ## ZeRO stage
 zero_stage=0
 
+#echo $(ds_ssh -f hostfile "nvidia-smi --query-gpu=name --format=csv,noheader")
 ## Total number of GPUs. ds_ssh is from DeepSpeed library.
-num_gpus=$(($(ds_ssh nvidia-smi --query-gpu=name --format=csv,noheader | wc -l)-2))
-num_gpus_pernode=$(nvidia-smi --query-gpu=name --format=csv,noheader | wc -l)
-num_node=$(( ${num_gpus} / ${num_gpus_pernode} ))
+#num_gpus=$(($(ds_ssh -f hostfile "nvidia-smi --query-gpu=name --format=csv,noheader" | wc -l)-2))
+#num_gpus_pernode=$(nvidia-smi --query-gpu=name --format=csv,noheader | wc -l)
+#num_node=$(( ${num_gpus} / ${num_gpus_pernode} ))
+
+num_node=$SLURM_NNODES
+num_gpus_pernode=$SLURM_GPUS_ON_NODE
+num_gpus=$((${num_node} * ${num_gpus_pernode}))
+
+
+echo "Number of GPUs: ${num_gpus}"
+echo "Number of GPUs per node:  ${num_gpus_pernode}"
+echo "Number of nodes:  ${num_node}"
+
+
 ## Data parallel size.
 dp_size=$(( ${num_gpus} / ${pp_size} / ${mp_size} ))
 
