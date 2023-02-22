@@ -7,7 +7,7 @@
 #SBATCH --mem-per-cpu 5G
 #SBATCH -q express
 #SBATCH --gres=gpu:a100:4
-#SBATCH -t 05:00:00
+#SBATCH -t 120
 
 module load mpi/OpenMPI/4.1.4-GCC-11.3.0
 module load system/CUDA/11.7.0
