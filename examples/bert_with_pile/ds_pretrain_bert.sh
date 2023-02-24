@@ -278,4 +278,31 @@ if [[ $iteration -gt 0 ]]; then
     ds_ssh "echo $iteration_2 > $iteration_file_2"
 fi
 
-deepspeed --hostfile=hostfile ${dir}/../../pretrain_bert.py ${megatron_options} ${data_options} ${deepspeed_options} &>> ${log_path}/${jobname}_${host}_${current_time}.log
+# deepspeed --hostfile=hostfile ${dir}/../../pretrain_bert.py ${megatron_options} ${data_options} ${deepspeed_options} &>> ${log_path}/${jobname}_${host}_${current_time}.log
+
+# re-using parts from BigScience's training script
+
+# so processes know who to talk to
+MASTER_ADDR=$(scontrol show hostnames $SLURM_JOB_NODELIST | head -n 1)
+MASTER_PORT=6000
+
+export LAUNCHER="python -u -m torch.distributed.run \
+    --nproc_per_node $num_gpus_pernode \
+    --nnodes $num_node \
+    --rdzv_endpoint $MASTER_ADDR:$MASTER_PORT \
+    --rdzv_backend c10d \
+    --max_restarts 0 \
+    --tee 3 \
+    "
+
+export CMD=" \
+    ${dir}/../../pretrain_bert.py ${megatron_options} ${data_options} --distributed-backend nccl ${deepspeed_options}
+    "
+
+# do not remove or the training will hang and nodes will be lost w/o this workaround
+export CUDA_LAUNCH_BLOCKING=1
+
+# hide duplicated errors using this hack - will be properly fixed in pt-1.12
+export TORCHELASTIC_ERROR_FILE=${output_home}'/tmp/torch-elastic-error.json'
+
+srun --jobid $SLURM_JOBID bash -c "$LAUNCHER --node_rank \$SLURM_PROCID $CMD" 2>&1 | tee -a ${log_path}/${jobname}_${host}_${current_time}.log
