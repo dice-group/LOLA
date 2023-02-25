@@ -284,7 +284,9 @@ fi
 
 # so processes know who to talk to
 MASTER_ADDR=$(scontrol show hostnames $SLURM_JOB_NODELIST | head -n 1)
-MASTER_PORT=6000
+MASTER_PORT=1259
+
+echo "Master address: ${MASTER_ADDR}:$MASTER_PORT"
 
 export LAUNCHER="python -u -m torch.distributed.run \
     --nproc_per_node $num_gpus_pernode \
@@ -305,4 +307,9 @@ export CUDA_LAUNCH_BLOCKING=1
 # hide duplicated errors using this hack - will be properly fixed in pt-1.12
 export TORCHELASTIC_ERROR_FILE=${output_home}'/tmp/torch-elastic-error.json'
 
-srun --jobid $SLURM_JOBID bash -c "$LAUNCHER --node_rank \$SLURM_PROCID $CMD" 2>&1 | tee -a ${log_path}/${jobname}_${host}_${current_time}.log
+export NCCL_ASYNC_ERROR_HANDLING=1
+
+export NCCL_DEBUG=DEBUG
+
+#srun --jobid $SLURM_JOBID bash -c 'python -c "import torch, socket; print(socket.gethostname(), torch.cuda.is_available())"'
+srun --wait=60 --kill-on-bad-exit=1 --jobid $SLURM_JOBID bash -c "$LAUNCHER --node_rank \$SLURM_PROCID $CMD" 2>&1 | tee -a ${log_path}/${jobname}_${host}_${current_time}.log
