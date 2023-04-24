@@ -128,7 +128,7 @@ host="${HOSTNAME}"
 ## about how to download and preprocess the data.
 jobname="bert-pile"
 ## For internal use. Change data_home to your own training data path.
-data_home="/scratch/hpc-prf-lola/data/the_pile_bert"
+data_home="/scratch/hpc-prf-lola/data/the_pile_bert_test"
 if [[ "$host" == *"webxt"* ]]; then
     data_home="/blob/data/the_pile_bert"
 fi
@@ -156,7 +156,7 @@ if [ "${no_pp}" = "true" ]; then
 fi
 
 username=$(whoami)
-output_home="/scratch/hpc-prf-lola/models/bert_with_pile"
+output_home="/scratch/hpc-prf-lola/models/bert_with_pile_dist"
 #if [[ "$host" == *"webxt"* ]]; then
 #    output_home="/blob/users/${username}/project/bert_with_pile"
 #fi
@@ -291,6 +291,7 @@ echo "Master address: ${MASTER_ADDR}:$MASTER_PORT"
 export LAUNCHER="python -u -m torch.distributed.run \
     --nproc_per_node $num_gpus_pernode \
     --nnodes $num_node \
+    --rdzv_id=$RANDOM \
     --rdzv_endpoint $MASTER_ADDR:$MASTER_PORT \
     --rdzv_backend c10d \
     --max_restarts 0 \
@@ -313,3 +314,4 @@ export NCCL_DEBUG=DEBUG
 
 #srun --jobid $SLURM_JOBID bash -c 'python -c "import torch, socket; print(socket.gethostname(), torch.cuda.is_available())"'
 srun --wait=60 --kill-on-bad-exit=1 --jobid $SLURM_JOBID bash -c "$LAUNCHER --node_rank \$SLURM_PROCID $CMD" 2>&1 | tee -a ${log_path}/${jobname}_${host}_${current_time}.log
+#bash -c "$LAUNCHER --node_rank $SLURM_PROCID $CMD" 2>&1 | tee -a ${log_path}/${jobname}_${host}_${current_time}.log

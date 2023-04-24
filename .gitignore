@@ -13,3 +13,10 @@ dist/
 
 # AML workspace config file
 *config.json
+.idea/
+checkpoints/
+data/
+examples/bert_with_pile/hostfile
+gpt2-dist.log
+output_dir/
+torch-elastic-error.json
