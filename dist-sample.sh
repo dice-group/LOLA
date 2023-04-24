@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH -J "Fast Setup - mini GPT2 train"
-#SBATCH -N 8
+#SBATCH -N 16
 #SBATCH --ntasks-per-node=1
 #SBATCH --gres=gpu:a100:4
 ###SBATCH --partition=dgx
@@ -16,12 +16,15 @@ module load ai/PyTorch/1.12.0-foss-2022a-CUDA-11.7.0
 # activating venv
 source /scratch/hpc-prf-lola/lib_repo/custom-venvs/lola1/bin/activate
 
-CHECKPOINT_PATH=checkpoints/gpt2-10b-dist-test
+# Creating time specific postfix for directory and file names
+DATE_POSTFIX=$(date '+%Y-%m-%d_%H%M%S')
+
+CHECKPOINT_PATH=checkpoints/gpt2-10b-dist-$DATE_POSTFIX
 
 VOCAB_FILE=data/gpt2-vocab.json
 MERGE_FILE=data/gpt2-merges.txt
 DATA_PATH=data/meg-gpt2-oscar-en-10k_text_document
-TENSORBOARD_PATH=output_dir/tensorboard-dist-1
+TENSORBOARD_PATH=output_dir/tensorboard-dist-$DATE_POSTFIX
 
 # so processes know who to talk to
 MASTER_ADDR=$(scontrol show hostnames $SLURM_JOB_NODELIST | head -n 1)
@@ -32,7 +35,7 @@ NNODES=$SLURM_NNODES
 
 
 MICRO_BATCH_SIZE=1
-GLOBAL_BATCH_SIZE=32
+GLOBAL_BATCH_SIZE=$((SLURM_NNODES*SLURM_GPUS_ON_NODE*MICRO_BATCH_SIZE))
 TP_SIZE=1
 PP_SIZE=1
 
@@ -75,7 +78,7 @@ GPT_ARGS=" \
 
 OUTPUT_ARGS=" \
     --exit-interval 1000 \
-    --log-interval 2 \
+    --log-interval 1 \
     --save-interval $SAVE_INTERVAL \
     --eval-interval 50 \
     --eval-iters 10 \
@@ -120,12 +123,7 @@ cat <<EOT > $config_json
     "initial_scale_power": 12
   },
   "steps_per_print": 2000,
-  "wall_clock_breakdown": false,
-  "tensorboard": {
-    "enabled": true,
-    "output_path": "output/ds_logs/",
-    "job_name": "train_gpt10b"
-  }
+  "wall_clock_breakdown": false
 }
 EOT
 
