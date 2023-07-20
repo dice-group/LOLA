@@ -20,3 +20,8 @@ examples/bert_with_pile/hostfile
 gpt2-dist.log
 output_dir/
 torch-elastic-error.json
+.coverage_*
+*~
+slurm*
+logs
+

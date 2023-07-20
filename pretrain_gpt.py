@@ -1,35 +1,27 @@
-# coding=utf-8
-# Copyright (c) 2020, NVIDIA CORPORATION.  All rights reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+# Copyright (c) 2023, NVIDIA CORPORATION.  All rights reserved.
 
 """Pretrain GPT"""
 
 import torch
+import math
 from functools import partial
 from megatron import get_args
 from megatron import print_rank_0
 from megatron import get_timers
 from megatron import get_tokenizer
-from megatron import mpu
+from megatron.core import mpu, tensor_parallel
+from megatron.core.enums import ModelType
 from megatron.data.gpt_dataset import build_train_valid_test_datasets
 from megatron.model import GPTModel, GPTModelPipe
+from megatron.model.rotary_pos_embedding import apply_rotary_pos_emb, RotaryEmbedding
 from megatron.training import pretrain
 from megatron.utils import get_ltor_masks_and_position_ids
 from megatron.utils import average_losses_across_data_parallel_group
+from megatron.arguments import core_transformer_config_from_args
 
 import deepspeed
 from deepspeed.runtime.utils import see_memory_usage
+from deepspeed.accelerator.real_accelerator import get_accelerator
 import os
 import subprocess
 
@@ -43,6 +35,7 @@ def model_provider(pre_process=True, post_process=True):
     see_memory_usage(f"Before Building Model", force=True)
 
     args = get_args()
+    config = core_transformer_config_from_args(args)
     with deepspeed.zero.Init(data_parallel_group=mpu.get_data_parallel_group(),
                              remote_device=None if args.remote_device == 'none' else args.remote_device,
                              config_dict_or_path=args.deepspeed_config,
@@ -50,6 +43,7 @@ def model_provider(pre_process=True, post_process=True):
                              mpu=mpu):
         if args.deepspeed and not args.no_pipeline_parallel:
             model = GPTModelPipe(
+                config,
                 num_tokentypes=0,
                 parallel_output=True
             )
@@ -61,7 +55,7 @@ def model_provider(pre_process=True, post_process=True):
             # pipeline it as an activation during training. The mask is constant, and thus
             # we can reuse it.
             attention_mask = torch.tril(torch.ones(
-                (1, args.seq_length, args.seq_length), device=torch.cuda.current_device())).view(
+                (1, args.seq_length, args.seq_length), device=get_accelerator().current_device_name())).view(
                     1, 1, args.seq_length, args.seq_length)
 
             # Convert attention mask to binary:
@@ -74,8 +68,28 @@ def model_provider(pre_process=True, post_process=True):
             # Attention mask must be bool.
             args.attn_mask = attention_mask.to(torch.bool)
 
+            # For prertaining, since sequence length is fixed, cache rotary embedding in args, to avoid communicating around
+            if args.use_rotary_position_embeddings:
+                rotary_dim = args.hidden_size // args.num_attention_heads \
+                    if args.kv_channels is None else args.kv_channels
+
+                if args.rotary_percent < 1.0:
+                    rotary_dim = int(rotary_dim * args.rotary_percent)
+
+                # partial rotary embeddings, which is better than full rotary
+                # Wang and Komatsuzaki et al
+                # https://github.com/kingoflolz/mesh-transformer-jax/
+                rotary_pos_emb = RotaryEmbedding(rotary_dim)(args.seq_length).to(
+                    get_accelerator().current_device_name())
+                if args.fp16:
+                    rotary_pos_emb = rotary_pos_emb.half()
+                elif args.bf16:
+                    rotary_pos_emb = rotary_pos_emb.bfloat16()
+                args.rotary_pos_emb = rotary_pos_emb
+
         else:
             model = GPTModel(
+                config,
                 num_tokentypes=0,
                 parallel_output=True,
                 pre_process=pre_process,
@@ -99,7 +113,7 @@ def get_batch(data_iterator):
         data = next(data_iterator)
     else:
         data = None
-    data_b = mpu.broadcast_data(keys, data, datatype)
+    data_b = tensor_parallel.broadcast_data(keys, data, datatype)
 
     # Unpack.
     tokens_ = data_b['text'].long()
@@ -116,6 +130,30 @@ def get_batch(data_iterator):
 
     return tokens, labels, loss_mask, attention_mask, position_ids
 
+def data_post_process(data, data_sampler_state_dict):
+    args = get_args()
+    if args.data_efficiency_curriculum_learning:
+        if 'seqlen_truncate' in data_sampler_state_dict['current_difficulties']:
+            args.data_efficiency_curriculum_learning_seqlen_type = 'seqlen_truncate'
+            current_seqlen = data_sampler_state_dict['current_difficulties']['seqlen_truncate']
+            if current_seqlen < args.seq_length:
+                data['text'] = data['text'][:, :(current_seqlen+1)].contiguous()
+        elif 'seqlen_reshape' in data_sampler_state_dict['current_difficulties']:
+            args.data_efficiency_curriculum_learning_seqlen_type = 'seqlen_reshape'
+            current_seqlen = data_sampler_state_dict['current_difficulties']['seqlen_reshape']
+            if current_seqlen < args.seq_length:
+                orig_num_token = torch.numel(data['text'])
+                reshape_len = (data['text'].size()[1] // (current_seqlen+1)) * (current_seqlen+1)
+                data['text'] = torch.cat((data['text'][:, :reshape_len].contiguous().view(-1, current_seqlen+1),
+                    data['text'][:, -(current_seqlen+1):]), 0).contiguous()
+                num_row = math.ceil(orig_num_token / (current_seqlen+1))
+                num_row = min(num_row, data['text'].size()[0])
+                if num_row > 1 and num_row % 2 != 0:
+                    num_row -= 1
+                data['text'] = data['text'][:num_row, :].contiguous()
+        else:
+            args.data_efficiency_curriculum_learning_seqlen_type = None
+    return data
 
 def get_batch_pipe(data):
     """Modification of `get_batch` to work on `next(data_iterator)` instead of `data_iterator`"""
@@ -127,7 +165,7 @@ def get_batch_pipe(data):
     datatype = torch.int64
 
     # Broadcast data.
-    data_b = mpu.broadcast_data(keys, data, datatype)
+    data_b = tensor_parallel.broadcast_data(keys, data, datatype)
 
     # Unpack.
     tokens_ = data_b['text'].long()
@@ -141,7 +179,7 @@ def get_batch_pipe(data):
         args.reset_position_ids,
         args.reset_attention_mask,
         args.eod_mask_loss)
-    if args.curriculum_learning and args.curriculum_seqlen < tokens.size()[1]:
+    if args.curriculum_learning_legacy and args.curriculum_seqlen < tokens.size()[1]:
         # seqlen-based curriculum learning
         # tokens, position_ids, labels, loss_mask have size [batch size, seqlen]
         tokens = tokens[:, :args.curriculum_seqlen].contiguous()
@@ -158,7 +196,7 @@ def loss_func(loss_mask, moe_loss, mos_loss, output_tensor):
     losses = output_tensor.float()
     loss_mask = loss_mask.view(-1).float()
     loss = torch.sum(losses.view(-1) * loss_mask) / loss_mask.sum()
-    
+
     # Reduce loss for logging.
     averaged_loss = average_losses_across_data_parallel_group([loss])
     if args.mos or args.kd:
@@ -181,10 +219,10 @@ def calculate_mos_loss(args, stu_output, teacher_model, tokens, position_ids, at
     alpha = args.kd_alpha_ce
     beta = args.kd_beta_ce
     kd_temp = args.kd_temp
-    
+
     if teacher_model:
         with torch.no_grad():
-            if args.curriculum_learning and args.curriculum_seqlen < args.seq_length:
+            if args.curriculum_learning_legacy and args.curriculum_seqlen < args.seq_length:
                 assert args.curriculum_seqlen is not None
                 curriculum_seqlen = args.curriculum_seqlen
                 tokens = tokens[:, :curriculum_seqlen].contiguous()
@@ -208,22 +246,28 @@ def forward_step(data_iterator, model):
     timers = get_timers()
 
     # Get the batch.
-    timers('batch-generator').start()
+    timers('batch-generator', log_level=2).start()
     tokens, labels, loss_mask, attention_mask, position_ids = get_batch(
         data_iterator)
     timers('batch-generator').stop()
 
+    if args.data_efficiency_curriculum_learning:
+        args.curriculum_seqlen = tokens.size()[1]
+        if hasattr(args, 'data_efficiency_curriculum_learning_seqlen_type') and \
+            args.data_efficiency_curriculum_learning_seqlen_type == 'seqlen_reshape':
+            args.data_efficiency_curriculum_learning_numel = torch.numel(tokens)
+
     if args.mos or args.kd:
         # The forward func can return either the loss or the logits, depending on whether passing in the labels or not.
         stu_output, *other_losses = model(tokens, position_ids, attention_mask)
-        if args.curriculum_learning and args.curriculum_seqlen < args.seq_length:
+        if args.curriculum_learning_legacy and args.curriculum_seqlen < args.seq_length:
             assert args.curriculum_seqlen is not None
             labels = labels[:, :args.curriculum_seqlen].contiguous()
-        output_tensor = mpu.vocab_parallel_cross_entropy(stu_output.contiguous().float(), labels)
+        output_tensor = tensor_parallel.vocab_parallel_cross_entropy(stu_output.contiguous().float(), labels)
     else:
         output_tensor, *other_losses = model(tokens, position_ids, attention_mask,
                                             labels=labels)
-    if args.curriculum_learning and args.curriculum_seqlen < args.seq_length:
+    if args.curriculum_learning_legacy and args.curriculum_seqlen < args.seq_length:
         loss_mask = loss_mask[:, :args.curriculum_seqlen].contiguous()
 
     moe_losses = []
@@ -238,7 +282,7 @@ def forward_step(data_iterator, model):
         if args.teacher_forward and args.teacher_model is not None:
             mos_loss = calculate_mos_loss(args, stu_output,
                 args.teacher_model[0], tokens, position_ids, attention_mask)
-    
+
     # Output_tensor stores the standard loss, loos_func calculates the total loss.
     return output_tensor, partial(loss_func, loss_mask, moe_loss, mos_loss)
 
@@ -256,7 +300,11 @@ def train_valid_test_datasets_provider(train_val_test_num_samples):
         train_valid_test_num_samples=train_val_test_num_samples,
         seq_length=args.seq_length,
         seed=args.seed,
-        skip_warmup=(not args.mmap_warmup))
+        skip_warmup=(not args.mmap_warmup),
+        train_data_prefix=args.train_data_path,
+        valid_data_prefix=args.valid_data_path,
+        test_data_prefix=args.test_data_path,
+        data_cache_path=args.data_cache_path)
     print_rank_0("> finished creating GPT datasets ...")
 
     return train_ds, valid_ds, test_ds
@@ -291,5 +339,9 @@ def git_ds_info():
 
 if __name__ == "__main__":
     git_ds_info()
-    pretrain(train_valid_test_datasets_provider, model_provider, forward_step,
-             args_defaults={'tokenizer_type': 'GPT2BPETokenizer'})
+    pretrain(train_valid_test_datasets_provider,
+             model_provider,
+             ModelType.encoder_or_decoder,
+             forward_step,
+             args_defaults={'tokenizer_type': 'GPT2BPETokenizer'},
+             data_post_process=data_post_process)

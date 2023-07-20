@@ -1,35 +1,27 @@
-# coding=utf-8
-# Copyright (c) 2020, NVIDIA CORPORATION.  All rights reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+# Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
 
 """General utilities."""
 
 import sys
+import os
 
 import torch
 from torch.nn.parallel import DistributedDataParallel as torchDDP
 
-from apex.multi_tensor_apply import multi_tensor_applier
-import amp_C
+from deepspeed.accelerator import get_accelerator
+if get_accelerator().device_name() == 'cuda':
+    from apex.multi_tensor_apply import multi_tensor_applier
+    import amp_C
 
-from megatron import get_args
-from megatron import print_rank_0
-from megatron import get_adlr_autoresume
-from megatron import mpu
+from megatron import (
+    get_args,
+    get_adlr_autoresume,
+    get_num_microbatches
+)
+from megatron.core import mpu
+from megatron.core.tensor_parallel import param_is_not_tensor_parallel_duplicate
 from megatron.model.module import param_is_not_shared
-from megatron.mpu.layers import param_is_not_tensor_parallel_duplicate
-from megatron import get_num_microbatches
+
 
 def unwrap_model(model, module_instances=(torchDDP)):
     return_list = True
@@ -63,13 +55,18 @@ def calc_params_l2_norm(model):
                 else:
                     params_data.append(param.data)
     # Calculate norm
-    dummy_overflow_buf = torch.cuda.IntTensor([0])
-    norm, _ = multi_tensor_applier(
-        amp_C.multi_tensor_l2norm,
-        dummy_overflow_buf,
-        [params_data],
-        False # no per-parameter norm
-    )
+    dummy_overflow_buf = get_accelerator().IntTensor([0])
+    
+    if get_accelerator().device_name() == 'cuda':
+
+        norm, _ = multi_tensor_applier(
+            amp_C.multi_tensor_l2norm,
+            dummy_overflow_buf,
+            [params_data],
+            False # no per-parameter norm
+        )
+    else :
+        norm = torch.norm(params_data,p=2.0)
     norm_2 = norm * norm
     # Sum across all model-parallel GPUs.
     torch.distributed.all_reduce(norm_2,
@@ -95,13 +92,13 @@ def report_memory(name):
     mega_bytes = 1024.0 * 1024.0
     string = name + ' memory (MB)'
     string += ' | allocated: {}'.format(
-        torch.cuda.memory_allocated() / mega_bytes)
+        get_accelerator().memory_allocated() / mega_bytes)
     string += ' | max allocated: {}'.format(
-        torch.cuda.max_memory_allocated() / mega_bytes)
+        get_accelerator().max_memory_allocated() / mega_bytes)
     string += ' | reserved: {}'.format(
-        torch.cuda.memory_reserved() / mega_bytes)
+        get_accelerator().memory_reserved() / mega_bytes)
     string += ' | max reserved: {}'.format(
-        torch.cuda.max_memory_reserved() / mega_bytes)
+        get_accelerator().max_memory_reserved() / mega_bytes)
     if mpu.get_data_parallel_rank() == 0:
         print("[Rank {}] {}".format(torch.distributed.get_rank(), string),
               flush=True)
@@ -126,7 +123,7 @@ def print_params_min_max_norm(optimizer, iteration):
 
 
 def check_adlr_autoresume_termination(iteration, model,
-                                      optimizer, lr_scheduler):
+                                      optimizer, opt_param_scheduler):
     """Check for autoresume signal and exit if it is received."""
     from megatron.checkpointing import save_checkpoint
 
@@ -136,7 +133,7 @@ def check_adlr_autoresume_termination(iteration, model,
     torch.distributed.barrier()
     if autoresume.termination_requested():
         if args.save:
-            save_checkpoint(iteration, model, optimizer, lr_scheduler)
+            save_checkpoint(iteration, model, optimizer, opt_param_scheduler)
         print_rank_0(">>> autoresume termination request found!")
         if torch.distributed.get_rank() == 0:
             autoresume.request_resume()
@@ -204,6 +201,42 @@ def get_ltor_masks_and_position_ids(data,
     return attention_mask, loss_mask, position_ids
 
 
+def print_rank_0(message):
+    """If distributed is initialized, print only on rank 0."""
+    if torch.distributed.is_initialized():
+        if torch.distributed.get_rank() == 0:
+            print(message, flush=True)
+    else:
+        print(message, flush=True)
+
+def is_last_rank():
+    return torch.distributed.get_rank() == (
+        torch.distributed.get_world_size() - 1)
+
+def print_rank_last(message):
+    """If distributed is initialized, print only on last rank."""
+    if torch.distributed.is_initialized():
+        if is_last_rank():
+            print(message, flush=True)
+    else:
+        print(message, flush=True)
+
+def is_aml():
+    # Are we running inside an Azure Machine Learning (AML) environment?
+    return 'AZUREML_EXPERIMENT_ID' in os.environ
+
+def is_rank_0():
+    """Check whether it is rank 0. For AML, check if it is rank 0 of a node"""
+    if torch.distributed.is_initialized():
+        if torch.distributed.get_rank() == 0 or (
+            is_aml() and torch.distributed.get_rank() % get_accelerator().device_count() == 0
+            ):
+            return True
+        else:
+            return False
+    else:
+        return True
+
 def get_parameters_in_billions(model):
     gpus_per_model = torch.distributed.get_world_size(group=mpu.get_model_parallel_group())
 
@@ -230,8 +263,15 @@ def throughput_calculator(model, args, iteration_time, total_iterations):
     # https://arxiv.org/pdf/2104.04473.pdf).
     # The factor of 4 is when used with activation check-pointing,
     # otherwise it will be 3.
-    checkpoint_activations_factor = 4 if args.checkpoint_activations else 3
-    flops_per_iteration = (24 * checkpoint_activations_factor * batch_size * args.seq_length * num_layers * (hidden_size**2)) * (1. + (args.seq_length / (6. * hidden_size)) + (vocab_size / (16. * num_layers * hidden_size)))
+    checkpoint_activations_factor = 3
+    if hasattr(args, 'checkpoint_activations') and args.checkpoint_activations:
+        checkpoint_activations_factor = 4
+    if hasattr(args, 'recompute_granularity') and args.recompute_granularity == 'selective':
+        checkpoint_activations_factor = 4
+    seq_len = args.seq_length
+    if hasattr(args, 'actual_seq_length'):
+        seq_len = args.actual_seq_length
+    flops_per_iteration = (24 * checkpoint_activations_factor * batch_size * seq_len * num_layers * (hidden_size**2)) * (1. + (seq_len / (6. * hidden_size)) + (vocab_size / (16. * num_layers * hidden_size)))
     tflops = flops_per_iteration / (elapsed_time_per_iter * args.world_size * (10**12))
     return samples_per_second, tflops, approx_parameters_in_billions
 
