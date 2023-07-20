@@ -77,10 +77,22 @@ no_pp="true"
 ## ZeRO stage
 zero_stage=0
 
+#echo $(ds_ssh -f hostfile "nvidia-smi --query-gpu=name --format=csv,noheader")
 ## Total number of GPUs. ds_ssh is from DeepSpeed library.
-num_gpus=$(($(ds_ssh nvidia-smi --query-gpu=name --format=csv,noheader | wc -l)-2))
-num_gpus_pernode=$(nvidia-smi --query-gpu=name --format=csv,noheader | wc -l)
-num_node=$(( ${num_gpus} / ${num_gpus_pernode} ))
+#num_gpus=$(($(ds_ssh -f hostfile "nvidia-smi --query-gpu=name --format=csv,noheader" | wc -l)-2))
+#num_gpus_pernode=$(nvidia-smi --query-gpu=name --format=csv,noheader | wc -l)
+#num_node=$(( ${num_gpus} / ${num_gpus_pernode} ))
+
+num_node=$SLURM_NNODES
+num_gpus_pernode=$SLURM_GPUS_ON_NODE
+num_gpus=$((${num_node} * ${num_gpus_pernode}))
+
+
+echo "Number of GPUs: ${num_gpus}"
+echo "Number of GPUs per node:  ${num_gpus_pernode}"
+echo "Number of nodes:  ${num_node}"
+
+
 ## Data parallel size.
 dp_size=$(( ${num_gpus} / ${pp_size} / ${mp_size} ))
 
@@ -116,11 +128,13 @@ host="${HOSTNAME}"
 ## about how to download and preprocess the data.
 jobname="bert-pile"
 ## For internal use. Change data_home to your own training data path.
-data_home="/vc_data_blob/users/conglli/the_pile_bert"
+data_home="/scratch/hpc-prf-lola/data/the_pile_bert_test"
 if [[ "$host" == *"webxt"* ]]; then
     data_home="/blob/data/the_pile_bert"
 fi
-data_path="${data_home}/pile_bert_train_text_sentence"
+# the default path is the merged file from all other fragments of the pile dataset
+# data_path="${data_home}/pile_bert_train_text_sentence"
+data_path="${data_home}/pile_bert_train_00_text_sentence"
 
 vocab_path="bert-large-uncased-vocab.txt"
 if [ ! -f "$vocab_path" ]; then
@@ -142,15 +156,15 @@ if [ "${no_pp}" = "true" ]; then
 fi
 
 username=$(whoami)
-output_home="/vc_data_blob/users/${username}/project/bert_with_pile"
-if [[ "$host" == *"webxt"* ]]; then
-    output_home="/blob/users/${username}/project/bert_with_pile"
-fi
+output_home="/scratch/hpc-prf-lola/models/bert_with_pile_dist"
+#if [[ "$host" == *"webxt"* ]]; then
+#    output_home="/blob/users/${username}/project/bert_with_pile"
+#fi
 log_path="${output_home}/log/"
 checkpoint_path="${output_home}/checkpoint/${jobname}"
 ## Microsoft internal constraint: because tensorboard is logged by last rank,
 ## it's better to put the path in NFS instead of Blob.
-tensorboard_dir="/vc_data/users/${username}/project/bert_with_pile/tensorboard/"
+tensorboard_dir="${output_home}/tensorboard/"
 tensorboard_path="${tensorboard_dir}${jobname}_${host}_${current_time}"
 mkdir -p ${log_path}
 mkdir -p ${checkpoint_path}
@@ -264,4 +278,40 @@ if [[ $iteration -gt 0 ]]; then
     ds_ssh "echo $iteration_2 > $iteration_file_2"
 fi
 
-deepspeed ${dir}/../../pretrain_bert.py ${megatron_options} ${data_options} ${deepspeed_options} &>> ${log_path}/${jobname}_${host}_${current_time}.log
+# deepspeed --hostfile=hostfile ${dir}/../../pretrain_bert.py ${megatron_options} ${data_options} ${deepspeed_options} &>> ${log_path}/${jobname}_${host}_${current_time}.log
+
+# re-using parts from BigScience's training script
+
+# so processes know who to talk to
+MASTER_ADDR=$(scontrol show hostnames $SLURM_JOB_NODELIST | head -n 1)
+MASTER_PORT=1259
+
+echo "Master address: ${MASTER_ADDR}:$MASTER_PORT"
+
+export LAUNCHER="python -u -m torch.distributed.run \
+    --nproc_per_node $num_gpus_pernode \
+    --nnodes $num_node \
+    --rdzv_id=$RANDOM \
+    --rdzv_endpoint $MASTER_ADDR:$MASTER_PORT \
+    --rdzv_backend c10d \
+    --max_restarts 0 \
+    --tee 3 \
+    "
+
+export CMD=" \
+    ${dir}/../../pretrain_bert.py ${megatron_options} ${data_options} --distributed-backend nccl ${deepspeed_options}
+    "
+
+# do not remove or the training will hang and nodes will be lost w/o this workaround
+export CUDA_LAUNCH_BLOCKING=1
+
+# hide duplicated errors using this hack - will be properly fixed in pt-1.12
+export TORCHELASTIC_ERROR_FILE=${output_home}'/tmp/torch-elastic-error.json'
+
+export NCCL_ASYNC_ERROR_HANDLING=1
+
+export NCCL_DEBUG=DEBUG
+
+#srun --jobid $SLURM_JOBID bash -c 'python -c "import torch, socket; print(socket.gethostname(), torch.cuda.is_available())"'
+srun --wait=60 --kill-on-bad-exit=1 --jobid $SLURM_JOBID bash -c "$LAUNCHER --node_rank \$SLURM_PROCID $CMD" 2>&1 | tee -a ${log_path}/${jobname}_${host}_${current_time}.log
+#bash -c "$LAUNCHER --node_rank $SLURM_PROCID $CMD" 2>&1 | tee -a ${log_path}/${jobname}_${host}_${current_time}.log
