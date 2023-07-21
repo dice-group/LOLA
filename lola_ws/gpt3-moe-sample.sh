@@ -7,6 +7,13 @@
 #SBATCH --qos=devel
 #SBATCH -t 00:30:00
 
+#load modules
+module load lib/NCCL/2.12.12-GCCcore-11.3.0-CUDA-11.7.0
+module load ai/PyTorch/1.12.0-foss-2022a-CUDA-11.7.0
+module load vis/torchvision/0.13.1-foss-2022a-CUDA-11.7.0
+# activating venv
+source /scratch/hpc-prf-lola/lib_repo/custom-venvs/lola1/bin/activate
+
 LIB_DIR=/scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft
 DATA_DIR=/scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/data
 OUTPUT_DIR=`pwd`
