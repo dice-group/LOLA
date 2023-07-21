@@ -4,4 +4,4 @@ bert-large-uncased-vocab.txt*
 logs/
 screenlog.*
 slurm-*.out
-
+hostfile
