@@ -5,7 +5,7 @@
 #SBATCH --gres=gpu:a100:4
 #SBATCH --partition=dgx
 #SBATCH --qos=devel
-#SBATCH -t 00:30:00
+#SBATCH -t 02:00:00
 
 #load modules
 module load lib/NCCL/2.12.12-GCCcore-11.3.0-CUDA-11.7.0
@@ -18,6 +18,8 @@ LIB_DIR=/scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft
 DATA_DIR=/scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/data
 OUTPUT_DIR=`pwd`
 # TODO: Extract SLURM environment variables
+GPUS_PER_NODE=$SLURM_GPUS_ON_NODE
+NNODES=$SLURM_NNODES
 ###############################################################################
 ### Main configs
 ## GPT-3 models use 2K sequence length/context window
@@ -37,12 +39,12 @@ SEQ_LEN=2048
 # MIN_LR=6.0e-5
 
 ## GPT-3 Medium 350M
-MODEL_SIZE=0.35
-NUM_LAYERS=24
-HIDDEN_SIZE=1024
-NUM_ATTN_HEADS=16
+#MODEL_SIZE=0.35
+#NUM_LAYERS=24
+#HIDDEN_SIZE=1024
+#NUM_ATTN_HEADS=16
 # TODO: This value should be $((SLURM_NNODES*SLURM_GPUS_ON_NODE*MICRO_BATCH_SIZE))
-GLOBAL_BATCH_SIZE=256
+#GLOBAL_BATCH_SIZE=256
 # LR=3.0e-4
 # MIN_LR=3.0e-5
 
@@ -56,29 +58,29 @@ GLOBAL_BATCH_SIZE=256
 # MIN_LR=2.5e-5
 
 ## GPT-3 XL 1.3B
-# MODEL_SIZE=1.3
-# NUM_LAYERS=24
-# HIDDEN_SIZE=2048
-# NUM_ATTN_HEADS=16
-# GLOBAL_BATCH_SIZE=512
+MODEL_SIZE=1.3
+NUM_LAYERS=24
+HIDDEN_SIZE=2048
+NUM_ATTN_HEADS=16
+GLOBAL_BATCH_SIZE=512
 # LR=2.0e-4
 # MIN_LR=2.0e-5
 
 ## GPT-3 2.7B
-# MODEL_SIZE=2.7
-# NUM_LAYERS=32
-# HIDDEN_SIZE=2560
-# NUM_ATTN_HEADS=32
-# GLOBAL_BATCH_SIZE=512
+#MODEL_SIZE=2.7
+#NUM_LAYERS=32
+#HIDDEN_SIZE=2560
+#NUM_ATTN_HEADS=32
+#GLOBAL_BATCH_SIZE=512
 # LR=1.6e-4
 # MIN_LR=1.6e-5
 
 ## GPT-3 6.7B
-# MODEL_SIZE=6.7
-# NUM_LAYERS=32
-# HIDDEN_SIZE=4096
-# NUM_ATTN_HEADS=32
-# GLOBAL_BATCH_SIZE=1024
+#MODEL_SIZE=6.7
+#NUM_LAYERS=32
+#HIDDEN_SIZE=4096
+#NUM_ATTN_HEADS=32
+#GLOBAL_BATCH_SIZE=1024
 # LR=1.2e-4
 # MIN_LR=1.2e-5
 
@@ -139,7 +141,7 @@ MP_SIZE=1
 ## Currently we don't support PP for MoE. To disable PP, set PP_SIZE
 ## to 1 and use the "--no-pipeline-parallel" arg.
 PP_SIZE=1
-NUM_GPUS=64
+NUM_GPUS=$((NNODES*GPUS_PER_NODE))
 ###############################################################################
 ### MoE configs
 ## Number of experts. EP_SIZE 1 means dense model without MoE
@@ -326,7 +328,7 @@ deepspeed_options="${deepspeed_options} \
 fi
 # TODO: Change the launcher to python -u -m torch.distributed.run
 # TODO: Introduce changes for distributed training setup
-run_cmd="deepspeed ${LIB_DIR}/pretrain_gpt.py ${megatron_options} ${data_options} ${deepspeed_options} &> ${OUTPUT_BASEPATH}/log/${NAME}_${host}_${current_time}.log"
+run_cmd="deepspeed ${LIB_DIR}/pretrain_gpt.py ${megatron_options} ${data_options} ${deepspeed_options} 2>&1 | tee -a ${OUTPUT_BASEPATH}/log/${NAME}_${host}_${current_time}.log"
 echo ${run_cmd}
 eval ${run_cmd}
 set +x
