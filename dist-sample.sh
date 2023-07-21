@@ -1,25 +1,27 @@
 #!/bin/bash
 #SBATCH -J "Fast Setup - mini GPT2 train"
-#SBATCH -N 16
+#SBATCH -N 1
 #SBATCH --ntasks-per-node=1
 #SBATCH --gres=gpu:a100:4
-###SBATCH --partition=dgx
-###SBATCH --qos=devel
-#SBATCH -t 10:00:00
+#SBATCH --partition=dgx
+#SBATCH --qos=devel
+#SBATCH -t 00:30:00
 
 #load modules
 #module load mpi/OpenMPI/4.1.4-GCC-11.3.0
-module load system/CUDA/11.7.0
+# CUDA installation already comes included in the PyTorch module
+#module load system/CUDA/11.7.0
 module load lib/NCCL/2.12.12-GCCcore-11.3.0-CUDA-11.7.0
 module load ai/PyTorch/1.12.0-foss-2022a-CUDA-11.7.0
-
+module load vis/torchvision/0.13.1-foss-2022a-CUDA-11.7.0
 # activating venv
 source /scratch/hpc-prf-lola/lib_repo/custom-venvs/lola1/bin/activate
 
 # Creating time specific postfix for directory and file names
 DATE_POSTFIX=$(date '+%Y-%m-%d_%H%M%S')
-
-CHECKPOINT_PATH=checkpoints/gpt2-10b-dist-$DATE_POSTFIX
+# The model_size variable is only used in the model name
+MODEL_SIZE=0.35
+CHECKPOINT_PATH=checkpoints/gpt2-${MODEL_SIZE}b-dist-${DATE_POSTFIX}
 
 VOCAB_FILE=data/gpt2-vocab.json
 MERGE_FILE=data/gpt2-merges.txt
@@ -39,14 +41,19 @@ GLOBAL_BATCH_SIZE=$((SLURM_NNODES*SLURM_GPUS_ON_NODE*MICRO_BATCH_SIZE))
 TP_SIZE=1
 PP_SIZE=1
 
-NLAYERS=50
-NHIDDEN=4096
-NHEADS=32
+# Parameter calculation formula for GPT2: https://github.com/bigscience-workshop/bigscience/blob/58d99c67f643d27b5765a73a2ee2d1ce0a4b2c6b/experiments/gpt2-utils.md
+# MODEL_SIZE=0.35
+NLAYERS=24
+NHIDDEN=1024
+NHEADS=16
+#NLAYERS=50
+#NHIDDEN=4096
+#NHEADS=32
 SEQ_LEN=1024
 VOCAB_SIZE=50257
 
 SAVE_INTERVAL=500
-EPOCH=100
+EPOCH=10
 TRAIN_SAMPLES=10000
 #    --rampup-batch-size 2 2 1_000 \
 #    --lr-decay-samples 12 \

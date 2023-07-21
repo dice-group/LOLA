@@ -25,9 +25,10 @@ def load(args):
         if int(bare_metal_major) >= 11:
             cc_flag.append('-gencode')
             cc_flag.append('arch=compute_80,code=sm_80')
-            if int(bare_metal_minor) >= 7:
-                cc_flag.append('-gencode')
-                cc_flag.append('arch=compute_90,code=sm_90')
+            # logic below is causing the following error: "Faced Error: nvcc fatal : Unsupported gpu architecture 'compute_90'"
+	    #if int(bare_metal_minor) >= 7:
+            #    cc_flag.append('-gencode')
+            #    cc_flag.append('arch=compute_90,code=sm_90')
 
     # Build path
     srcpath = pathlib.Path(__file__).parent.absolute()
