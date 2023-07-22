@@ -2,7 +2,7 @@
 #SBATCH -J "GPT3 - MoE Sample"
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
-#SBATCH --gres=gpu:a100:1
+#SBATCH --gres=gpu:a100:4
 #SBATCH --partition=dgx
 #SBATCH --qos=devel
 #SBATCH -t 02:00:00
@@ -17,7 +17,11 @@ source /scratch/hpc-prf-lola/lib_repo/custom-venvs/lola1/bin/activate
 LIB_DIR=/scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft
 DATA_DIR=/scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/data
 OUTPUT_DIR=`pwd`
-# TODO: Extract SLURM environment variables
+# Extract SLURM environment variables
+# so processes know who to talk to
+MASTER_ADDR=$(scontrol show hostnames $SLURM_JOB_NODELIST | head -n 1)
+MASTER_PORT=6005
+
 GPUS_PER_NODE=$SLURM_GPUS_ON_NODE
 NNODES=$SLURM_NNODES
 ###############################################################################
@@ -43,8 +47,9 @@ SEQ_LEN=2048
 #NUM_LAYERS=24
 #HIDDEN_SIZE=1024
 #NUM_ATTN_HEADS=16
-# TODO: This value should be $((SLURM_NNODES*SLURM_GPUS_ON_NODE*MICRO_BATCH_SIZE))
-#GLOBAL_BATCH_SIZE=256
+# Use Micro batch size instead of global batch size, the latter is set to $((NNODES*GPUS_PER_NODE*MICRO_BATCH_SIZE))
+# MICRO_BATCH_SIZE=1
+### GLOBAL_BATCH_SIZE=256
 # LR=3.0e-4
 # MIN_LR=3.0e-5
 
@@ -53,7 +58,9 @@ SEQ_LEN=2048
 # NUM_LAYERS=24
 # HIDDEN_SIZE=1536
 # NUM_ATTN_HEADS=16
-# GLOBAL_BATCH_SIZE=256
+# Use Micro batch size instead of global batch size, the latter is set to $((NNODES*GPUS_PER_NODE*MICRO_BATCH_SIZE))
+# MICRO_BATCH_SIZE=1
+### GLOBAL_BATCH_SIZE=256
 # LR=2.5e-4
 # MIN_LR=2.5e-5
 
@@ -62,7 +69,9 @@ MODEL_SIZE=1.3
 NUM_LAYERS=24
 HIDDEN_SIZE=2048
 NUM_ATTN_HEADS=16
-GLOBAL_BATCH_SIZE=512
+# Use Micro batch size instead of global batch size, the latter is set to $((NNODES*GPUS_PER_NODE*MICRO_BATCH_SIZE))
+MICRO_BATCH_SIZE=128
+### GLOBAL_BATCH_SIZE=512
 # LR=2.0e-4
 # MIN_LR=2.0e-5
 
@@ -71,7 +80,9 @@ GLOBAL_BATCH_SIZE=512
 #NUM_LAYERS=32
 #HIDDEN_SIZE=2560
 #NUM_ATTN_HEADS=32
-#GLOBAL_BATCH_SIZE=512
+# Use Micro batch size instead of global batch size, the latter is set to $((NNODES*GPUS_PER_NODE*MICRO_BATCH_SIZE))
+# MICRO_BATCH_SIZE=1
+### GLOBAL_BATCH_SIZE=512
 # LR=1.6e-4
 # MIN_LR=1.6e-5
 
@@ -80,7 +91,9 @@ GLOBAL_BATCH_SIZE=512
 #NUM_LAYERS=32
 #HIDDEN_SIZE=4096
 #NUM_ATTN_HEADS=32
-#GLOBAL_BATCH_SIZE=1024
+# Use Micro batch size instead of global batch size, the latter is set to $((NNODES*GPUS_PER_NODE*MICRO_BATCH_SIZE))
+# MICRO_BATCH_SIZE=1
+### GLOBAL_BATCH_SIZE=1024
 # LR=1.2e-4
 # MIN_LR=1.2e-5
 
@@ -89,7 +102,9 @@ GLOBAL_BATCH_SIZE=512
 # NUM_LAYERS=40
 # HIDDEN_SIZE=5120
 # NUM_ATTN_HEADS=40
-# GLOBAL_BATCH_SIZE=1024
+# Use Micro batch size instead of global batch size, the latter is set to $((NNODES*GPUS_PER_NODE*MICRO_BATCH_SIZE))
+# MICRO_BATCH_SIZE=1
+### GLOBAL_BATCH_SIZE=1024
 # LR=1.0e-4
 # MIN_LR=1.0e-5
 
@@ -98,9 +113,14 @@ GLOBAL_BATCH_SIZE=512
 # NUM_LAYERS=96
 # HIDDEN_SIZE=12288
 # NUM_ATTN_HEADS=96
-# GLOBAL_BATCH_SIZE=1536
+# Use Micro batch size instead of global batch size, the latter is set to $((NNODES*GPUS_PER_NODE*MICRO_BATCH_SIZE))
+# MICRO_BATCH_SIZE=1
+### GLOBAL_BATCH_SIZE=1536
 # LR=0.6e-4
 # MIN_LR=0.6e-5
+
+# Setting Global batch size in the end, since it relies on micro batch size
+GLOBAL_BATCH_SIZE=$((NNODES*GPUS_PER_NODE*MICRO_BATCH_SIZE))
 ###############################################################################
 ### Training duration configs
 ## The main termination condition, original GPT-3 paper trains for 300B tokens
@@ -131,7 +151,8 @@ LR_DECAY_TOKENS=300000000000
 ### Parallelism configs
 ## Micro batch size per GPU
 ## Make sure that BATCH_SIZE <= GLOBAL_BATCH_SIZE*PP_SIZE*MP_SIZE/NUM_GPUS
-BATCH_SIZE=4
+# LOLA: We have replaced this with MICRO_BATCH_SIZE
+# BATCH_SIZE=4
 
 ## Model parallelism, 1 is no MP
 ## Currently MoE models have divergence issue when MP > 1.
@@ -250,7 +271,7 @@ megatron_options=" \
         --init-method-std ${INIT_STD} \
         --lr-decay-tokens ${LR_DECAY_TOKENS} \
         --lr-warmup-tokens ${WARMUP_TOKENS} \
-        --micro-batch-size ${BATCH_SIZE} \
+        --micro-batch-size ${MICRO_BATCH_SIZE} \
         --exit-duration-in-mins ${EXIT_DURATION} \
         --global-batch-size ${GLOBAL_BATCH_SIZE} \
         --num-layers ${NUM_LAYERS} \
@@ -299,7 +320,7 @@ fi
 template_json="ds_config_gpt_TEMPLATE.json"
 config_json="ds_config_gpt_${NAME}.json"
 sed "s/CONFIG_BATCH_SIZE/${GLOBAL_BATCH_SIZE}/" ${template_json} \
-    | sed "s/CONFIG_MBSIZE/${BATCH_SIZE}/" \
+    | sed "s/CONFIG_MBSIZE/${MICRO_BATCH_SIZE}/" \
     | sed "s/LOG_INTERVAL/${LOG_INTERVAL}/" \
     | sed "s/ZERO_STAGE/0/" \
     | sed "s/PRESCALE_GRAD/true/" \
@@ -326,9 +347,28 @@ if [ "${ACTIVATION_CHECKPOINT}" = "true" ]; then
 deepspeed_options="${deepspeed_options} \
         --deepspeed-activation-checkpointing"
 fi
-# TODO: Change the launcher to python -u -m torch.distributed.run
-# TODO: Introduce changes for distributed training setup
-run_cmd="deepspeed ${LIB_DIR}/pretrain_gpt.py ${megatron_options} ${data_options} ${deepspeed_options} 2>&1 | tee -a ${OUTPUT_BASEPATH}/log/${NAME}_${host}_${current_time}.log"
-echo ${run_cmd}
-eval ${run_cmd}
-set +x
+
+# LOLA: some flags from previous setups
+# do not remove or the training will hang and nodes will be lost w/o this workaround
+export CUDA_LAUNCH_BLOCKING=1
+# hide duplicated errors using this hack - will be properly fixed in pt-1.12
+export TORCHELASTIC_ERROR_FILE='torch-elastic-error.json'
+export NCCL_ASYNC_ERROR_HANDLING=1
+
+# launcher to python -u -m torch.distributed.run
+export LAUNCHER="python -u -m torch.distributed.run \
+    --nproc_per_node $GPUS_PER_NODE \
+    --nnodes $NNODES \
+    --rdzv_id=$RANDOM \
+    --rdzv_endpoint $MASTER_ADDR:$MASTER_PORT \
+    --rdzv_backend c10d \
+    --max_restarts 0 \
+    --tee 3 \
+    "
+export CMD="${LIB_DIR}/pretrain_gpt.py ${megatron_options} ${data_options} ${deepspeed_options}"
+# Command for distributed training setup
+# run_cmd="deepspeed ${LIB_DIR}/pretrain_gpt.py ${megatron_options} ${data_options} ${deepspeed_options} 2>&1 | tee -a ${OUTPUT_BASEPATH}/log/${NAME}_${host}_${current_time}.log"
+echo LAUNCHER: $LAUNCHER
+echo CMD: $CMD
+srun --wait=60 --kill-on-bad-exit=1 bash -c "NCCL_DEBUG=INFO $LAUNCHER --node_rank \$SLURM_PROCID $CMD" 2>&1 | tee -a ${OUTPUT_BASEPATH}/log/${NAME}_${host}_${current_time}.log
+set -x
