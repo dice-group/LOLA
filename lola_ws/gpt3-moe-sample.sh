@@ -2,7 +2,7 @@
 #SBATCH -J "GPT3 - MoE Sample"
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
-#SBATCH --gres=gpu:a100:4
+#SBATCH --gres=gpu:a100:1
 #SBATCH --partition=dgx
 #SBATCH --qos=devel
 #SBATCH -t 02:00:00
@@ -188,10 +188,10 @@ CL_TOKENS=$((${CL_TOKENS} * 1000000000))
 CL_STEP=$(( ${CL_TOKENS} / (${GLOBAL_BATCH_SIZE} * ${CL_AVG_SEQLEN}) ))
 ###############################################################################
 ### Misc configs
-LOG_INTERVAL=10
+LOG_INTERVAL=1
 EVAL_ITERS=10
 EVAL_INTERVAL=100
-SAVE_INTERVAL=200
+SAVE_INTERVAL=50
 
 ## Standard deviation for weight initialization
 ## We used 0.014 for 350M/1.3B dense/MoE models, and used 0.01 for 6.7B
