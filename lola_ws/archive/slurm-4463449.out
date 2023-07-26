@@ -1,0 +1,841 @@
+cpu-bind=MASK - n2dgx01, task  0  0 [2967523]: mask |--------|--------||--------|--------||--------|--------||--------|--------||||B-------|--------||--------|--------||--------|--------||--------|--------|  set
+deepspeed /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/pretrain_gpt.py --override-opt_param-scheduler --adam-beta1 0.9 --adam-beta2 0.95 --tensor-model-parallel-size 1 --moe-expert-parallel-size 1 --num-experts 128 --moe-loss-coeff 0.01 --moe-train-capacity-factor 1.0 --moe-eval-capacity-factor 1.0 --moe-min-capacity 4 --init-method-std 0.014 --lr-decay-tokens 300000000000 --lr-warmup-tokens 375000000 --micro-batch-size 4 --exit-duration-in-mins 30000000 --global-batch-size 512 --num-layers 24 --hidden-size 2048 --num-attention-heads 16 --seq-length 2048 --max-position-embeddings 2048 --train-tokens 300000000000 --train-iters 858306 --lr 2.0e-4 --min-lr 2e-06 --lr-decay-style cosine --split 98,2,0 --log-interval 1 --eval-interval 100 --eval-iters 10 --save-interval 50 --weight-decay 0.1 --clip-grad 1.0 --hysteresis 2 --num-workers 0 --fp16 --load /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/lola_ws/output/checkpoint/gpt-1.3B-lr-2.0e-4-minlr-2e-06-bs-512-gpus-1-mp-1-pp-1-ep-128-mlc-0.01-cap-1.0-drop-true --save /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/lola_ws/output/checkpoint/gpt-1.3B-lr-2.0e-4-minlr-2e-06-bs-512-gpus-1-mp-1-pp-1-ep-128-mlc-0.01-cap-1.0-drop-true --tensorboard-queue-size 1 --log-timers-to-tensorboard --log-batch-size-to-tensorboard --log-validation-ppl-to-tensorboard --tensorboard-dir /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/lola_ws/output/tensorboard/gpt-1.3B-lr-2.0e-4-minlr-2e-06-bs-512-gpus-1-mp-1-pp-1-ep-128-mlc-0.01-cap-1.0-drop-true_n2dgx01_2023.07.22-02.30.12 --checkpoint-activations --create-moe-param-group --vocab-file /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/data/gpt2-vocab.json --merge-file /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/data/gpt2-merges.txt --data-path /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/data/meg-gpt2-oscar-en-10k_text_document --data-impl mmap --deepspeed --deepspeed_config ds_config_gpt_gpt-1.3B-lr-2.0e-4-minlr-2e-06-bs-512-gpus-1-mp-1-pp-1-ep-128-mlc-0.01-cap-1.0-drop-true.json --pipeline-model-parallel-size 1 --no-pipeline-parallel --deepspeed-activation-checkpointing 2>&1 | tee -a /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/lola_ws/output/log/gpt-1.3B-lr-2.0e-4-minlr-2e-06-bs-512-gpus-1-mp-1-pp-1-ep-128-mlc-0.01-cap-1.0-drop-true_n2dgx01_2023.07.22-02.30.12.log
+[2023-07-22 02:30:14,902] [INFO] [real_accelerator.py:133:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2023-07-22 02:30:31,211] [WARNING] [runner.py:196:fetch_hostfile] Unable to find hostfile, will proceed with training with local resources only.
+Detected CUDA_VISIBLE_DEVICES=0: setting --include=localhost:0
+[2023-07-22 02:30:31,211] [INFO] [runner.py:555:main] cmd = /scratch/hpc-prf-lola/lib_repo/custom-venvs/lola1/bin/python -u -m deepspeed.launcher.launch --world_info=eyJsb2NhbGhvc3QiOiBbMF19 --master_addr=127.0.0.1 --master_port=29500 --enable_each_rank_log=None /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/pretrain_gpt.py --override-opt_param-scheduler --adam-beta1 0.9 --adam-beta2 0.95 --tensor-model-parallel-size 1 --moe-expert-parallel-size 1 --num-experts 128 --moe-loss-coeff 0.01 --moe-train-capacity-factor 1.0 --moe-eval-capacity-factor 1.0 --moe-min-capacity 4 --init-method-std 0.014 --lr-decay-tokens 300000000000 --lr-warmup-tokens 375000000 --micro-batch-size 4 --exit-duration-in-mins 30000000 --global-batch-size 512 --num-layers 24 --hidden-size 2048 --num-attention-heads 16 --seq-length 2048 --max-position-embeddings 2048 --train-tokens 300000000000 --train-iters 858306 --lr 2.0e-4 --min-lr 2e-06 --lr-decay-style cosine --split 98,2,0 --log-interval 1 --eval-interval 100 --eval-iters 10 --save-interval 50 --weight-decay 0.1 --clip-grad 1.0 --hysteresis 2 --num-workers 0 --fp16 --load /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/lola_ws/output/checkpoint/gpt-1.3B-lr-2.0e-4-minlr-2e-06-bs-512-gpus-1-mp-1-pp-1-ep-128-mlc-0.01-cap-1.0-drop-true --save /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/lola_ws/output/checkpoint/gpt-1.3B-lr-2.0e-4-minlr-2e-06-bs-512-gpus-1-mp-1-pp-1-ep-128-mlc-0.01-cap-1.0-drop-true --tensorboard-queue-size 1 --log-timers-to-tensorboard --log-batch-size-to-tensorboard --log-validation-ppl-to-tensorboard --tensorboard-dir /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/lola_ws/output/tensorboard/gpt-1.3B-lr-2.0e-4-minlr-2e-06-bs-512-gpus-1-mp-1-pp-1-ep-128-mlc-0.01-cap-1.0-drop-true_n2dgx01_2023.07.22-02.30.12 --checkpoint-activations --create-moe-param-group --vocab-file /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/data/gpt2-vocab.json --merge-file /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/data/gpt2-merges.txt --data-path /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/data/meg-gpt2-oscar-en-10k_text_document --data-impl mmap --deepspeed --deepspeed_config ds_config_gpt_gpt-1.3B-lr-2.0e-4-minlr-2e-06-bs-512-gpus-1-mp-1-pp-1-ep-128-mlc-0.01-cap-1.0-drop-true.json --pipeline-model-parallel-size 1 --no-pipeline-parallel --deepspeed-activation-checkpointing
+[2023-07-22 02:30:32,393] [INFO] [real_accelerator.py:133:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2023-07-22 02:30:43,715] [INFO] [launch.py:138:main] 0 EBVERSIONNCCL=2.12.12
+[2023-07-22 02:30:43,715] [INFO] [launch.py:138:main] 0 EBROOTNCCL=/opt/software/pc2/EB-SW/software/NCCL/2.12.12-GCCcore-11.3.0-CUDA-11.7.0
+[2023-07-22 02:30:43,715] [INFO] [launch.py:138:main] 0 EBDEVELNCCL=/opt/software/pc2/EB-SW/software/NCCL/2.12.12-GCCcore-11.3.0-CUDA-11.7.0/easybuild/lib-NCCL-2.12.12-GCCcore-11.3.0-CUDA-11.7.0-easybuild-devel
+[2023-07-22 02:30:43,715] [INFO] [launch.py:145:main] WORLD INFO DICT: {'localhost': [0]}
+[2023-07-22 02:30:43,715] [INFO] [launch.py:151:main] nnodes=1, num_local_procs=1, node_rank=0
+[2023-07-22 02:30:43,716] [INFO] [launch.py:162:main] global_rank_mapping=defaultdict(<class 'list'>, {'localhost': [0]})
+[2023-07-22 02:30:43,716] [INFO] [launch.py:163:main] dist_world_size=1
+[2023-07-22 02:30:43,716] [INFO] [launch.py:165:main] Setting CUDA_VISIBLE_DEVICES=0
+[2023-07-22 02:30:44,758] [INFO] [real_accelerator.py:133:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+--------------------------------------------------
+DeepSpeed C++/CUDA extension op report
+--------------------------------------------------
+NOTE: Ops not installed will be just-in-time (JIT) compiled at
+      runtime if needed. Op compatibility means that your system
+      meet the required dependencies to JIT install the op.
+--------------------------------------------------
+JIT compiled ops requires ninja
+ninja .................. [92m[OKAY][0m
+--------------------------------------------------
+op name ................ installed .. compatible
+--------------------------------------------------
+[93m [WARNING] [0m async_io requires the dev libaio .so object and headers but these were not found.
+[93m [WARNING] [0m async_io: please install the libaio-devel package with yum
+[93m [WARNING] [0m If libaio is already installed (perhaps from source), try setting the CFLAGS and LDFLAGS environment variables to where it can be found.
+async_io ............... [93m[NO][0m ....... [93m[NO][0m
+cpu_adagrad ............ [93m[NO][0m ....... [92m[OKAY][0m
+cpu_adam ............... [93m[NO][0m ....... [92m[OKAY][0m
+fused_adam ............. [93m[NO][0m ....... [92m[OKAY][0m
+fused_lamb ............. [93m[NO][0m ....... [92m[OKAY][0m
+quantizer .............. [93m[NO][0m ....... [92m[OKAY][0m
+random_ltd ............. [93m[NO][0m ....... [92m[OKAY][0m
+[93m [WARNING] [0m please install triton==1.0.0 if you want to use sparse attention
+sparse_attn ............ [93m[NO][0m ....... [93m[NO][0m
+spatial_inference ...... [93m[NO][0m ....... [92m[OKAY][0m
+transformer ............ [93m[NO][0m ....... [92m[OKAY][0m
+stochastic_transformer . [93m[NO][0m ....... [92m[OKAY][0m
+transformer_inference .. [93m[NO][0m ....... [92m[OKAY][0m
+--------------------------------------------------
+DeepSpeed general environment info:
+torch install path ............... ['/opt/software/pc2/EB-SW/software/PyTorch/1.12.0-foss-2022a-CUDA-11.7.0/lib/python3.10/site-packages/torch']
+torch version .................... 1.12.0
+deepspeed install path ........... ['/scratch/hpc-prf-lola/lib_repo/custom-venvs/lola1/lib/python3.10/site-packages/deepspeed']
+deepspeed info ................... 0.10.0, unknown, unknown
+torch cuda version ............... 11.7
+torch hip version ................ None
+nvcc version ..................... 11.7
+deepspeed wheel compiled w. ...... torch 1.12, cuda 11.7
+**** Git info for Megatron: git_hash=04aa4db git_branch=main ****
+using world size: 1, data-parallel-size: 1, tensor-model-parallel size: 1, pipeline-model-parallel size: 1 
+using torch.float16 for parameters ...
+------------------------ arguments ------------------------
+  accumulate_allreduce_grads_in_fp32 .............. False
+  adam_beta1 ...................................... 0.9
+  adam_beta2 ...................................... 0.95
+  adam_eps ........................................ 1e-08
+  add_bias_linear ................................. True
+  add_position_embedding .......................... True
+  adlr_autoresume ................................. False
+  adlr_autoresume_interval ........................ 1000
+  aml_data_download_path .......................... None
+  apply_layernorm_1p .............................. False
+  apply_query_key_layer_scaling ................... True
+  apply_residual_connection_post_layernorm ........ False
+  async_tensor_model_parallel_allreduce ........... False
+  attention_dropout ............................... 0.1
+  attention_softmax_in_fp32 ....................... False
+  barrier_with_L1_time ............................ True
+  bert_binary_head ................................ True
+  bert_embedder_type .............................. megatron
+  bert_load ....................................... None
+  bf16 ............................................ False
+  bias_dropout_fusion ............................. True
+  bias_gelu_fusion ................................ True
+  biencoder_projection_dim ........................ 0
+  biencoder_shared_query_context_model ............ False
+  block_data_path ................................. None
+  checkpoint_activations .......................... True
+  checkpoint_in_cpu ............................... False
+  checkpoint_num_layers ........................... 1
+  classes_fraction ................................ 1.0
+  clip_grad ....................................... 1.0
+  compression_training ............................ False
+  consumed_train_samples .......................... 0
+  consumed_train_tokens ........................... 0
+  consumed_valid_samples .......................... 0
+  contigious_checkpointing ........................ False
+  cpu_optimizer ................................... False
+  cpu_torch_adam .................................. False
+  create_moe_param_group .......................... True
+  curriculum_learning_legacy ...................... False
+  data_cache_path ................................. None
+  data_efficiency_curriculum_learning ............. False
+  data_impl ....................................... mmap
+  data_parallel_random_init ....................... False
+  data_parallel_size .............................. 1
+  data_path ....................................... ['/scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/data/meg-gpt2-oscar-en-10k_text_document']
+  data_per_class_fraction ......................... 1.0
+  data_sharding ................................... True
+  dataloader_type ................................. single
+  DDP_impl ........................................ local
+  decoder_num_layers .............................. None
+  decoder_seq_length .............................. None
+  deepscale ....................................... False
+  deepscale_config ................................ None
+  deepspeed ....................................... True
+  deepspeed_activation_checkpointing .............. True
+  deepspeed_config ................................ ds_config_gpt_gpt-1.3B-lr-2.0e-4-minlr-2e-06-bs-512-gpus-1-mp-1-pp-1-ep-128-mlc-0.01-cap-1.0-drop-true.json
+  deepspeed_mpi ................................... False
+  dino_bottleneck_size ............................ 256
+  dino_freeze_last_layer .......................... 1
+  dino_head_hidden_size ........................... 2048
+  dino_local_crops_number ......................... 10
+  dino_local_img_size ............................. 96
+  dino_norm_last_layer ............................ False
+  dino_teacher_temp ............................... 0.07
+  dino_warmup_teacher_temp ........................ 0.04
+  dino_warmup_teacher_temp_epochs ................. 30
+  distribute_checkpointed_activations ............. False
+  distribute_saved_activations .................... False
+  distributed_backend ............................. nccl
+  distributed_timeout_minutes ..................... 10
+  ds_inference .................................... False
+  ds_pipeline_enabled ............................. False
+  embedding_path .................................. None
+  embedding_weights_in_fp32 ....................... False
+  empty_unused_memory_level ....................... 0
+  enable_expert_tensor_parallelism ................ False
+  encoder_num_layers .............................. 24
+  encoder_seq_length .............................. 2048
+  end_weight_decay ................................ 0.1
+  eod_mask_loss ................................... False
+  eval_interval ................................... 100
+  eval_iters ...................................... 10
+  evidence_data_path .............................. None
+  exit_duration_in_mins ........................... 30000000
+  exit_interval ................................... None
+  exit_on_missing_checkpoint ...................... False
+  exit_signal_handler ............................. False
+  expert_interval ................................. 2
+  ffn_hidden_size ................................. 8192
+  finetune ........................................ False
+  fp16 ............................................ True
+  fp16_lm_cross_entropy ........................... False
+  fp32_residual_connection ........................ False
+  fp8_amax_compute_algo ........................... most_recent
+  fp8_amax_history_len ............................ 1
+  fp8_e4m3 ........................................ False
+  fp8_hybrid ...................................... False
+  fp8_interval .................................... 1
+  fp8_margin ...................................... 0
+  fp8_wgrad ....................................... True
+  global_batch_size ............................... 512
+  gradient_accumulation_fusion .................... True
+  head_lr_mult .................................... 1.0
+  hidden_dropout .................................. 0.1
+  hidden_size ..................................... 2048
+  hidden_size_teacher ............................. None
+  hysteresis ...................................... 2
+  ict_head_size ................................... None
+  ict_load ........................................ None
+  img_h ........................................... 224
+  img_w ........................................... 224
+  indexer_batch_size .............................. 128
+  indexer_log_interval ............................ 1000
+  inference ....................................... False
+  inference_batch_times_seqlen_threshold .......... 512
+  init_method_std ................................. 0.014
+  init_method_xavier_uniform ...................... False
+  initial_loss_scale .............................. 4294967296
+  iter_per_epoch .................................. 1250
+  kd .............................................. False
+  kd_alpha_ce ..................................... 1
+  kd_beta_ce ...................................... 1
+  kd_temp ......................................... 1.0
+  kv_channels ..................................... 128
+  layernorm_epsilon ............................... 1e-05
+  lazy_mpu_init ................................... None
+  load ............................................ /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/lola_ws/output/checkpoint/gpt-1.3B-lr-2.0e-4-minlr-2e-06-bs-512-gpus-1-mp-1-pp-1-ep-128-mlc-0.01-cap-1.0-drop-true
+  load_teacher .................................... None
+  local_rank ...................................... 0
+  log_batch_size_to_tensorboard ................... True
+  log_interval .................................... 1
+  log_learning_rate_to_tensorboard ................ True
+  log_loss_scale_to_tensorboard ................... True
+  log_memory_to_tensorboard ....................... False
+  log_num_zeros_in_grad ........................... False
+  log_optimizer_states_to_tensorboard ............. False
+  log_params_norm ................................. False
+  log_timers_to_tensorboard ....................... True
+  log_validation_ppl_to_tensorboard ............... True
+  log_world_size_to_tensorboard ................... False
+  loss_scale ...................................... None
+  loss_scale_window ............................... 1000
+  lr .............................................. 0.0002
+  lr_decay_iters .................................. None
+  lr_decay_samples ................................ None
+  lr_decay_style .................................. cosine
+  lr_decay_tokens ................................. 300000000000
+  lr_warmup_fraction .............................. None
+  lr_warmup_iters ................................. 0
+  lr_warmup_samples ............................... 0
+  lr_warmup_tokens ................................ 375000000
+  make_vocab_size_divisible_by .................... 128
+  mask_factor ..................................... 1.0
+  mask_prob ....................................... 0.15
+  mask_type ....................................... random
+  masked_softmax_fusion ........................... True
+  max_position_embeddings ......................... 2048
+  max_tokens_to_oom ............................... 12000
+  memory_centric_tiled_linear ..................... False
+  merge_file ...................................... /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/data/gpt2-merges.txt
+  micro_batch_size ................................ 4
+  min_loss_scale .................................. 1.0
+  min_lr .......................................... 2e-06
+  mlp_type ........................................ standard
+  mmap_warmup ..................................... False
+  moe_eval_capacity_factor ........................ 1.0
+  moe_expert_parallel_size ........................ 1
+  moe_loss_coeff .................................. 0.01
+  moe_min_capacity ................................ 4
+  moe_token_dropping .............................. True
+  moe_train_capacity_factor ....................... 1.0
+  mos ............................................. False
+  no_load_lr_state ................................ False
+  no_load_optim ................................... None
+  no_load_rng ..................................... None
+  no_persist_layer_norm ........................... False
+  no_pipeline_parallel ............................ True
+  no_save_optim ................................... None
+  no_save_rng ..................................... None
+  normalization ................................... layernorm
+  num_attention_heads ............................. 16
+  num_attention_heads_teacher ..................... None
+  num_channels .................................... 3
+  num_classes ..................................... 1000
+  num_experts ..................................... [128]
+  num_experts_switch .............................. None
+  num_experts_teacher ............................. [1]
+  num_layers ...................................... 24
+  num_layers_per_virtual_pipeline_stage ........... None
+  num_layers_teacher .............................. None
+  num_workers ..................................... 0
+  onnx_safe ....................................... None
+  openai_gelu ..................................... False
+  optimizer ....................................... adam
+  output_bert_embeddings .......................... False
+  overlap_p2p_comm ................................ False
+  override_opt_param_scheduler .................... True
+  params_dtype .................................... torch.float16
+  partition_activations ........................... False
+  patch_dim ....................................... 16
+  perform_initialization .......................... True
+  pipeline_model_parallel_size .................... 1
+  pipeline_model_parallel_split_rank .............. None
+  profile_backward ................................ False
+  query_in_block_prob ............................. 0.1
+  rampup_batch_size ............................... None
+  random_ltd ...................................... False
+  rank ............................................ 0
+  recompute_granularity ........................... None
+  recompute_method ................................ None
+  recompute_num_layers ............................ 1
+  remote_device ................................... none
+  reset_attention_mask ............................ False
+  reset_iteration ................................. False
+  reset_position_ids .............................. False
+  retriever_report_topk_accuracies ................ []
+  retriever_score_scaling ......................... False
+  retriever_seq_length ............................ 256
+  retro_add_retriever ............................. False
+  retro_cyclic_train_iters ........................ None
+  retro_encoder_attention_dropout ................. 0.1
+  retro_encoder_hidden_dropout .................... 0.1
+  retro_encoder_layers ............................ 2
+  retro_num_neighbors ............................. 2
+  retro_num_retrieved_chunks ...................... 2
+  retro_return_doc_ids ............................ False
+  retro_workdir ................................... None
+  return_data_index ............................... False
+  rotary_percent .................................. 1.0
+  sample_rate ..................................... 1.0
+  save ............................................ /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/lola_ws/output/checkpoint/gpt-1.3B-lr-2.0e-4-minlr-2e-06-bs-512-gpus-1-mp-1-pp-1-ep-128-mlc-0.01-cap-1.0-drop-true
+  save_interval ................................... 50
+  scatter_gather_tensors_in_pipeline .............. True
+  scattered_embeddings ............................ False
+  seed ............................................ 1234
+  seq_length ...................................... 2048
+  sequence_parallel ............................... False
+  sgd_momentum .................................... 0.9
+  short_seq_prob .................................. 0.1
+  skip_train ...................................... False
+  split ........................................... 98,2,0
+  split_transformers .............................. False
+  squared_relu .................................... False
+  standalone_embedding_stage ...................... False
+  start_weight_decay .............................. 0.1
+  swiglu .......................................... False
+  swin_backbone_type .............................. tiny
+  synchronize_each_layer .......................... False
+  tensor_model_parallel_size ...................... 1
+  tensorboard_dir ................................. /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/lola_ws/output/tensorboard/gpt-1.3B-lr-2.0e-4-minlr-2e-06-bs-512-gpus-1-mp-1-pp-1-ep-128-mlc-0.01-cap-1.0-drop-true_n2dgx01_2023.07.22-02.30.12
+  tensorboard_log_interval ........................ 1
+  tensorboard_queue_size .......................... 1
+  test_data_path .................................. None
+  tile_factor ..................................... 1
+  timing_log_level ................................ 0
+  timing_log_option ............................... minmax
+  titles_data_path ................................ None
+  tokenizer_model ................................. None
+  tokenizer_type .................................. GPT2BPETokenizer
+  topk ............................................ 1
+  train_data_exact_num_epochs ..................... None
+  train_data_path ................................. None
+  train_desc_path ................................. None
+  train_doc_idx_path .............................. None
+  train_idx_path .................................. None
+  train_iters ..................................... 858306
+  train_sample_idx_path ........................... None
+  train_samples ................................... None
+  train_shuffle_idx_path .......................... None
+  train_tokens .................................... 300000000000
+  transformer_impl ................................ local
+  transformer_pipeline_model_parallel_size ........ 1
+  untie_embeddings_and_output_weights ............. False
+  use_checkpoint_args ............................. False
+  use_checkpoint_opt_param_scheduler .............. False
+  use_contiguous_buffers_in_local_ddp ............. True
+  use_cpu_initialization .......................... None
+  use_distributed_optimizer ....................... False
+  use_flash_attn .................................. False
+  use_one_sent_docs ............................... False
+  use_pin_memory .................................. False
+  use_ring_exchange_p2p ........................... False
+  use_rotary_position_embeddings .................. False
+  use_tutel ....................................... False
+  valid_data_path ................................. None
+  variable_seq_lengths ............................ False
+  virtual_pipeline_model_parallel_size ............ None
+  vision_backbone_type ............................ vit
+  vision_pretraining .............................. False
+  vision_pretraining_type ......................... classify
+  vocab_extra_ids ................................. 0
+  vocab_file ...................................... /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/data/gpt2-vocab.json
+  vocab_size ...................................... None
+  weight_decay .................................... 0.1
+  weight_decay_incr_style ......................... constant
+  world_size ...................................... 1
+  zero_allgather_bucket_size ...................... 0.0
+  zero_contigious_gradients ....................... False
+  zero_reduce_bucket_size ......................... 0.0
+  zero_reduce_scatter ............................. False
+  zero_stage ...................................... 1.0
+-------------------- end of arguments ---------------------
+setting number of micro-batches to constant 128
+> building GPT2BPETokenizer tokenizer ...
+ > padded vocab (size: 50257) with 47 dummy tokens (new size: 50304)
+> setting tensorboard ...
+> initializing torch distributed ...
+[2023-07-22 02:30:53,507] [WARNING] [comm.py:152:init_deepspeed_backend] NCCL backend in DeepSpeed not yet implemented
+[2023-07-22 02:30:53,507] [INFO] [comm.py:616:init_distributed] cdb=None
+[2023-07-22 02:30:53,507] [INFO] [comm.py:643:init_distributed] Initializing TorchBackend in DeepSpeed with backend nccl
+> initialized tensor model parallel with size 1
+> initialized pipeline model parallel with size 1
+> setting random seeds to 1234 ...
+> initializing model parallel cuda seeds on global rank 0, model parallel rank 0, and data parallel rank 0 with model parallel seed: 3952 and data parallel seed: 1234
+> compiling dataset index builder ...
+make: Entering directory '/scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/megatron/data'
+make: Nothing to be done for 'default'.
+make: Leaving directory '/scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/megatron/data'
+>>> done with dataset index builder. Compilation time: 0.115 seconds
+> compiling and loading fused kernels ...
+Detected CUDA files, patching ldflags
+Emitting ninja build file /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/megatron/fused_kernels/build/build.ninja...
+Building extension module scaled_upper_triang_masked_softmax_cuda...
+Allowing ninja to set a default number of workers... (overridable by setting the environment variable MAX_JOBS=N)
+ninja: no work to do.
+Loading extension module scaled_upper_triang_masked_softmax_cuda...
+Detected CUDA files, patching ldflags
+Emitting ninja build file /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/megatron/fused_kernels/build/build.ninja...
+Building extension module scaled_masked_softmax_cuda...
+Allowing ninja to set a default number of workers... (overridable by setting the environment variable MAX_JOBS=N)
+ninja: no work to do.
+Loading extension module scaled_masked_softmax_cuda...
+Detected CUDA files, patching ldflags
+Emitting ninja build file /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/megatron/fused_kernels/build/build.ninja...
+Building extension module scaled_softmax_cuda...
+Allowing ninja to set a default number of workers... (overridable by setting the environment variable MAX_JOBS=N)
+ninja: no work to do.
+Loading extension module scaled_softmax_cuda...
+>>> done with compiling and loading fused kernels. Compilation time: 2.068 seconds
+time to initialize megatron (seconds): 5.782
+[after megatron is initialized] datetime: 2023-07-22 02:30:56 
+building GPT model ...
+[2023-07-22 02:30:56,671] [INFO] [utils.py:785:see_memory_usage] Before Building Model
+[2023-07-22 02:30:56,672] [INFO] [utils.py:786:see_memory_usage] MA 0.0 GB         Max_MA 2.13 GB         CA 0.0 GB         Max_CA 2 GB 
+[2023-07-22 02:30:56,672] [INFO] [utils.py:793:see_memory_usage] CPU Virtual Memory:  used = 16.9 GB, percent = 1.7%
+[2023-07-22 02:30:56,864] [INFO] [utils.py:785:see_memory_usage] After Building Model
+[2023-07-22 02:30:56,864] [INFO] [utils.py:786:see_memory_usage] MA 2.44 GB         Max_MA 2.44 GB         CA 2.49 GB         Max_CA 2 GB 
+[2023-07-22 02:30:56,865] [INFO] [utils.py:793:see_memory_usage] CPU Virtual Memory:  used = 16.92 GB, percent = 1.7%
+ > number of parameters on (tensor, pipeline) model parallel rank (0, 0): 1315819520
+param_group keyset: dict_keys(['name', 'params', 'wd_mult', 'lr_mult'])
+> learning rate decay style: cosine
+DeepSpeed is enabled.
+[2023-07-22 02:30:56,868] [INFO] [logging.py:96:log_dist] [Rank 0] DeepSpeed info: version=0.10.0, git-hash=unknown, git-branch=unknown
+[2023-07-22 02:30:57,143] [INFO] [logging.py:96:log_dist] [Rank 0] DeepSpeed Flops Profiler Enabled: False
+[2023-07-22 02:30:57,144] [INFO] [logging.py:96:log_dist] [Rank 0] Removing param_group that has no 'params' in the client Optimizer
+[2023-07-22 02:30:57,144] [INFO] [logging.py:96:log_dist] [Rank 0] Using client Optimizer as basic optimizer
+[2023-07-22 02:30:57,156] [INFO] [logging.py:96:log_dist] [Rank 0] DeepSpeed Basic Optimizer = FusedAdam
+[2023-07-22 02:30:57,156] [INFO] [logging.py:96:log_dist] [Rank 0] Creating fp16 optimizer with dynamic loss scale
+[2023-07-22 02:30:57,219] [INFO] [logging.py:96:log_dist] [Rank 0] DeepSpeed Final Optimizer = FusedAdam
+[2023-07-22 02:30:57,219] [INFO] [logging.py:96:log_dist] [Rank 0] DeepSpeed using client LR scheduler
+[2023-07-22 02:30:57,219] [INFO] [logging.py:96:log_dist] [Rank 0] DeepSpeed LR Scheduler = <megatron.optimizer_param_scheduler.OptimizerParamScheduler object at 0x152ee02c6dd0>
+[2023-07-22 02:30:57,219] [INFO] [logging.py:96:log_dist] [Rank 0] step=0, skipped=0, lr=[0.0, 0.0], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 02:30:57,220] [INFO] [config.py:960:print] DeepSpeedEngine configuration:
+[2023-07-22 02:30:57,220] [INFO] [config.py:964:print]   activation_checkpointing_config  {
+    "partition_activations": false, 
+    "contiguous_memory_optimization": false, 
+    "cpu_checkpointing": false, 
+    "number_checkpoints": null, 
+    "synchronize_checkpoint_boundary": false, 
+    "profile": false
+}
+[2023-07-22 02:30:57,220] [INFO] [config.py:964:print]   aio_config ................... {'block_size': 1048576, 'queue_depth': 8, 'thread_count': 1, 'single_submit': False, 'overlap_events': True}
+[2023-07-22 02:30:57,220] [INFO] [config.py:964:print]   amp_enabled .................. False
+[2023-07-22 02:30:57,220] [INFO] [config.py:964:print]   amp_params ................... False
+[2023-07-22 02:30:57,220] [INFO] [config.py:964:print]   autotuning_config ............ {
+    "enabled": false, 
+    "start_step": null, 
+    "end_step": null, 
+    "metric_path": null, 
+    "arg_mappings": null, 
+    "metric": "throughput", 
+    "model_info": null, 
+    "results_dir": "autotuning_results", 
+    "exps_dir": "autotuning_exps", 
+    "overwrite": true, 
+    "fast": true, 
+    "start_profile_step": 3, 
+    "end_profile_step": 5, 
+    "tuner_type": "gridsearch", 
+    "tuner_early_stopping": 5, 
+    "tuner_num_trials": 50, 
+    "model_info_path": null, 
+    "mp_size": 1, 
+    "max_train_batch_size": null, 
+    "min_train_batch_size": 1, 
+    "max_train_micro_batch_size_per_gpu": 1.024000e+03, 
+    "min_train_micro_batch_size_per_gpu": 1, 
+    "num_tuning_micro_batch_sizes": 3
+}
+[2023-07-22 02:30:57,220] [INFO] [config.py:964:print]   bfloat16_enabled ............. False
+[2023-07-22 02:30:57,220] [INFO] [config.py:964:print]   checkpoint_parallel_write_pipeline  False
+[2023-07-22 02:30:57,220] [INFO] [config.py:964:print]   checkpoint_tag_validation_enabled  True
+[2023-07-22 02:30:57,220] [INFO] [config.py:964:print]   checkpoint_tag_validation_fail  False
+[2023-07-22 02:30:57,220] [INFO] [config.py:964:print]   comms_config ................. <deepspeed.comm.config.DeepSpeedCommsConfig object at 0x152ee0336e00>
+[2023-07-22 02:30:57,220] [INFO] [config.py:964:print]   communication_data_type ...... None
+[2023-07-22 02:30:57,220] [INFO] [config.py:964:print]   compression_config ........... {'weight_quantization': {'shared_parameters': {'enabled': False, 'quantizer_kernel': False, 'schedule_offset': 0, 'quantize_groups': 1, 'quantize_verbose': False, 'quantization_type': 'symmetric', 'quantize_weight_in_forward': False, 'rounding': 'nearest', 'fp16_mixed_quantize': False, 'quantize_change_ratio': 0.001}, 'different_groups': {}}, 'activation_quantization': {'shared_parameters': {'enabled': False, 'quantization_type': 'symmetric', 'range_calibration': 'dynamic', 'schedule_offset': 1000}, 'different_groups': {}}, 'sparse_pruning': {'shared_parameters': {'enabled': False, 'method': 'l1', 'schedule_offset': 1000}, 'different_groups': {}}, 'row_pruning': {'shared_parameters': {'enabled': False, 'method': 'l1', 'schedule_offset': 1000}, 'different_groups': {}}, 'head_pruning': {'shared_parameters': {'enabled': False, 'method': 'topk', 'schedule_offset': 1000}, 'different_groups': {}}, 'channel_pruning': {'shared_parameters': {'enabled': False, 'method': 'l1', 'schedule_offset': 1000}, 'different_groups': {}}, 'layer_reduction': {'enabled': False}}
+[2023-07-22 02:30:57,220] [INFO] [config.py:964:print]   curriculum_enabled_legacy .... False
+[2023-07-22 02:30:57,220] [INFO] [config.py:964:print]   curriculum_params_legacy ..... {'curriculum_type': 'seqlen', 'min_difficulty': 80, 'max_difficulty': 2048, 'schedule_type': 'fixed_linear', 'schedule_config': {'total_curriculum_step': 110138, 'difficulty_step': 8}}
+[2023-07-22 02:30:57,220] [INFO] [config.py:964:print]   data_efficiency_config ....... {'enabled': False, 'seed': 1234, 'data_sampling': {'enabled': False, 'num_epochs': 1000, 'num_workers': 0, 'curriculum_learning': {'enabled': False}}, 'data_routing': {'enabled': False, 'random_ltd': {'enabled': False, 'layer_token_lr_schedule': {'enabled': False}}}}
+[2023-07-22 02:30:57,220] [INFO] [config.py:964:print]   data_efficiency_enabled ...... False
+[2023-07-22 02:30:57,220] [INFO] [config.py:964:print]   dataloader_drop_last ......... False
+[2023-07-22 02:30:57,220] [INFO] [config.py:964:print]   disable_allgather ............ False
+[2023-07-22 02:30:57,220] [INFO] [config.py:964:print]   dump_state ................... False
+[2023-07-22 02:30:57,220] [INFO] [config.py:964:print]   dynamic_loss_scale_args ...... {'init_scale': 2048, 'scale_window': 500, 'delayed_shift': 2, 'consecutive_hysteresis': False, 'min_scale': 1}
+[2023-07-22 02:30:57,220] [INFO] [config.py:964:print]   eigenvalue_enabled ........... False
+[2023-07-22 02:30:57,220] [INFO] [config.py:964:print]   eigenvalue_gas_boundary_resolution  1
+[2023-07-22 02:30:57,220] [INFO] [config.py:964:print]   eigenvalue_layer_name ........ bert.encoder.layer
+[2023-07-22 02:30:57,220] [INFO] [config.py:964:print]   eigenvalue_layer_num ......... 0
+[2023-07-22 02:30:57,220] [INFO] [config.py:964:print]   eigenvalue_max_iter .......... 100
+[2023-07-22 02:30:57,220] [INFO] [config.py:964:print]   eigenvalue_stability ......... 1e-06
+[2023-07-22 02:30:57,220] [INFO] [config.py:964:print]   eigenvalue_tol ............... 0.01
+[2023-07-22 02:30:57,220] [INFO] [config.py:964:print]   eigenvalue_verbose ........... False
+[2023-07-22 02:30:57,220] [INFO] [config.py:964:print]   elasticity_enabled ........... False
+[2023-07-22 02:30:57,221] [INFO] [config.py:964:print]   flops_profiler_config ........ {
+    "enabled": false, 
+    "recompute_fwd_factor": 0.0, 
+    "profile_step": 1, 
+    "module_depth": -1, 
+    "top_modules": 1, 
+    "detailed": true, 
+    "output_file": null
+}
+[2023-07-22 02:30:57,221] [INFO] [config.py:964:print]   fp16_auto_cast ............... False
+[2023-07-22 02:30:57,221] [INFO] [config.py:964:print]   fp16_enabled ................. True
+[2023-07-22 02:30:57,221] [INFO] [config.py:964:print]   fp16_master_weights_and_gradients  False
+[2023-07-22 02:30:57,221] [INFO] [config.py:964:print]   global_rank .................. 0
+[2023-07-22 02:30:57,221] [INFO] [config.py:964:print]   grad_accum_dtype ............. None
+[2023-07-22 02:30:57,221] [INFO] [config.py:964:print]   gradient_accumulation_steps .. 128
+[2023-07-22 02:30:57,221] [INFO] [config.py:964:print]   gradient_clipping ............ 1
+[2023-07-22 02:30:57,221] [INFO] [config.py:964:print]   gradient_predivide_factor .... 1.0
+[2023-07-22 02:30:57,221] [INFO] [config.py:964:print]   hybrid_engine ................ enabled=False max_out_tokens=512 inference_tp_size=1 release_inference_cache=False pin_parameters=True tp_gather_partition_size=8
+[2023-07-22 02:30:57,221] [INFO] [config.py:964:print]   initial_dynamic_scale ........ 2048
+[2023-07-22 02:30:57,221] [INFO] [config.py:964:print]   load_universal_checkpoint .... False
+[2023-07-22 02:30:57,221] [INFO] [config.py:964:print]   loss_scale ................... 0
+[2023-07-22 02:30:57,221] [INFO] [config.py:964:print]   memory_breakdown ............. False
+[2023-07-22 02:30:57,221] [INFO] [config.py:964:print]   mics_hierarchial_params_gather  False
+[2023-07-22 02:30:57,221] [INFO] [config.py:964:print]   mics_shard_size .............. -1
+[2023-07-22 02:30:57,221] [INFO] [config.py:964:print]   monitor_config ............... tensorboard=TensorBoardConfig(enabled=False, output_path='', job_name='DeepSpeedJobName') wandb=WandbConfig(enabled=False, group=None, team=None, project='deepspeed') csv_monitor=CSVConfig(enabled=False, output_path='', job_name='DeepSpeedJobName') enabled=False
+[2023-07-22 02:30:57,221] [INFO] [config.py:964:print]   nebula_config ................ {
+    "enabled": false, 
+    "persistent_storage_path": null, 
+    "persistent_time_interval": 100, 
+    "num_of_version_in_retention": 2, 
+    "enable_nebula_load": true, 
+    "load_path": null
+}
+[2023-07-22 02:30:57,221] [INFO] [config.py:964:print]   optimizer_legacy_fusion ...... False
+[2023-07-22 02:30:57,221] [INFO] [config.py:964:print]   optimizer_name ............... None
+[2023-07-22 02:30:57,221] [INFO] [config.py:964:print]   optimizer_params ............. None
+[2023-07-22 02:30:57,221] [INFO] [config.py:964:print]   pipeline ..................... {'stages': 'auto', 'partition': 'best', 'seed_layers': False, 'activation_checkpoint_interval': 0}
+[2023-07-22 02:30:57,221] [INFO] [config.py:964:print]   pld_enabled .................. False
+[2023-07-22 02:30:57,221] [INFO] [config.py:964:print]   pld_params ................... False
+[2023-07-22 02:30:57,221] [INFO] [config.py:964:print]   prescale_gradients ........... True
+[2023-07-22 02:30:57,221] [INFO] [config.py:964:print]   scheduler_name ............... None
+[2023-07-22 02:30:57,221] [INFO] [config.py:964:print]   scheduler_params ............. None
+[2023-07-22 02:30:57,221] [INFO] [config.py:964:print]   sparse_attention ............. None
+[2023-07-22 02:30:57,221] [INFO] [config.py:964:print]   sparse_gradients_enabled ..... False
+[2023-07-22 02:30:57,221] [INFO] [config.py:964:print]   steps_per_print .............. 1
+[2023-07-22 02:30:57,221] [INFO] [config.py:964:print]   train_batch_size ............. 512
+[2023-07-22 02:30:57,221] [INFO] [config.py:964:print]   train_micro_batch_size_per_gpu  4
+[2023-07-22 02:30:57,221] [INFO] [config.py:964:print]   use_node_local_storage ....... False
+[2023-07-22 02:30:57,221] [INFO] [config.py:964:print]   wall_clock_breakdown ......... False
+[2023-07-22 02:30:57,221] [INFO] [config.py:964:print]   world_size ................... 1
+[2023-07-22 02:30:57,221] [INFO] [config.py:964:print]   zero_allow_untested_optimizer  False
+[2023-07-22 02:30:57,221] [INFO] [config.py:964:print]   zero_config .................. stage=0 contiguous_gradients=True reduce_scatter=True reduce_bucket_size=500,000,000 allgather_partitions=True allgather_bucket_size=500,000,000 overlap_comm=False load_from_fp32_weights=True elastic_checkpoint=True offload_param=None offload_optimizer=None sub_group_size=1,000,000,000 cpu_offload_param=None cpu_offload_use_pin_memory=None cpu_offload=None prefetch_bucket_size=50,000,000 param_persistence_threshold=100,000 model_persistence_threshold=sys.maxsize max_live_parameters=1,000,000,000 max_reuse_distance=1,000,000,000 gather_16bit_weights_on_model_save=False stage3_gather_fp16_weights_on_model_save=False ignore_unused_parameters=True legacy_stage1=False round_robin_gradients=False zero_hpz_partition_size=1 zero_quantized_weights=False zero_quantized_gradients=False mics_shard_size=-1 mics_hierarchical_params_gather=False memory_efficient_linear=True
+[2023-07-22 02:30:57,221] [INFO] [config.py:964:print]   zero_enabled ................. False
+[2023-07-22 02:30:57,221] [INFO] [config.py:964:print]   zero_force_ds_cpu_optimizer .. True
+[2023-07-22 02:30:57,221] [INFO] [config.py:964:print]   zero_optimization_stage ...... 0
+[2023-07-22 02:30:57,222] [INFO] [config.py:950:print_user_config]   json = {
+    "train_batch_size": 512, 
+    "train_micro_batch_size_per_gpu": 4, 
+    "steps_per_print": 1, 
+    "zero_optimization": {
+        "stage": 0, 
+        "elastic_checkpoint": true
+    }, 
+    "gradient_clipping": 1, 
+    "prescale_gradients": true, 
+    "fp16": {
+        "enabled": true, 
+        "loss_scale": 0, 
+        "loss_scale_window": 500, 
+        "hysteresis": 2, 
+        "min_loss_scale": 1, 
+        "initial_scale_power": 11
+    }, 
+    "bf16": {
+        "enabled": false
+    }, 
+    "curriculum_learning": {
+        "enabled": false, 
+        "curriculum_type": "seqlen", 
+        "min_difficulty": 80, 
+        "max_difficulty": 2.048000e+03, 
+        "schedule_type": "fixed_linear", 
+        "schedule_config": {
+            "total_curriculum_step": 1.101380e+05, 
+            "difficulty_step": 8
+        }
+    }, 
+    "wall_clock_breakdown": false
+}
+[2023-07-22 02:30:57,236] [WARNING] [engine.py:2635:load_checkpoint] Unable to find latest file at /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/lola_ws/output/checkpoint/gpt-1.3B-lr-2.0e-4-minlr-2e-06-bs-512-gpus-1-mp-1-pp-1-ep-128-mlc-0.01-cap-1.0-drop-true/latest, if trying to load latest checkpoint please ensure this file exists or pass an explicit checkpoint tag when loading a checkpoint.
+WARNING: could not find the metadata file /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/lola_ws/output/checkpoint/gpt-1.3B-lr-2.0e-4-minlr-2e-06-bs-512-gpus-1-mp-1-pp-1-ep-128-mlc-0.01-cap-1.0-drop-true 
+    will not load any checkpoints and will start from random
+(min, max) time across ranks (ms):
+    load-checkpoint ................................: (1.95, 1.95)
+[after model, optimizer, and learning rate scheduler are built] datetime: 2023-07-22 02:30:57 
+> building train, validation, and test datasets ...
+ > datasets target sizes (minimum size):
+    train:      439452672
+    validation: 43950080
+    test:       5120
+> building train, validation, and test datasets for GPT ...
+Single data path provided for train, valid & test
+ > building dataset index ...
+    reading sizes...
+    reading pointers...
+    reading document index...
+    creating numpy buffer of mmap...
+    creating memory view of numpy buffer...
+ > finished creating indexed dataset in 0.018384 seconds
+    number of documents: 10000
+ > dataset split:
+    train:
+     document indices in [0, 9800) total of 9800 documents
+    validation:
+     document indices in [9800, 10000) total of 200 documents
+    test:
+     document indices in [10000, 10000) total of 0 documents
+ > loading doc-idx mapping from /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/data/index-cache/6eb7a5d8fdebc610393d5f584185f960_doc_idx.npy
+ > loading sample-idx mapping from /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/data/index-cache/6eb7a5d8fdebc610393d5f584185f960_sample_idx.npy
+ > loading shuffle-idx mapping from /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/data/index-cache/6eb7a5d8fdebc610393d5f584185f960_shuffle_idx.npy
+    loaded indexed file in 0.046 seconds
+    total number of samples: 439466004
+    total number of epochs: 30909
+ > loading doc-idx mapping from /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/data/index-cache/0162a907a8bf39285ab0b0e166ee3431_doc_idx.npy
+ > loading sample-idx mapping from /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/data/index-cache/0162a907a8bf39285ab0b0e166ee3431_sample_idx.npy
+ > loading shuffle-idx mapping from /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/data/index-cache/0162a907a8bf39285ab0b0e166ee3431_shuffle_idx.npy
+    loaded indexed file in 0.019 seconds
+    total number of samples: 43950108
+    total number of epochs: 129637
+> finished creating GPT datasets ...
+[after dataloaders are built] datetime: 2023-07-22 02:30:57 
+done with setup ...
+(min, max) time across ranks (ms):
+    model-and-optimizer-setup ......................: (621.42, 621.42)
+    train/valid/test-data-iterators-setup ..........: (434.98, 434.98)
+training ...
+[before the start of training step] datetime: 2023-07-22 02:30:57 
+[2023-07-22 02:32:42,430] [INFO] [logging.py:96:log_dist] [Rank 0] step=1, skipped=0, lr=[0.0, 0.0], mom=[(0.9, 0.95), (0.9, 0.95)]
+ iteration        1/  858306 | consumed samples:          512 | consumed tokens:      1048576 | elapsed time per iteration (ms): 104610.6 | learning rate: 0.000E+00 | global batch size:   512 | lm loss: 1.102390E+01 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 4.894 | TFLOPs: 119.20 |
+[2023-07-22 02:34:25,072] [INFO] [logging.py:96:log_dist] [Rank 0] step=2, skipped=0, lr=[5.592405333333334e-07, 5.592405333333334e-07], mom=[(0.9, 0.95), (0.9, 0.95)]
+ iteration        2/  858306 | consumed samples:         1024 | consumed tokens:      2097152 | elapsed time per iteration (ms): 102641.3 | learning rate: 5.592E-07 | global batch size:   512 | lm loss: 1.102450E+01 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 4.988 | TFLOPs: 121.49 |
+[Rank 0] (after 2 iterations) memory (MB) | allocated: 18083.36279296875 | max allocated: 30629.67529296875 | reserved: 35234.0 | max reserved: 35234.0
+[2023-07-22 02:36:06,447] [INFO] [logging.py:96:log_dist] [Rank 0] step=3, skipped=0, lr=[1.1184810666666667e-06, 1.1184810666666667e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 02:36:06,474] [INFO] [timer.py:215:stop] epoch=0/micro_step=3/global_step=3, RunningAvgSamplesPerSec=601.2202689063867, CurrSamplesPerSec=601.2202689063867, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration        3/  858306 | consumed samples:         1536 | consumed tokens:      3145728 | elapsed time per iteration (ms): 101392.5 | learning rate: 1.118E-06 | global batch size:   512 | lm loss: 1.102475E+01 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.050 | TFLOPs: 122.99 |
+[2023-07-22 02:37:48,322] [INFO] [logging.py:96:log_dist] [Rank 0] step=4, skipped=0, lr=[1.6777216e-06, 1.6777216e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 02:37:48,350] [INFO] [timer.py:215:stop] epoch=0/micro_step=4/global_step=4, RunningAvgSamplesPerSec=598.7845620871823, CurrSamplesPerSec=596.3685110585199, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration        4/  858306 | consumed samples:         2048 | consumed tokens:      4194304 | elapsed time per iteration (ms): 101874.8 | learning rate: 1.678E-06 | global batch size:   512 | lm loss: 1.084285E+01 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.026 | TFLOPs: 122.41 |
+[2023-07-22 02:39:29,469] [INFO] [logging.py:96:log_dist] [Rank 0] step=5, skipped=0, lr=[2.2369621333333334e-06, 2.2369621333333334e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 02:39:29,504] [INFO] [timer.py:215:stop] epoch=0/micro_step=5/global_step=5, RunningAvgSamplesPerSec=596.24691927491, CurrSamplesPerSec=591.235618342182, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration        5/  858306 | consumed samples:         2560 | consumed tokens:      5242880 | elapsed time per iteration (ms): 101151.8 | learning rate: 2.237E-06 | global batch size:   512 | lm loss: 1.042130E+01 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.062 | TFLOPs: 123.28 |
+[2023-07-22 02:41:10,072] [INFO] [logging.py:96:log_dist] [Rank 0] step=6, skipped=0, lr=[2.7962026666666668e-06, 2.7962026666666668e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 02:41:10,100] [INFO] [timer.py:215:stop] epoch=0/micro_step=6/global_step=6, RunningAvgSamplesPerSec=594.6982141125106, CurrSamplesPerSec=590.0999970872607, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration        6/  858306 | consumed samples:         3072 | consumed tokens:      6291456 | elapsed time per iteration (ms): 100597.5 | learning rate: 2.796E-06 | global batch size:   512 | lm loss: 1.005695E+01 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.090 | TFLOPs: 123.96 |
+[2023-07-22 02:42:50,806] [INFO] [logging.py:96:log_dist] [Rank 0] step=7, skipped=0, lr=[3.3554432e-06, 3.3554432e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 02:42:50,833] [INFO] [timer.py:215:stop] epoch=0/micro_step=7/global_step=7, RunningAvgSamplesPerSec=596.2879337114915, CurrSamplesPerSec=602.7327219981858, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration        7/  858306 | consumed samples:         3584 | consumed tokens:      7340032 | elapsed time per iteration (ms): 100735.0 | learning rate: 3.355E-06 | global batch size:   512 | lm loss: 9.790754E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.083 | TFLOPs: 123.79 |
+[2023-07-22 02:44:31,331] [INFO] [logging.py:96:log_dist] [Rank 0] step=8, skipped=0, lr=[3.914683733333333e-06, 3.914683733333333e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 02:44:31,358] [INFO] [timer.py:215:stop] epoch=0/micro_step=8/global_step=8, RunningAvgSamplesPerSec=596.1109254987523, CurrSamplesPerSec=595.2274584467092, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration        8/  858306 | consumed samples:         4096 | consumed tokens:      8388608 | elapsed time per iteration (ms): 100528.7 | learning rate: 3.915E-06 | global batch size:   512 | lm loss: 9.614494E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.093 | TFLOPs: 124.05 |
+[2023-07-22 02:46:11,598] [INFO] [logging.py:96:log_dist] [Rank 0] step=9, skipped=0, lr=[4.473924266666667e-06, 4.473924266666667e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 02:46:11,625] [INFO] [timer.py:215:stop] epoch=0/micro_step=9/global_step=9, RunningAvgSamplesPerSec=563.9403932693084, CurrSamplesPerSec=425.9998670909968, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration        9/  858306 | consumed samples:         4608 | consumed tokens:      9437184 | elapsed time per iteration (ms): 100266.4 | learning rate: 4.474E-06 | global batch size:   512 | lm loss: 9.451506E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.106 | TFLOPs: 124.37 |
+[2023-07-22 02:47:51,056] [INFO] [logging.py:96:log_dist] [Rank 0] step=10, skipped=0, lr=[5.0331648000000006e-06, 5.0331648000000006e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 02:47:51,083] [INFO] [timer.py:215:stop] epoch=0/micro_step=10/global_step=10, RunningAvgSamplesPerSec=568.4924518981571, CurrSamplesPerSec=602.537733739424, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       10/  858306 | consumed samples:         5120 | consumed tokens:     10485760 | elapsed time per iteration (ms): 99452.9 | learning rate: 5.033E-06 | global batch size:   512 | lm loss: 9.342230E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.148 | TFLOPs: 125.39 |
+[2023-07-22 02:49:30,815] [INFO] [logging.py:96:log_dist] [Rank 0] step=11, skipped=0, lr=[5.5924053333333335e-06, 5.5924053333333335e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 02:49:30,842] [INFO] [timer.py:215:stop] epoch=0/micro_step=11/global_step=11, RunningAvgSamplesPerSec=572.1391590385798, CurrSamplesPerSec=603.0881855037559, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       11/  858306 | consumed samples:         5632 | consumed tokens:     11534336 | elapsed time per iteration (ms): 99757.1 | learning rate: 5.592E-06 | global batch size:   512 | lm loss: 9.242350E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.132 | TFLOPs: 125.00 |
+[2023-07-22 02:51:10,465] [INFO] [logging.py:96:log_dist] [Rank 0] step=12, skipped=0, lr=[6.151645866666667e-06, 6.151645866666667e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 02:51:10,471] [INFO] [timer.py:215:stop] epoch=0/micro_step=12/global_step=12, RunningAvgSamplesPerSec=573.1302096364806, CurrSamplesPerSec=582.2066132125985, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       12/  858306 | consumed samples:         6144 | consumed tokens:     12582912 | elapsed time per iteration (ms): 99628.8 | learning rate: 6.152E-06 | global batch size:   512 | lm loss: 9.175137E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.139 | TFLOPs: 125.17 |
+[2023-07-22 02:52:49,826] [INFO] [logging.py:96:log_dist] [Rank 0] step=13, skipped=0, lr=[6.7108864e-06, 6.7108864e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 02:52:49,860] [INFO] [timer.py:215:stop] epoch=0/micro_step=13/global_step=13, RunningAvgSamplesPerSec=574.3808396812757, CurrSamplesPerSec=587.1940273367902, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       13/  858306 | consumed samples:         6656 | consumed tokens:     13631488 | elapsed time per iteration (ms): 99390.2 | learning rate: 6.711E-06 | global batch size:   512 | lm loss: 9.131772E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.151 | TFLOPs: 125.47 |
+[2023-07-22 02:54:29,257] [INFO] [logging.py:96:log_dist] [Rank 0] step=14, skipped=0, lr=[7.270126933333334e-06, 7.270126933333334e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 02:54:29,284] [INFO] [timer.py:215:stop] epoch=0/micro_step=14/global_step=14, RunningAvgSamplesPerSec=576.3803307115246, CurrSamplesPerSec=599.3300981820414, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       14/  858306 | consumed samples:         7168 | consumed tokens:     14680064 | elapsed time per iteration (ms): 99422.5 | learning rate: 7.270E-06 | global batch size:   512 | lm loss: 9.117332E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.150 | TFLOPs: 125.43 |
+[2023-07-22 02:56:08,224] [INFO] [logging.py:96:log_dist] [Rank 0] step=15, skipped=0, lr=[7.829367466666666e-06, 7.829367466666666e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 02:56:08,250] [INFO] [timer.py:215:stop] epoch=0/micro_step=15/global_step=15, RunningAvgSamplesPerSec=576.1471276027374, CurrSamplesPerSec=573.3633383750532, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       15/  858306 | consumed samples:         7680 | consumed tokens:     15728640 | elapsed time per iteration (ms): 98979.9 | learning rate: 7.829E-06 | global batch size:   512 | lm loss: 9.077180E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.173 | TFLOPs: 125.99 |
+[2023-07-22 02:57:47,290] [INFO] [logging.py:96:log_dist] [Rank 0] step=16, skipped=0, lr=[8.388608e-06, 8.388608e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 02:57:47,317] [INFO] [timer.py:215:stop] epoch=0/micro_step=16/global_step=16, RunningAvgSamplesPerSec=577.4977775242262, CurrSamplesPerSec=595.6506074156915, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       16/  858306 | consumed samples:         8192 | consumed tokens:     16777216 | elapsed time per iteration (ms): 99052.2 | learning rate: 8.389E-06 | global batch size:   512 | lm loss: 9.049445E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.169 | TFLOPs: 125.89 |
+[2023-07-22 02:59:26,499] [INFO] [logging.py:96:log_dist] [Rank 0] step=17, skipped=0, lr=[8.947848533333334e-06, 8.947848533333334e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 02:59:26,518] [INFO] [timer.py:215:stop] epoch=0/micro_step=17/global_step=17, RunningAvgSamplesPerSec=578.7204859287702, CurrSamplesPerSec=596.3986545032816, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       17/  858306 | consumed samples:         8704 | consumed tokens:     17825792 | elapsed time per iteration (ms): 99199.4 | learning rate: 8.948E-06 | global batch size:   512 | lm loss: 9.039499E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.161 | TFLOPs: 125.71 |
+[2023-07-22 03:01:05,649] [INFO] [logging.py:96:log_dist] [Rank 0] step=18, skipped=0, lr=[9.507089066666667e-06, 9.507089066666667e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 03:01:05,676] [INFO] [timer.py:215:stop] epoch=0/micro_step=18/global_step=18, RunningAvgSamplesPerSec=579.2275999804855, CurrSamplesPerSec=586.9423794483602, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       18/  858306 | consumed samples:         9216 | consumed tokens:     18874368 | elapsed time per iteration (ms): 99168.2 | learning rate: 9.507E-06 | global batch size:   512 | lm loss: 9.018130E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.163 | TFLOPs: 125.75 |
+[2023-07-22 03:02:44,549] [INFO] [logging.py:96:log_dist] [Rank 0] step=19, skipped=0, lr=[1.0066329600000001e-05, 1.0066329600000001e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 03:02:44,576] [INFO] [timer.py:215:stop] epoch=0/micro_step=19/global_step=19, RunningAvgSamplesPerSec=580.5419127260002, CurrSamplesPerSec=602.4126559517281, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       19/  858306 | consumed samples:         9728 | consumed tokens:     19922944 | elapsed time per iteration (ms): 98895.2 | learning rate: 1.007E-05 | global batch size:   512 | lm loss: 8.992535E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.177 | TFLOPs: 126.09 |
+[2023-07-22 03:04:23,099] [INFO] [logging.py:96:log_dist] [Rank 0] step=20, skipped=0, lr=[1.0625570133333333e-05, 1.0625570133333333e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 03:04:23,126] [INFO] [timer.py:215:stop] epoch=0/micro_step=20/global_step=20, RunningAvgSamplesPerSec=581.5817628412327, CurrSamplesPerSec=599.8470547355178, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       20/  858306 | consumed samples:        10240 | consumed tokens:     20971520 | elapsed time per iteration (ms): 98549.9 | learning rate: 1.063E-05 | global batch size:   512 | lm loss: 8.945347E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.195 | TFLOPs: 126.54 |
+[2023-07-22 03:06:02,191] [INFO] [logging.py:96:log_dist] [Rank 0] step=21, skipped=0, lr=[1.1184810666666667e-05, 1.1184810666666667e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 03:06:02,218] [INFO] [timer.py:215:stop] epoch=0/micro_step=21/global_step=21, RunningAvgSamplesPerSec=582.634215434663, CurrSamplesPerSec=602.2516525238112, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       21/  858306 | consumed samples:        10752 | consumed tokens:     22020096 | elapsed time per iteration (ms): 99091.6 | learning rate: 1.118E-05 | global batch size:   512 | lm loss: 8.916187E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.167 | TFLOPs: 125.84 |
+[2023-07-22 03:07:41,883] [INFO] [logging.py:96:log_dist] [Rank 0] step=22, skipped=0, lr=[1.1744051200000002e-05, 1.1744051200000002e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 03:07:41,910] [INFO] [timer.py:215:stop] epoch=0/micro_step=22/global_step=22, RunningAvgSamplesPerSec=582.908761842282, CurrSamplesPerSec=588.1747485277032, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       22/  858306 | consumed samples:        11264 | consumed tokens:     23068672 | elapsed time per iteration (ms): 99693.5 | learning rate: 1.174E-05 | global batch size:   512 | lm loss: 8.875278E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.136 | TFLOPs: 125.08 |
+[2023-07-22 03:09:21,325] [INFO] [logging.py:96:log_dist] [Rank 0] step=23, skipped=0, lr=[1.2303291733333335e-05, 1.2303291733333335e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 03:09:21,352] [INFO] [timer.py:215:stop] epoch=0/micro_step=23/global_step=23, RunningAvgSamplesPerSec=583.3070864121106, CurrSamplesPerSec=591.3894820269929, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       23/  858306 | consumed samples:        11776 | consumed tokens:     24117248 | elapsed time per iteration (ms): 99440.8 | learning rate: 1.230E-05 | global batch size:   512 | lm loss: 8.881678E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.149 | TFLOPs: 125.40 |
+[2023-07-22 03:11:00,167] [INFO] [logging.py:96:log_dist] [Rank 0] step=24, skipped=0, lr=[1.2862532266666667e-05, 1.2862532266666667e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 03:11:00,194] [INFO] [timer.py:215:stop] epoch=0/micro_step=24/global_step=24, RunningAvgSamplesPerSec=583.9400139422379, CurrSamplesPerSec=597.5561778040206, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       24/  858306 | consumed samples:        12288 | consumed tokens:     25165824 | elapsed time per iteration (ms): 98868.4 | learning rate: 1.286E-05 | global batch size:   512 | lm loss: 8.829149E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.179 | TFLOPs: 126.13 |
+[2023-07-22 03:12:39,650] [INFO] [logging.py:96:log_dist] [Rank 0] step=25, skipped=0, lr=[1.34217728e-05, 1.34217728e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 03:12:39,677] [INFO] [timer.py:215:stop] epoch=0/micro_step=25/global_step=25, RunningAvgSamplesPerSec=582.8683890680164, CurrSamplesPerSec=560.2491276613341, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       25/  858306 | consumed samples:        12800 | consumed tokens:     26214400 | elapsed time per iteration (ms): 99458.9 | learning rate: 1.342E-05 | global batch size:   512 | lm loss: 8.785395E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.148 | TFLOPs: 125.38 |
+[2023-07-22 03:14:18,783] [INFO] [logging.py:96:log_dist] [Rank 0] step=26, skipped=0, lr=[1.3981013333333334e-05, 1.3981013333333334e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 03:14:18,811] [INFO] [timer.py:215:stop] epoch=0/micro_step=26/global_step=26, RunningAvgSamplesPerSec=583.6704871667617, CurrSamplesPerSec=602.7479475539334, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       26/  858306 | consumed samples:        13312 | consumed tokens:     27262976 | elapsed time per iteration (ms): 99129.9 | learning rate: 1.398E-05 | global batch size:   512 | lm loss: 8.770923E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.165 | TFLOPs: 125.80 |
+[2023-07-22 03:15:58,542] [INFO] [logging.py:96:log_dist] [Rank 0] step=27, skipped=0, lr=[1.4540253866666668e-05, 1.4540253866666668e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 03:15:58,569] [INFO] [timer.py:215:stop] epoch=0/micro_step=27/global_step=27, RunningAvgSamplesPerSec=584.0780953744699, CurrSamplesPerSec=594.0343964440098, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       27/  858306 | consumed samples:        13824 | consumed tokens:     28311552 | elapsed time per iteration (ms): 99761.4 | learning rate: 1.454E-05 | global batch size:   512 | lm loss: 8.733966E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.132 | TFLOPs: 125.00 |
+[2023-07-22 03:17:38,367] [INFO] [logging.py:96:log_dist] [Rank 0] step=28, skipped=0, lr=[1.50994944e-05, 1.50994944e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 03:17:38,395] [INFO] [timer.py:215:stop] epoch=0/micro_step=28/global_step=28, RunningAvgSamplesPerSec=584.6976567336493, CurrSamplesPerSec=600.6255077736496, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       28/  858306 | consumed samples:        14336 | consumed tokens:     29360128 | elapsed time per iteration (ms): 99824.5 | learning rate: 1.510E-05 | global batch size:   512 | lm loss: 8.684361E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.129 | TFLOPs: 124.92 |
+[2023-07-22 03:19:18,400] [INFO] [logging.py:96:log_dist] [Rank 0] step=29, skipped=0, lr=[1.5658734933333332e-05, 1.5658734933333332e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 03:19:18,427] [INFO] [timer.py:215:stop] epoch=0/micro_step=29/global_step=29, RunningAvgSamplesPerSec=583.785198676959, CurrSamplesPerSec=561.0219240416249, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       29/  858306 | consumed samples:        14848 | consumed tokens:     30408704 | elapsed time per iteration (ms): 100029.0 | learning rate: 1.566E-05 | global batch size:   512 | lm loss: 8.688571E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.119 | TFLOPs: 124.66 |
+[2023-07-22 03:20:58,793] [INFO] [logging.py:96:log_dist] [Rank 0] step=30, skipped=0, lr=[1.6217975466666668e-05, 1.6217975466666668e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 03:20:58,821] [INFO] [timer.py:215:stop] epoch=0/micro_step=30/global_step=30, RunningAvgSamplesPerSec=584.3785052189586, CurrSamplesPerSec=600.8664988984264, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       30/  858306 | consumed samples:        15360 | consumed tokens:     31457280 | elapsed time per iteration (ms): 100398.5 | learning rate: 1.622E-05 | global batch size:   512 | lm loss: 8.563674E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.100 | TFLOPs: 124.21 |
+[2023-07-22 03:22:39,484] [INFO] [logging.py:96:log_dist] [Rank 0] step=31, skipped=0, lr=[1.6777216e-05, 1.6777216e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 03:22:39,513] [INFO] [timer.py:215:stop] epoch=0/micro_step=31/global_step=31, RunningAvgSamplesPerSec=585.1121750343128, CurrSamplesPerSec=606.4301137273385, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       31/  858306 | consumed samples:        15872 | consumed tokens:     32505856 | elapsed time per iteration (ms): 100691.4 | learning rate: 1.678E-05 | global batch size:   512 | lm loss: 8.546257E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.085 | TFLOPs: 123.84 |
+[2023-07-22 03:24:19,501] [INFO] [logging.py:96:log_dist] [Rank 0] step=32, skipped=0, lr=[1.7336456533333335e-05, 1.7336456533333335e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 03:24:19,530] [INFO] [timer.py:215:stop] epoch=0/micro_step=32/global_step=32, RunningAvgSamplesPerSec=584.4914837740254, CurrSamplesPerSec=567.0471781563579, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       32/  858306 | consumed samples:        16384 | consumed tokens:     33554432 | elapsed time per iteration (ms): 100017.0 | learning rate: 1.734E-05 | global batch size:   512 | lm loss: 8.553605E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.119 | TFLOPs: 124.68 |
+[2023-07-22 03:25:59,601] [INFO] [logging.py:96:log_dist] [Rank 0] step=33, skipped=0, lr=[1.7895697066666667e-05, 1.7895697066666667e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 03:25:59,630] [INFO] [timer.py:215:stop] epoch=0/micro_step=33/global_step=33, RunningAvgSamplesPerSec=585.088030771211, CurrSamplesPerSec=603.5685571973745, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       33/  858306 | consumed samples:        16896 | consumed tokens:     34603008 | elapsed time per iteration (ms): 100106.2 | learning rate: 1.790E-05 | global batch size:   512 | lm loss: 8.496062E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.115 | TFLOPs: 124.57 |
+[2023-07-22 03:27:39,918] [INFO] [logging.py:96:log_dist] [Rank 0] step=34, skipped=0, lr=[1.84549376e-05, 1.84549376e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 03:27:39,947] [INFO] [timer.py:215:stop] epoch=0/micro_step=34/global_step=34, RunningAvgSamplesPerSec=585.788873109654, CurrSamplesPerSec=608.3798835074678, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       34/  858306 | consumed samples:        17408 | consumed tokens:     35651584 | elapsed time per iteration (ms): 100315.4 | learning rate: 1.845E-05 | global batch size:   512 | lm loss: 8.448738E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.104 | TFLOPs: 124.31 |
+[2023-07-22 03:29:18,785] [INFO] [logging.py:96:log_dist] [Rank 0] step=35, skipped=0, lr=[1.9014178133333335e-05, 1.9014178133333335e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 03:29:18,814] [INFO] [timer.py:215:stop] epoch=0/micro_step=35/global_step=35, RunningAvgSamplesPerSec=586.2286896710619, CurrSamplesPerSec=600.6601152493031, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       35/  858306 | consumed samples:        17920 | consumed tokens:     36700160 | elapsed time per iteration (ms): 98861.4 | learning rate: 1.901E-05 | global batch size:   512 | lm loss: 8.423394E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.179 | TFLOPs: 126.14 |
+[2023-07-22 03:30:58,177] [INFO] [logging.py:96:log_dist] [Rank 0] step=36, skipped=0, lr=[1.9573418666666667e-05, 1.9573418666666667e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 03:30:58,204] [INFO] [timer.py:215:stop] epoch=0/micro_step=36/global_step=36, RunningAvgSamplesPerSec=586.5481315911856, CurrSamplesPerSec=597.2885945240387, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       36/  858306 | consumed samples:        18432 | consumed tokens:     37748736 | elapsed time per iteration (ms): 99385.9 | learning rate: 1.957E-05 | global batch size:   512 | lm loss: 8.374339E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.152 | TFLOPs: 125.47 |
+[2023-07-22 03:32:39,185] [INFO] [logging.py:96:log_dist] [Rank 0] step=37, skipped=0, lr=[2.0132659200000002e-05, 2.0132659200000002e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 03:32:39,212] [INFO] [timer.py:215:stop] epoch=0/micro_step=37/global_step=37, RunningAvgSamplesPerSec=587.0209824862533, CurrSamplesPerSec=603.564316275169, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       37/  858306 | consumed samples:        18944 | consumed tokens:     38797312 | elapsed time per iteration (ms): 101010.1 | learning rate: 2.013E-05 | global batch size:   512 | lm loss: 8.371071E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.069 | TFLOPs: 123.45 |
+[2023-07-22 03:34:19,119] [INFO] [logging.py:96:log_dist] [Rank 0] step=38, skipped=0, lr=[2.0691899733333334e-05, 2.0691899733333334e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 03:34:19,145] [INFO] [timer.py:215:stop] epoch=0/micro_step=38/global_step=38, RunningAvgSamplesPerSec=587.2558310367564, CurrSamplesPerSec=595.5955954156956, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       38/  858306 | consumed samples:        19456 | consumed tokens:     39845888 | elapsed time per iteration (ms): 99935.4 | learning rate: 2.069E-05 | global batch size:   512 | lm loss: 8.321516E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.123 | TFLOPs: 124.78 |
+[2023-07-22 03:35:59,527] [INFO] [logging.py:96:log_dist] [Rank 0] step=39, skipped=0, lr=[2.1251140266666666e-05, 2.1251140266666666e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 03:35:59,554] [INFO] [timer.py:215:stop] epoch=0/micro_step=39/global_step=39, RunningAvgSamplesPerSec=587.5613588845008, CurrSamplesPerSec=598.776130747493, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       39/  858306 | consumed samples:        19968 | consumed tokens:     40894464 | elapsed time per iteration (ms): 100425.3 | learning rate: 2.125E-05 | global batch size:   512 | lm loss: 8.264161E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.098 | TFLOPs: 124.17 |
+[2023-07-22 03:37:39,160] [INFO] [logging.py:96:log_dist] [Rank 0] step=40, skipped=0, lr=[2.1810380800000002e-05, 2.1810380800000002e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 03:37:39,187] [INFO] [timer.py:215:stop] epoch=0/micro_step=40/global_step=40, RunningAvgSamplesPerSec=587.775579560642, CurrSamplesPerSec=595.8130594893697, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       40/  858306 | consumed samples:        20480 | consumed tokens:     41943040 | elapsed time per iteration (ms): 99613.4 | learning rate: 2.181E-05 | global batch size:   512 | lm loss: 8.215972E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.140 | TFLOPs: 125.19 |
+[2023-07-22 03:39:19,444] [INFO] [logging.py:96:log_dist] [Rank 0] step=41, skipped=0, lr=[2.2369621333333334e-05, 2.2369621333333334e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 03:39:19,471] [INFO] [timer.py:215:stop] epoch=0/micro_step=41/global_step=41, RunningAvgSamplesPerSec=587.3708719940719, CurrSamplesPerSec=572.3944255421796, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       41/  858306 | consumed samples:        20992 | consumed tokens:     42991616 | elapsed time per iteration (ms): 100289.5 | learning rate: 2.237E-05 | global batch size:   512 | lm loss: 8.189459E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.105 | TFLOPs: 124.34 |
+[2023-07-22 03:40:59,569] [INFO] [logging.py:96:log_dist] [Rank 0] step=42, skipped=0, lr=[2.292886186666667e-05, 2.292886186666667e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 03:40:59,596] [INFO] [timer.py:215:stop] epoch=0/micro_step=42/global_step=42, RunningAvgSamplesPerSec=587.6398673573843, CurrSamplesPerSec=598.326358517655, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       42/  858306 | consumed samples:        21504 | consumed tokens:     44040192 | elapsed time per iteration (ms): 100123.1 | learning rate: 2.293E-05 | global batch size:   512 | lm loss: 8.153835E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.114 | TFLOPs: 124.55 |
+[2023-07-22 03:42:38,494] [INFO] [logging.py:96:log_dist] [Rank 0] step=43, skipped=0, lr=[2.3488102400000005e-05, 2.3488102400000005e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 03:42:38,521] [INFO] [timer.py:215:stop] epoch=0/micro_step=43/global_step=43, RunningAvgSamplesPerSec=587.7991374830242, CurrSamplesPerSec=594.2415132119088, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       43/  858306 | consumed samples:        22016 | consumed tokens:     45088768 | elapsed time per iteration (ms): 98924.9 | learning rate: 2.349E-05 | global batch size:   512 | lm loss: 8.106874E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.176 | TFLOPs: 126.06 |
+[2023-07-22 03:44:17,744] [INFO] [logging.py:96:log_dist] [Rank 0] step=44, skipped=0, lr=[2.4047342933333334e-05, 2.4047342933333334e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 03:44:17,771] [INFO] [timer.py:215:stop] epoch=0/micro_step=44/global_step=44, RunningAvgSamplesPerSec=588.0637249599375, CurrSamplesPerSec=599.1207568815018, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       44/  858306 | consumed samples:        22528 | consumed tokens:     46137344 | elapsed time per iteration (ms): 99250.4 | learning rate: 2.405E-05 | global batch size:   512 | lm loss: 8.076097E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.159 | TFLOPs: 125.64 |
+[2023-07-22 03:45:57,986] [INFO] [logging.py:96:log_dist] [Rank 0] step=45, skipped=0, lr=[2.460658346666667e-05, 2.460658346666667e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 03:45:58,013] [INFO] [timer.py:215:stop] epoch=0/micro_step=45/global_step=45, RunningAvgSamplesPerSec=588.3804342373378, CurrSamplesPerSec=601.9973985665205, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       45/  858306 | consumed samples:        23040 | consumed tokens:     47185920 | elapsed time per iteration (ms): 100246.5 | learning rate: 2.461E-05 | global batch size:   512 | lm loss: 8.023810E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.107 | TFLOPs: 124.39 |
+[2023-07-22 03:47:38,603] [INFO] [logging.py:96:log_dist] [Rank 0] step=46, skipped=0, lr=[2.5165824000000005e-05, 2.5165824000000005e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 03:47:38,630] [INFO] [timer.py:215:stop] epoch=0/micro_step=46/global_step=46, RunningAvgSamplesPerSec=588.5612026433146, CurrSamplesPerSec=596.4407279215264, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       46/  858306 | consumed samples:        23552 | consumed tokens:     48234496 | elapsed time per iteration (ms): 100619.0 | learning rate: 2.517E-05 | global batch size:   512 | lm loss: 8.002198E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.089 | TFLOPs: 123.93 |
+[2023-07-22 03:49:19,270] [INFO] [logging.py:96:log_dist] [Rank 0] step=47, skipped=0, lr=[2.5725064533333333e-05, 2.5725064533333333e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 03:49:19,297] [INFO] [timer.py:215:stop] epoch=0/micro_step=47/global_step=47, RunningAvgSamplesPerSec=588.6868972184051, CurrSamplesPerSec=594.2711131121696, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       47/  858306 | consumed samples:        24064 | consumed tokens:     49283072 | elapsed time per iteration (ms): 100657.6 | learning rate: 2.573E-05 | global batch size:   512 | lm loss: 7.958433E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.087 | TFLOPs: 123.89 |
+[2023-07-22 03:50:58,606] [INFO] [logging.py:96:log_dist] [Rank 0] step=48, skipped=0, lr=[2.628430506666667e-05, 2.628430506666667e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 03:50:58,640] [INFO] [timer.py:215:stop] epoch=0/micro_step=48/global_step=48, RunningAvgSamplesPerSec=588.8281863162774, CurrSamplesPerSec=595.2571566531963, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       48/  858306 | consumed samples:        24576 | consumed tokens:     50331648 | elapsed time per iteration (ms): 99345.5 | learning rate: 2.628E-05 | global batch size:   512 | lm loss: 7.890919E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.154 | TFLOPs: 125.52 |
+[2023-07-22 03:52:37,637] [INFO] [logging.py:96:log_dist] [Rank 0] step=49, skipped=0, lr=[2.68435456e-05, 2.68435456e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 03:52:37,672] [INFO] [timer.py:215:stop] epoch=0/micro_step=49/global_step=49, RunningAvgSamplesPerSec=589.3750394031592, CurrSamplesPerSec=615.6772983501729, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       49/  858306 | consumed samples:        25088 | consumed tokens:     51380224 | elapsed time per iteration (ms): 99027.6 | learning rate: 2.684E-05 | global batch size:   512 | lm loss: 7.836849E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.170 | TFLOPs: 125.93 |
+[2023-07-22 03:54:17,554] [INFO] [logging.py:96:log_dist] [Rank 0] step=50, skipped=0, lr=[2.7402786133333333e-05, 2.7402786133333333e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 03:54:17,581] [INFO] [timer.py:215:stop] epoch=0/micro_step=50/global_step=50, RunningAvgSamplesPerSec=589.5786540976784, CurrSamplesPerSec=599.3098599292656, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       50/  858306 | consumed samples:        25600 | consumed tokens:     52428800 | elapsed time per iteration (ms): 99916.4 | learning rate: 2.740E-05 | global batch size:   512 | lm loss: 7.851628E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.124 | TFLOPs: 124.81 |
+saving checkpoint at iteration      50 to /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/lola_ws/output/checkpoint/gpt-1.3B-lr-2.0e-4-minlr-2e-06-bs-512-gpus-1-mp-1-pp-1-ep-128-mlc-0.01-cap-1.0-drop-true
+[2023-07-22 03:54:17,639] [INFO] [logging.py:96:log_dist] [Rank 0] [Torch] Checkpoint global_step50 is about to be saved!
+[2023-07-22 03:54:17,643] [INFO] [logging.py:96:log_dist] [Rank 0] Saving model checkpoint: /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/lola_ws/output/checkpoint/gpt-1.3B-lr-2.0e-4-minlr-2e-06-bs-512-gpus-1-mp-1-pp-1-ep-128-mlc-0.01-cap-1.0-drop-true/global_step50/mp_rank_00_model_states.pt
+[2023-07-22 03:54:17,643] [INFO] [torch_checkpoint_engine.py:21:save] [Torch] Saving /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/lola_ws/output/checkpoint/gpt-1.3B-lr-2.0e-4-minlr-2e-06-bs-512-gpus-1-mp-1-pp-1-ep-128-mlc-0.01-cap-1.0-drop-true/global_step50/mp_rank_00_model_states.pt...
+[2023-07-22 03:54:49,689] [INFO] [torch_checkpoint_engine.py:23:save] [Torch] Saved /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/lola_ws/output/checkpoint/gpt-1.3B-lr-2.0e-4-minlr-2e-06-bs-512-gpus-1-mp-1-pp-1-ep-128-mlc-0.01-cap-1.0-drop-true/global_step50/mp_rank_00_model_states.pt.
+[2023-07-22 03:54:49,689] [INFO] [torch_checkpoint_engine.py:33:commit] [Torch] Checkpoint global_step50 is ready now!
+  successfully saved checkpoint at iteration      50 to /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/lola_ws/output/checkpoint/gpt-1.3B-lr-2.0e-4-minlr-2e-06-bs-512-gpus-1-mp-1-pp-1-ep-128-mlc-0.01-cap-1.0-drop-true
+Checkpoint Save GB: 18.421, GB/Sec: 0.57, Latency(second): 32.058
+(min, max) time across ranks (ms):
+    save-checkpoint ................................: (32057.62, 32057.62)
+[2023-07-22 03:56:29,871] [INFO] [logging.py:96:log_dist] [Rank 0] step=51, skipped=0, lr=[2.796202666666667e-05, 2.796202666666667e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 03:56:29,897] [INFO] [timer.py:215:stop] epoch=0/micro_step=51/global_step=51, RunningAvgSamplesPerSec=589.6292859333394, CurrSamplesPerSec=592.069883250374, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       51/  858306 | consumed samples:        26112 | consumed tokens:     53477376 | elapsed time per iteration (ms): 132314.4 | learning rate: 2.796E-05 | global batch size:   512 | lm loss: 7.838258E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 3.870 | TFLOPs: 94.25 |
+[2023-07-22 03:58:10,087] [INFO] [logging.py:96:log_dist] [Rank 0] step=52, skipped=0, lr=[2.85212672e-05, 2.85212672e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 03:58:10,114] [INFO] [timer.py:215:stop] epoch=0/micro_step=52/global_step=52, RunningAvgSamplesPerSec=589.6803877756773, CurrSamplesPerSec=592.1952750867962, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       52/  858306 | consumed samples:        26624 | consumed tokens:     54525952 | elapsed time per iteration (ms): 100215.8 | learning rate: 2.852E-05 | global batch size:   512 | lm loss: 7.822450E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.109 | TFLOPs: 124.43 |
+[2023-07-22 03:59:50,204] [INFO] [logging.py:96:log_dist] [Rank 0] step=53, skipped=0, lr=[2.9080507733333336e-05, 2.9080507733333336e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 03:59:50,231] [INFO] [timer.py:215:stop] epoch=0/micro_step=53/global_step=53, RunningAvgSamplesPerSec=588.9112180589351, CurrSamplesPerSec=552.8544881056216, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       53/  858306 | consumed samples:        27136 | consumed tokens:     55574528 | elapsed time per iteration (ms): 100114.9 | learning rate: 2.908E-05 | global batch size:   512 | lm loss: 7.782616E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.114 | TFLOPs: 124.56 |
+[2023-07-22 04:01:29,337] [INFO] [logging.py:96:log_dist] [Rank 0] step=54, skipped=0, lr=[2.9639748266666668e-05, 2.9639748266666668e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 04:01:29,364] [INFO] [timer.py:215:stop] epoch=0/micro_step=54/global_step=54, RunningAvgSamplesPerSec=589.1123842853816, CurrSamplesPerSec=599.5573287263155, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       54/  858306 | consumed samples:        27648 | consumed tokens:     56623104 | elapsed time per iteration (ms): 99134.8 | learning rate: 2.964E-05 | global batch size:   512 | lm loss: 7.745770E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.165 | TFLOPs: 125.79 |
+[2023-07-22 04:03:09,154] [INFO] [logging.py:96:log_dist] [Rank 0] step=55, skipped=0, lr=[3.01989888e-05, 3.01989888e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 04:03:09,181] [INFO] [timer.py:215:stop] epoch=0/micro_step=55/global_step=55, RunningAvgSamplesPerSec=588.1777668005233, CurrSamplesPerSec=543.3527022229937, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       55/  858306 | consumed samples:        28160 | consumed tokens:     57671680 | elapsed time per iteration (ms): 99814.3 | learning rate: 3.020E-05 | global batch size:   512 | lm loss: 7.704095E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.130 | TFLOPs: 124.93 |
+[2023-07-22 04:04:49,246] [INFO] [logging.py:96:log_dist] [Rank 0] step=56, skipped=0, lr=[3.0758229333333336e-05, 3.0758229333333336e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 04:04:49,252] [INFO] [timer.py:215:stop] epoch=0/micro_step=56/global_step=56, RunningAvgSamplesPerSec=588.1632751858515, CurrSamplesPerSec=587.3962401430878, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       56/  858306 | consumed samples:        28672 | consumed tokens:     58720256 | elapsed time per iteration (ms): 100074.2 | learning rate: 3.076E-05 | global batch size:   512 | lm loss: 7.665946E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.116 | TFLOPs: 124.61 |
+[2023-07-22 04:06:28,962] [INFO] [logging.py:96:log_dist] [Rank 0] step=57, skipped=0, lr=[3.1317469866666664e-05, 3.1317469866666664e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 04:06:28,990] [INFO] [timer.py:215:stop] epoch=0/micro_step=57/global_step=57, RunningAvgSamplesPerSec=588.062773463719, CurrSamplesPerSec=582.6862183010179, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       57/  858306 | consumed samples:        29184 | consumed tokens:     59768832 | elapsed time per iteration (ms): 99749.2 | learning rate: 3.132E-05 | global batch size:   512 | lm loss: 7.675861E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.133 | TFLOPs: 125.01 |
+[2023-07-22 04:08:08,471] [INFO] [logging.py:96:log_dist] [Rank 0] step=58, skipped=0, lr=[3.18767104e-05, 3.18767104e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 04:08:08,500] [INFO] [timer.py:215:stop] epoch=0/micro_step=58/global_step=58, RunningAvgSamplesPerSec=588.2963632270177, CurrSamplesPerSec=601.4359649963003, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       58/  858306 | consumed samples:        29696 | consumed tokens:     60817408 | elapsed time per iteration (ms): 99493.2 | learning rate: 3.188E-05 | global batch size:   512 | lm loss: 7.629464E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.146 | TFLOPs: 125.34 |
+[2023-07-22 04:09:48,721] [INFO] [logging.py:96:log_dist] [Rank 0] step=59, skipped=0, lr=[3.2435950933333335e-05, 3.2435950933333335e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 04:09:48,750] [INFO] [timer.py:215:stop] epoch=0/micro_step=59/global_step=59, RunningAvgSamplesPerSec=588.4533520391207, CurrSamplesPerSec=597.3804765393896, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       59/  858306 | consumed samples:        30208 | consumed tokens:     61865984 | elapsed time per iteration (ms): 100250.8 | learning rate: 3.244E-05 | global batch size:   512 | lm loss: 7.599776E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.107 | TFLOPs: 124.39 |
+[2023-07-22 04:11:28,546] [INFO] [logging.py:96:log_dist] [Rank 0] step=60, skipped=0, lr=[3.2995191466666664e-05, 3.2995191466666664e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 04:11:28,575] [INFO] [timer.py:215:stop] epoch=0/micro_step=60/global_step=60, RunningAvgSamplesPerSec=588.0181084046818, CurrSamplesPerSec=564.2304463431808, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       60/  858306 | consumed samples:        30720 | consumed tokens:     62914560 | elapsed time per iteration (ms): 99824.1 | learning rate: 3.300E-05 | global batch size:   512 | lm loss: 7.607428E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.129 | TFLOPs: 124.92 |
+[2023-07-22 04:13:07,829] [INFO] [logging.py:96:log_dist] [Rank 0] step=61, skipped=0, lr=[3.3554432e-05, 3.3554432e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 04:13:07,858] [INFO] [timer.py:215:stop] epoch=0/micro_step=61/global_step=61, RunningAvgSamplesPerSec=587.9762751152856, CurrSamplesPerSec=585.5600868298831, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       61/  858306 | consumed samples:        31232 | consumed tokens:     63963136 | elapsed time per iteration (ms): 99285.7 | learning rate: 3.355E-05 | global batch size:   512 | lm loss: 7.552979E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.157 | TFLOPs: 125.60 |
+[2023-07-22 04:14:47,197] [INFO] [logging.py:96:log_dist] [Rank 0] step=62, skipped=0, lr=[3.4113672533333335e-05, 3.4113672533333335e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 04:14:47,225] [INFO] [timer.py:215:stop] epoch=0/micro_step=62/global_step=62, RunningAvgSamplesPerSec=588.1074398727337, CurrSamplesPerSec=595.9511224779767, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       62/  858306 | consumed samples:        31744 | consumed tokens:     65011712 | elapsed time per iteration (ms): 99372.0 | learning rate: 3.411E-05 | global batch size:   512 | lm loss: 7.551080E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.152 | TFLOPs: 125.49 |
+[2023-07-22 04:16:26,274] [INFO] [logging.py:96:log_dist] [Rank 0] step=63, skipped=0, lr=[3.467291306666667e-05, 3.467291306666667e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 04:16:26,308] [INFO] [timer.py:215:stop] epoch=0/micro_step=63/global_step=63, RunningAvgSamplesPerSec=588.1553332229129, CurrSamplesPerSec=591.0432792844565, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       63/  858306 | consumed samples:        32256 | consumed tokens:     66060288 | elapsed time per iteration (ms): 99080.4 | learning rate: 3.467E-05 | global batch size:   512 | lm loss: 7.492517E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.168 | TFLOPs: 125.86 |
+[2023-07-22 04:18:05,971] [INFO] [logging.py:96:log_dist] [Rank 0] step=64, skipped=0, lr=[3.52321536e-05, 3.52321536e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 04:18:05,998] [INFO] [timer.py:215:stop] epoch=0/micro_step=64/global_step=64, RunningAvgSamplesPerSec=588.357497761224, CurrSamplesPerSec=600.9579715198322, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       64/  858306 | consumed samples:        32768 | consumed tokens:     67108864 | elapsed time per iteration (ms): 99693.1 | learning rate: 3.523E-05 | global batch size:   512 | lm loss: 7.508588E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.136 | TFLOPs: 125.08 |
+[2023-07-22 04:19:45,630] [INFO] [logging.py:96:log_dist] [Rank 0] step=65, skipped=0, lr=[3.5791394133333334e-05, 3.5791394133333334e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 04:19:45,657] [INFO] [timer.py:215:stop] epoch=0/micro_step=65/global_step=65, RunningAvgSamplesPerSec=587.6126646722191, CurrSamplesPerSec=544.8480320370545, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       65/  858306 | consumed samples:        33280 | consumed tokens:     68157440 | elapsed time per iteration (ms): 99672.7 | learning rate: 3.579E-05 | global batch size:   512 | lm loss: 7.448945E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.137 | TFLOPs: 125.11 |
+[2023-07-22 04:21:24,905] [INFO] [logging.py:96:log_dist] [Rank 0] step=66, skipped=0, lr=[3.635063466666667e-05, 3.635063466666667e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 04:21:24,932] [INFO] [timer.py:215:stop] epoch=0/micro_step=66/global_step=66, RunningAvgSamplesPerSec=587.6854538631101, CurrSamplesPerSec=592.3078137510788, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       66/  858306 | consumed samples:        33792 | consumed tokens:     69206016 | elapsed time per iteration (ms): 99254.6 | learning rate: 3.635E-05 | global batch size:   512 | lm loss: 7.429156E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.158 | TFLOPs: 125.64 |
+[2023-07-22 04:23:04,288] [INFO] [logging.py:96:log_dist] [Rank 0] step=67, skipped=0, lr=[3.69098752e-05, 3.69098752e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 04:23:04,315] [INFO] [timer.py:215:stop] epoch=0/micro_step=67/global_step=67, RunningAvgSamplesPerSec=587.7891484902476, CurrSamplesPerSec=594.5025873171078, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       67/  858306 | consumed samples:        34304 | consumed tokens:     70254592 | elapsed time per iteration (ms): 99384.9 | learning rate: 3.691E-05 | global batch size:   512 | lm loss: 7.413905E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.152 | TFLOPs: 125.47 |
+[2023-07-22 04:24:43,863] [INFO] [logging.py:96:log_dist] [Rank 0] step=68, skipped=0, lr=[3.7469115733333334e-05, 3.7469115733333334e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 04:24:43,890] [INFO] [timer.py:215:stop] epoch=0/micro_step=68/global_step=68, RunningAvgSamplesPerSec=587.960025880809, CurrSamplesPerSec=599.2842713680305, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       68/  858306 | consumed samples:        34816 | consumed tokens:     71303168 | elapsed time per iteration (ms): 99573.8 | learning rate: 3.747E-05 | global batch size:   512 | lm loss: 7.418770E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.142 | TFLOPs: 125.23 |
+[2023-07-22 04:26:23,597] [INFO] [logging.py:96:log_dist] [Rank 0] step=69, skipped=0, lr=[3.802835626666667e-05, 3.802835626666667e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 04:26:23,624] [INFO] [timer.py:215:stop] epoch=0/micro_step=69/global_step=69, RunningAvgSamplesPerSec=588.0601431373789, CurrSamplesPerSec=594.7441245895265, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       69/  858306 | consumed samples:        35328 | consumed tokens:     72351744 | elapsed time per iteration (ms): 99734.6 | learning rate: 3.803E-05 | global batch size:   512 | lm loss: 7.399100E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.134 | TFLOPs: 125.03 |
+[2023-07-22 04:28:03,714] [INFO] [logging.py:96:log_dist] [Rank 0] step=70, skipped=0, lr=[3.8587596800000005e-05, 3.8587596800000005e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 04:28:03,740] [INFO] [timer.py:215:stop] epoch=0/micro_step=70/global_step=70, RunningAvgSamplesPerSec=588.2066779290795, CurrSamplesPerSec=598.1936914388987, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       70/  858306 | consumed samples:        35840 | consumed tokens:     73400320 | elapsed time per iteration (ms): 100115.6 | learning rate: 3.859E-05 | global batch size:   512 | lm loss: 7.361573E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.114 | TFLOPs: 124.56 |
+[2023-07-22 04:29:43,764] [INFO] [logging.py:96:log_dist] [Rank 0] step=71, skipped=0, lr=[3.9146837333333334e-05, 3.9146837333333334e-05], mom=[(0.9, 0.95), (0.9, 0.95)]
+[2023-07-22 04:29:43,791] [INFO] [timer.py:215:stop] epoch=0/micro_step=71/global_step=71, RunningAvgSamplesPerSec=588.3284619367079, CurrSamplesPerSec=596.7297703594078, MemAllocated=17.66GB, MaxMemAllocated=29.91GB
+ iteration       71/  858306 | consumed samples:        36352 | consumed tokens:     74448896 | elapsed time per iteration (ms): 100050.2 | learning rate: 3.915E-05 | global batch size:   512 | lm loss: 7.356718E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.117 | TFLOPs: 124.64 |
+slurmstepd: error: *** JOB 4463449 ON n2dgx01 CANCELLED AT 2023-07-22T04:30:30 DUE TO TIME LIMIT ***

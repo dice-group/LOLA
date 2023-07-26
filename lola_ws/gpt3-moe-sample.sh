@@ -1,11 +1,11 @@
 #!/bin/bash
 #SBATCH -J "GPT3 - MoE Sample"
-#SBATCH -N 1
+#SBATCH -N 2
 #SBATCH --ntasks-per-node=1
-#SBATCH --gres=gpu:a100:4
-#SBATCH --partition=dgx
-#SBATCH --qos=devel
-#SBATCH -t 02:00:00
+#SBATCH --gres=gpu:a100:2
+###SBATCH --partition=dgx
+###SBATCH --qos=devel
+#SBATCH -t 05:00:00
 
 #load modules
 module load lib/NCCL/2.12.12-GCCcore-11.3.0-CUDA-11.7.0
@@ -48,7 +48,7 @@ SEQ_LEN=2048
 #HIDDEN_SIZE=1024
 #NUM_ATTN_HEADS=16
 # Use Micro batch size instead of global batch size, the latter is set to $((NNODES*GPUS_PER_NODE*MICRO_BATCH_SIZE))
-# MICRO_BATCH_SIZE=1
+#MICRO_BATCH_SIZE=1
 ### GLOBAL_BATCH_SIZE=256
 # LR=3.0e-4
 # MIN_LR=3.0e-5
@@ -70,7 +70,7 @@ NUM_LAYERS=24
 HIDDEN_SIZE=2048
 NUM_ATTN_HEADS=16
 # Use Micro batch size instead of global batch size, the latter is set to $((NNODES*GPUS_PER_NODE*MICRO_BATCH_SIZE))
-MICRO_BATCH_SIZE=128
+MICRO_BATCH_SIZE=1
 ### GLOBAL_BATCH_SIZE=512
 # LR=2.0e-4
 # MIN_LR=2.0e-5
@@ -209,8 +209,8 @@ CL_TOKENS=$((${CL_TOKENS} * 1000000000))
 CL_STEP=$(( ${CL_TOKENS} / (${GLOBAL_BATCH_SIZE} * ${CL_AVG_SEQLEN}) ))
 ###############################################################################
 ### Misc configs
-LOG_INTERVAL=1
-EVAL_ITERS=10
+LOG_INTERVAL=5
+EVAL_ITERS=50
 EVAL_INTERVAL=100
 SAVE_INTERVAL=50
 

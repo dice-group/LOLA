@@ -1,3 +1,2 @@
 ds_config_gpt_gpt-*.json
 output/
-slurm-*.out
