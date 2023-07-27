@@ -1,11 +1,11 @@
 #!/bin/bash
 #SBATCH -J "GPT3 - MoE Sample"
-#SBATCH -N 2
+#SBATCH -N 4
 #SBATCH --ntasks-per-node=1
-#SBATCH --gres=gpu:a100:2
+#SBATCH --gres=gpu:a100:4
 ###SBATCH --partition=dgx
 ###SBATCH --qos=devel
-#SBATCH -t 05:00:00
+#SBATCH -t 10:00:00
 
 #load modules
 module load lib/NCCL/2.12.12-GCCcore-11.3.0-CUDA-11.7.0
@@ -65,12 +65,12 @@ SEQ_LEN=2048
 # MIN_LR=2.5e-5
 
 ## GPT-3 XL 1.3B
-MODEL_SIZE=1.3
-NUM_LAYERS=24
-HIDDEN_SIZE=2048
-NUM_ATTN_HEADS=16
+#MODEL_SIZE=1.3
+#NUM_LAYERS=24
+#HIDDEN_SIZE=2048
+#NUM_ATTN_HEADS=16
 # Use Micro batch size instead of global batch size, the latter is set to $((NNODES*GPUS_PER_NODE*MICRO_BATCH_SIZE))
-MICRO_BATCH_SIZE=1
+#MICRO_BATCH_SIZE=1
 ### GLOBAL_BATCH_SIZE=512
 # LR=2.0e-4
 # MIN_LR=2.0e-5
@@ -87,23 +87,23 @@ MICRO_BATCH_SIZE=1
 # MIN_LR=1.6e-5
 
 ## GPT-3 6.7B
-#MODEL_SIZE=6.7
-#NUM_LAYERS=32
-#HIDDEN_SIZE=4096
-#NUM_ATTN_HEADS=32
+MODEL_SIZE=6.7
+NUM_LAYERS=32
+HIDDEN_SIZE=4096
+NUM_ATTN_HEADS=32
 # Use Micro batch size instead of global batch size, the latter is set to $((NNODES*GPUS_PER_NODE*MICRO_BATCH_SIZE))
-# MICRO_BATCH_SIZE=1
+MICRO_BATCH_SIZE=8
 ### GLOBAL_BATCH_SIZE=1024
 # LR=1.2e-4
 # MIN_LR=1.2e-5
 
 ## GPT-3 13B
-# MODEL_SIZE=13
-# NUM_LAYERS=40
-# HIDDEN_SIZE=5120
-# NUM_ATTN_HEADS=40
+#MODEL_SIZE=13
+#NUM_LAYERS=40
+#HIDDEN_SIZE=5120
+#NUM_ATTN_HEADS=40
 # Use Micro batch size instead of global batch size, the latter is set to $((NNODES*GPUS_PER_NODE*MICRO_BATCH_SIZE))
-# MICRO_BATCH_SIZE=1
+#MICRO_BATCH_SIZE=1
 ### GLOBAL_BATCH_SIZE=1024
 # LR=1.0e-4
 # MIN_LR=1.0e-5
@@ -212,13 +212,13 @@ CL_STEP=$(( ${CL_TOKENS} / (${GLOBAL_BATCH_SIZE} * ${CL_AVG_SEQLEN}) ))
 LOG_INTERVAL=5
 EVAL_ITERS=50
 EVAL_INTERVAL=100
-SAVE_INTERVAL=50
+SAVE_INTERVAL=100
 
 ## Standard deviation for weight initialization
 ## We used 0.014 for 350M/1.3B dense/MoE models, and used 0.01 for 6.7B
 ## dense model. Usually larger model needs lower std.
-INIT_STD=0.014
-# INIT_STD=0.01
+#INIT_STD=0.014
+INIT_STD=0.01
 
 ## Activation checkpointing saves GPU memory, but reduces training speed
 ACTIVATION_CHECKPOINT="true"
@@ -317,7 +317,8 @@ megatron_options="${megatron_options} \
         --disable-moe-token-dropping"
 fi
 
-template_json="ds_config_gpt_TEMPLATE.json"
+#template_json="ds_config_gpt_TEMPLATE.json"
+template_json="ds_config_gpt_Zero2_TEMPLATE.json"
 config_json="ds_config_gpt_${NAME}.json"
 sed "s/CONFIG_BATCH_SIZE/${GLOBAL_BATCH_SIZE}/" ${template_json} \
     | sed "s/CONFIG_MBSIZE/${MICRO_BATCH_SIZE}/" \
