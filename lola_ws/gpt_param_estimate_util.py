@@ -17,16 +17,14 @@ def calculate_gpt2_parameter_count(v, h, s, n, k, is_moe, num_experts):
     """
     Calculate the parameter count for the GPT2 implementation.
 
-    Parameters:
-        v (int): Vocabulary size.
-        h (int): Hidden size (dimension).
-        s (int): Maximum sequence length.
-        n (int): Number of transformer blocks (layers).
-        k (int): Number of attention heads.
-        is_moe (bool): Does the model has mixture of experts.
-        num_experts (int): Number of experts.
-
-    Returns: total_params (int), total_expert_params (int): Total number of dense parameters and the expert
+    :param v: Vocabulary size.
+    :param h: Hidden size (dimension).
+    :param s: Maximum sequence length.
+    :param n: Number of transformer blocks (layers).
+    :param k: Number of attention heads.
+    :param is_moe: If mixture of experts is enabled.
+    :param num_experts: Number of experts.
+    :return: total_params (int), total_expert_params (int): Total number of dense parameters and the expert
     parameters in the GPT2 model.
     """
 
