@@ -7,7 +7,7 @@ import subprocess
 import json
 
 # Output file
-OUTPUT_FILE = 'scaling_exp_det.json'
+OUTPUT_FILE = 'scaling_exp_det_4.json'
 # Script to execute
 SCALE_SCRIPT = 'gpt3-moe-scaling-train.sh'
 """
@@ -15,24 +15,25 @@ Model configs to test, key represents the model size in billion(s) and the corre
 the model shape  in the following order: [NUM_LAYERS, HIDDEN_SIZE, NUM_ATTN_HEADS]
 """
 MODEL_CONFIGS = {
-    '0.35': [12, 768, 12],
-    '0.76': [24, 1536, 16],
-    '1.3': [24, 2048, 16],
+#    '0.35': [12, 768, 12],
+#    '0.76': [24, 1536, 16],
+#    '1.3': [24, 2048, 16],
     '2.7': [32, 2560, 32],
     '6.7': [32, 4096, 32],
     '13': [40, 5120, 40]
 }
 
 BATCH_SIZE_VALUES = [1, 2, 4, 8, 16, 32]
-
+#BATCH_SIZE_VALUES = [1, 2, 4]
+#BATCH_SIZE_VALUES = [8, 16, 32]
 """
 Hardware configs the list represents the following values in order: [NUM_NODES, NUM_GPU_PER_NODE, TIME]
 """
 HARDWARE_CONFIGS = [
-    [1, 1, '03:00:00'],
-    [1, 4, '03:00:00'],
-    [2, 4, '03:00:00'],
-    [4, 4, '03:00:00']
+    [1, 1, '01:00:00'],
+    [1, 4, '01:00:00'],
+    [2, 4, '01:00:00'],
+    [4, 4, '01:00:00']
 ]
 
 EXP_NAME_TEMPLATE = 'GPT_%sB_MoE128_%dBATCH_%dGPU_%dNode'
@@ -51,10 +52,13 @@ def submit_slurm_job(sbatch_args, script_args):
         process_list = ['sbatch']
         process_list.extend(sbatch_args)
         process_list.extend(script_args)
-        print('Executing the following: %s' % ' '.join(map(str, process_list)))
+
+        # convert all to string
+        process_list = list(map(str, process_list))
+        print('Executing the following: %s' % ' '.join(process_list))
         result = subprocess.run(process_list, capture_output=True, text=True, check=True)
         # Get the job ID from the output
-        job_id = int(result.stdout.strip().split()[-1])
+        job_id = str(result.stdout.strip().split()[-1])
         print('Job ID: %s\n\n' % job_id)
         return job_id
     except subprocess.CalledProcessError as e:
@@ -95,14 +99,14 @@ if __name__ == "__main__":
             for batch_size in BATCH_SIZE_VALUES:
                 # Compose arguments
                 scr_args = compose_script_args(model_config_name, hw_config, batch_size)
-                ex_name = scr_args[0]
+                ex_name = scr_args[1]
                 sb_args = compose_sbatch_args(hw_config, ex_name)
                 # Execute the experiment
                 print('Submitting the the batch job for %s' % ex_name)
                 res_dict[ex_name] = submit_slurm_job(sb_args, scr_args)
 
     # save the results
-    with open('', 'w') as op_file:
-        json.dumps(res_dict, indent=4)
+    with open(OUTPUT_FILE, 'w') as op_file:
+        op_file.write(json.dumps(res_dict, indent=4))
 
     print('Finished submitting experiments!')

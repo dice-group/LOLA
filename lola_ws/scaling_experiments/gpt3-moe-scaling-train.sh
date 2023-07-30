@@ -237,8 +237,8 @@ megatron_options="${megatron_options} \
 fi
 
 #template_json="ds_config_gpt_TEMPLATE.json"
-template_json="ds_config_gpt_Zero2_TEMPLATE.json"
-config_json="ds_config_gpt_${NAME}.json"
+template_json="../ds_config_gpt_Zero2_TEMPLATE.json"
+config_json="${OUTPUT_BASEPATH}/ds_config_gpt_${NAME}.json"
 sed "s/CONFIG_BATCH_SIZE/${GLOBAL_BATCH_SIZE}/" ${template_json} \
     | sed "s/CONFIG_MBSIZE/${MICRO_BATCH_SIZE}/" \
     | sed "s/LOG_INTERVAL/${LOG_INTERVAL}/" \
@@ -272,7 +272,7 @@ fi
 # do not remove or the training will hang and nodes will be lost w/o this workaround
 export CUDA_LAUNCH_BLOCKING=1
 # hide duplicated errors using this hack - will be properly fixed in pt-1.12
-export TORCHELASTIC_ERROR_FILE='torch-elastic-error.json'
+export TORCHELASTIC_ERROR_FILE='${OUTPUT_BASEPATH}/torch-elastic-error.json'
 export NCCL_ASYNC_ERROR_HANDLING=1
 
 # launcher to python -u -m torch.distributed.run
@@ -287,7 +287,7 @@ export LAUNCHER="python -u -m torch.distributed.run \
     "
 export CMD="${LIB_DIR}/pretrain_gpt.py ${megatron_options} ${data_options} ${deepspeed_options}"
 # Printing estimated model size
-python ../gpt_param_estimate_util.py --vocab_size 50257 --hidden_size HIDDEN_SIZE --seq_length SEQ_LEN --num_heads NUM_ATTN_HEADS --num_layers NUM_LAYERS --is_moe --num_experts EP_SIZE 2>&1
+python ../gpt_param_estimate_util.py --vocab_size 50257 --hidden_size $HIDDEN_SIZE --seq_length $SEQ_LEN --num_heads $NUM_ATTN_HEADS --num_layers $NUM_LAYERS --is_moe --num_experts $EP_SIZE 2>&1
 # Command for distributed training setup
 # run_cmd="deepspeed ${LIB_DIR}/pretrain_gpt.py ${megatron_options} ${data_options} ${deepspeed_options} 2>&1 | tee -a ${OUTPUT_BASEPATH}/log/${NAME}_${host}_${current_time}.log"
 echo LAUNCHER: $LAUNCHER
