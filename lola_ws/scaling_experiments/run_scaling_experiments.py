@@ -80,7 +80,7 @@ def compose_script_args(mdl_cfg_key, hw_cfg, b_sz):
 
     exp_name = EXP_NAME_TEMPLATE % (mdl_cfg_key, b_sz, (hw_num_nodes * hw_num_gpu_per_nodes), hw_num_nodes)
 
-    return [exp_name, mdl_cfg_key, mdl_num_layers, mdl_hidden_size, mdl_num_attn_heads, b_sz]
+    return [SCALE_SCRIPT, exp_name, mdl_cfg_key, mdl_num_layers, mdl_hidden_size, mdl_num_attn_heads, b_sz]
 
 
 # sbatch --job-name="${EXP_NAME}" --nodes=$NUM_NODES --ntasks-per-node=1 --gres=gpu:a100:$NUM_GPU_PER_NODE --time=$EXP_RUNTIME  gpt3-moe-scaling-train.sh
@@ -88,13 +88,13 @@ def compose_script_args(mdl_cfg_key, hw_cfg, b_sz):
 if __name__ == "__main__":
     res_dict = dict()
     # for each model_config
-    for model_config in MODEL_CONFIGS:
+    for model_config_name in MODEL_CONFIGS:
         # for each hardware config
         for hw_config in HARDWARE_CONFIGS:
             # for each batch size
             for batch_size in BATCH_SIZE_VALUES:
                 # Compose arguments
-                scr_args = compose_script_args(model_config, hw_config, batch_size)
+                scr_args = compose_script_args(model_config_name, hw_config, batch_size)
                 ex_name = scr_args[0]
                 sb_args = compose_sbatch_args(hw_config, ex_name)
                 # Execute the experiment
