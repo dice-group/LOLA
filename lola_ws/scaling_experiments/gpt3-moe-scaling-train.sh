@@ -8,7 +8,7 @@ HIDDEN_SIZE=$4
 NUM_ATTN_HEADS=$5
 
 MICRO_BATCH_SIZE=$6
-
+MASTER_PORT=$7
 #load modules
 module load lib/NCCL/2.12.12-GCCcore-11.3.0-CUDA-11.7.0
 module load ai/PyTorch/1.12.0-foss-2022a-CUDA-11.7.0
@@ -22,7 +22,7 @@ OUTPUT_DIR=`pwd`
 # Extract SLURM environment variables
 # so processes know who to talk to
 MASTER_ADDR=$(scontrol show hostnames $SLURM_JOB_NODELIST | head -n 1)
-MASTER_PORT=6005
+# MASTER_PORT=6005
 
 GPUS_PER_NODE=$SLURM_GPUS_ON_NODE
 NNODES=$SLURM_NNODES

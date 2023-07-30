@@ -7,33 +7,35 @@ import subprocess
 import json
 
 # Output file
-OUTPUT_FILE = 'scaling_exp_det_4.json'
+OUTPUT_FILE = 'scaling_exp_det.json'
 # Script to execute
 SCALE_SCRIPT = 'gpt3-moe-scaling-train.sh'
+
+START_PORT_VAL = 6005
 """
 Model configs to test, key represents the model size in billion(s) and the corresponding list has the values for 
 the model shape  in the following order: [NUM_LAYERS, HIDDEN_SIZE, NUM_ATTN_HEADS]
 """
 MODEL_CONFIGS = {
-#    '0.35': [12, 768, 12],
-#    '0.76': [24, 1536, 16],
-#    '1.3': [24, 2048, 16],
+    '0.35': [12, 768, 12],
+    '0.76': [24, 1536, 16],
+    '1.3': [24, 2048, 16],
     '2.7': [32, 2560, 32],
     '6.7': [32, 4096, 32],
     '13': [40, 5120, 40]
 }
 
 BATCH_SIZE_VALUES = [1, 2, 4, 8, 16, 32]
-#BATCH_SIZE_VALUES = [1, 2, 4]
-#BATCH_SIZE_VALUES = [8, 16, 32]
+# BATCH_SIZE_VALUES = [1, 2, 4]
+# BATCH_SIZE_VALUES = [8, 16, 32]
 """
 Hardware configs the list represents the following values in order: [NUM_NODES, NUM_GPU_PER_NODE, TIME]
 """
 HARDWARE_CONFIGS = [
-    [1, 1, '01:00:00'],
-    [1, 4, '01:00:00'],
-    [2, 4, '01:00:00'],
-    [4, 4, '01:00:00']
+    [1, 1, '00:10:00'],
+    [1, 4, '00:15:00'],
+    [2, 4, '00:30:00'],
+    [4, 4, '00:30:00']
 ]
 
 EXP_NAME_TEMPLATE = 'GPT_%sB_MoE128_%dBATCH_%dGPU_%dNode'
@@ -72,6 +74,9 @@ def compose_sbatch_args(hw_cfg, exp_name):
             '--gres=gpu:a100:%d' % hw_cfg[1], '--time=%s' % hw_cfg[2]]
 
 
+port_inc_val = 0
+
+
 def compose_script_args(mdl_cfg_key, hw_cfg, b_sz):
     # unpack the params
     mdl_cfg = MODEL_CONFIGS[mdl_cfg_key]
@@ -83,8 +88,10 @@ def compose_script_args(mdl_cfg_key, hw_cfg, b_sz):
     hw_num_gpu_per_nodes = hw_cfg[1]
 
     exp_name = EXP_NAME_TEMPLATE % (mdl_cfg_key, b_sz, (hw_num_nodes * hw_num_gpu_per_nodes), hw_num_nodes)
-
-    return [SCALE_SCRIPT, exp_name, mdl_cfg_key, mdl_num_layers, mdl_hidden_size, mdl_num_attn_heads, b_sz]
+    res_arr = [SCALE_SCRIPT, exp_name, mdl_cfg_key, mdl_num_layers, mdl_hidden_size, mdl_num_attn_heads, b_sz,
+               int(START_PORT_VAL + port_inc_val)]
+    port_inc_val += 1
+    return res_arr
 
 
 # sbatch --job-name="${EXP_NAME}" --nodes=$NUM_NODES --ntasks-per-node=1 --gres=gpu:a100:$NUM_GPU_PER_NODE --time=$EXP_RUNTIME  gpt3-moe-scaling-train.sh
