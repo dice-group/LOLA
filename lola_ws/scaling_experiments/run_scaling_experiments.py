@@ -78,6 +78,7 @@ port_inc_val = 0
 
 
 def compose_script_args(mdl_cfg_key, hw_cfg, b_sz):
+    global port_inc_val
     # unpack the params
     mdl_cfg = MODEL_CONFIGS[mdl_cfg_key]
     mdl_num_layers = mdl_cfg[0]
