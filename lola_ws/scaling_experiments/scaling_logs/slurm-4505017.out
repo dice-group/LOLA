@@ -1,0 +1,1945 @@
+cpu-bind=MASK - n2gpu1211, task  0  0 [32447]: mask |--------|--------||--------|--------||--------|--------||--------|--------||||B-------|--------||--------|--------||--------|--------||--------|--------|  set
+Total estimated parameters in the Dense GPT-2 model: 760300032 (0.76B)
+Total Estimated Parameters in the Sparse(MoE) GPT-2 model: 29763125760 (29.76B)
+LAUNCHER: python -u -m torch.distributed.run --nproc_per_node 4 --nnodes 2 --rdzv_id=22499 --rdzv_endpoint n2gpu1211:6044 --rdzv_backend c10d --max_restarts 0 --tee 3
+CMD: /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/pretrain_gpt.py --override-opt_param-scheduler --adam-beta1 0.9 --adam-beta2 0.95 --tensor-model-parallel-size 1 --moe-expert-parallel-size 8 --num-experts 128 --moe-loss-coeff 0.01 --moe-train-capacity-factor 1.0 --moe-eval-capacity-factor 1.0 --moe-min-capacity 4 --init-method-std 0.01 --lr-decay-tokens 300000000000 --lr-warmup-tokens 375000000 --micro-batch-size 8 --exit-duration-in-mins 30000000 --global-batch-size 64 --num-layers 24 --hidden-size 1536 --num-attention-heads 16 --seq-length 2048 --max-position-embeddings 2048 --train-tokens 300000000000 --train-iters 6866455 --lr 2.0e-4 --min-lr 2e-06 --lr-decay-style cosine --split 98,2,0 --log-interval 5 --eval-interval 100 --eval-iters 50 --save-interval 1000000 --weight-decay 0.1 --clip-grad 1.0 --hysteresis 2 --num-workers 0 --fp16 --load /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/lola_ws/scaling_experiments/output/GPT_0.76B_MoE128_8BATCH_8GPU_2Node/checkpoint/gpt-0.76B-lr-2.0e-4-minlr-2e-06-bs-64-gpus-8-mp-1-pp-1-ep-128-mlc-0.01-cap-1.0-drop-true --save /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/lola_ws/scaling_experiments/output/GPT_0.76B_MoE128_8BATCH_8GPU_2Node/checkpoint/gpt-0.76B-lr-2.0e-4-minlr-2e-06-bs-64-gpus-8-mp-1-pp-1-ep-128-mlc-0.01-cap-1.0-drop-true --tensorboard-queue-size 1 --log-timers-to-tensorboard --log-batch-size-to-tensorboard --log-validation-ppl-to-tensorboard --tensorboard-dir /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/lola_ws/scaling_experiments/output/GPT_0.76B_MoE128_8BATCH_8GPU_2Node/tensorboard/gpt-0.76B-lr-2.0e-4-minlr-2e-06-bs-64-gpus-8-mp-1-pp-1-ep-128-mlc-0.01-cap-1.0-drop-true_n2gpu1211_2023.07.31-02.22.51 --checkpoint-activations --create-moe-param-group --vocab-file /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/data/gpt2-vocab.json --merge-file /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/data/gpt2-merges.txt --data-path /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/data/meg-gpt2-oscar-en-10k_text_document --data-impl mmap --deepspeed --deepspeed_config /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/lola_ws/scaling_experiments/output/GPT_0.76B_MoE128_8BATCH_8GPU_2Node/ds_config_gpt_gpt-0.76B-lr-2.0e-4-minlr-2e-06-bs-64-gpus-8-mp-1-pp-1-ep-128-mlc-0.01-cap-1.0-drop-true.json --pipeline-model-parallel-size 1 --no-pipeline-parallel --deepspeed-activation-checkpointing
+cpu-bind=MASK - n2gpu1215, task  1  0 [386378]: mask |--------|--------||--------|--------||--------|--------||--------|--------||||B-------|--------||--------|--------||--------|--------||--------|--------|  set
+cpu-bind=MASK - n2gpu1211, task  0  0 [32569]: mask |--------|--------||--------|--------||--------|--------||--------|--------||||B-------|--------||--------|--------||--------|--------||--------|--------|  set
+WARNING:__main__:
+*****************************************
+Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+*****************************************
+WARNING:__main__:
+*****************************************
+Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+*****************************************
+[default1]:[2023-07-31 02:22:57,635] [INFO] [real_accelerator.py:133:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[default2]:[2023-07-31 02:22:57,634] [INFO] [real_accelerator.py:133:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[default0]:[2023-07-31 02:22:57,635] [INFO] [real_accelerator.py:133:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[default2]:[2023-07-31 02:22:57,634] [INFO] [real_accelerator.py:133:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[default3]:[2023-07-31 02:22:57,634] [INFO] [real_accelerator.py:133:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[default3]:[2023-07-31 02:22:57,633] [INFO] [real_accelerator.py:133:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[default0]:[2023-07-31 02:22:57,635] [INFO] [real_accelerator.py:133:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[default1]:[2023-07-31 02:22:57,634] [INFO] [real_accelerator.py:133:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[default2]:--------------------------------------------------
+[default2]:DeepSpeed C++/CUDA extension op report
+[default2]:--------------------------------------------------
+[default2]:NOTE: Ops not installed will be just-in-time (JIT) compiled at
+[default2]:      runtime if needed. Op compatibility means that your system
+[default2]:      meet the required dependencies to JIT install the op.
+[default2]:--------------------------------------------------
+[default2]:JIT compiled ops requires ninja
+[default0]:--------------------------------------------------
+[default0]:DeepSpeed C++/CUDA extension op report
+[default0]:--------------------------------------------------
+[default0]:NOTE: Ops not installed will be just-in-time (JIT) compiled at
+[default0]:      runtime if needed. Op compatibility means that your system
+[default0]:      meet the required dependencies to JIT install the op.
+[default0]:--------------------------------------------------
+[default0]:JIT compiled ops requires ninja
+[default3]:--------------------------------------------------
+[default3]:DeepSpeed C++/CUDA extension op report
+[default3]:--------------------------------------------------
+[default3]:NOTE: Ops not installed will be just-in-time (JIT) compiled at
+[default3]:      runtime if needed. Op compatibility means that your system
+[default3]:      meet the required dependencies to JIT install the op.
+[default3]:--------------------------------------------------
+[default3]:JIT compiled ops requires ninja
+[default0]:--------------------------------------------------
+[default0]:DeepSpeed C++/CUDA extension op report
+[default0]:--------------------------------------------------
+[default0]:NOTE: Ops not installed will be just-in-time (JIT) compiled at
+[default0]:      runtime if needed. Op compatibility means that your system
+[default0]:      meet the required dependencies to JIT install the op.
+[default0]:--------------------------------------------------
+[default0]:JIT compiled ops requires ninja
+[default0]:ninja .................. [92m[OKAY][0m
+[default0]:--------------------------------------------------
+[default0]:op name ................ installed .. compatible
+[default0]:--------------------------------------------------
+[default2]:--------------------------------------------------
+[default2]:DeepSpeed C++/CUDA extension op report
+[default2]:--------------------------------------------------
+[default2]:NOTE: Ops not installed will be just-in-time (JIT) compiled at
+[default2]:      runtime if needed. Op compatibility means that your system
+[default2]:      meet the required dependencies to JIT install the op.
+[default2]:--------------------------------------------------
+[default2]:JIT compiled ops requires ninja
+[default2]:ninja .................. [92m[OKAY][0m
+[default2]:--------------------------------------------------
+[default2]:op name ................ installed .. compatible
+[default2]:--------------------------------------------------
+[default3]:--------------------------------------------------
+[default3]:DeepSpeed C++/CUDA extension op report
+[default3]:--------------------------------------------------
+[default3]:NOTE: Ops not installed will be just-in-time (JIT) compiled at
+[default3]:      runtime if needed. Op compatibility means that your system
+[default3]:      meet the required dependencies to JIT install the op.
+[default3]:--------------------------------------------------
+[default3]:JIT compiled ops requires ninja
+[default3]:ninja .................. [92m[OKAY][0m
+[default3]:--------------------------------------------------
+[default3]:op name ................ installed .. compatible
+[default3]:--------------------------------------------------
+[default1]:--------------------------------------------------
+[default1]:DeepSpeed C++/CUDA extension op report
+[default1]:--------------------------------------------------
+[default1]:NOTE: Ops not installed will be just-in-time (JIT) compiled at
+[default1]:      runtime if needed. Op compatibility means that your system
+[default1]:      meet the required dependencies to JIT install the op.
+[default1]:--------------------------------------------------
+[default1]:JIT compiled ops requires ninja
+[default1]:ninja .................. [92m[OKAY][0m
+[default1]:--------------------------------------------------
+[default1]:op name ................ installed .. compatible
+[default1]:--------------------------------------------------
+[default1]:--------------------------------------------------
+[default1]:DeepSpeed C++/CUDA extension op report
+[default1]:--------------------------------------------------
+[default1]:NOTE: Ops not installed will be just-in-time (JIT) compiled at
+[default1]:      runtime if needed. Op compatibility means that your system
+[default1]:      meet the required dependencies to JIT install the op.
+[default1]:--------------------------------------------------
+[default1]:JIT compiled ops requires ninja
+[default1]:ninja .................. [92m[OKAY][0m
+[default1]:--------------------------------------------------
+[default1]:op name ................ installed .. compatible
+[default1]:--------------------------------------------------
+[default2]:ninja .................. [92m[OKAY][0m
+[default2]:--------------------------------------------------
+[default2]:op name ................ installed .. compatible
+[default2]:--------------------------------------------------
+[default0]:ninja .................. [92m[OKAY][0m
+[default0]:--------------------------------------------------
+[default0]:op name ................ installed .. compatible
+[default0]:--------------------------------------------------
+[default3]:ninja .................. [92m[OKAY][0m
+[default3]:--------------------------------------------------
+[default3]:op name ................ installed .. compatible
+[default3]:--------------------------------------------------
+[default0]:[93m [WARNING] [0m async_io requires the dev libaio .so object and headers but these were not found.
+[default2]:[93m [WARNING] [0m async_io requires the dev libaio .so object and headers but these were not found.
+[default1]:[93m [WARNING] [0m async_io requires the dev libaio .so object and headers but these were not found.
+[default1]:[93m [WARNING] [0m async_io: please install the libaio-devel package with yum
+[default1]:[93m [WARNING] [0m If libaio is already installed (perhaps from source), try setting the CFLAGS and LDFLAGS environment variables to where it can be found.
+[default1]:async_io ............... [93m[NO][0m ....... [93m[NO][0m
+[default1]:cpu_adagrad ............ [93m[NO][0m ....... [92m[OKAY][0m
+[default1]:cpu_adam ............... [93m[NO][0m ....... [92m[OKAY][0m
+[default1]:fused_adam ............. [93m[NO][0m ....... [92m[OKAY][0m
+[default1]:fused_lamb ............. [93m[NO][0m ....... [92m[OKAY][0m
+[default1]:quantizer .............. [93m[NO][0m ....... [92m[OKAY][0m
+[default1]:random_ltd ............. [93m[NO][0m ....... [92m[OKAY][0m
+[default1]:[93m [WARNING] [0m please install triton==1.0.0 if you want to use sparse attention
+[default1]:[93m [WARNING] [0m async_io requires the dev libaio .so object and headers but these were not found.
+[default1]:sparse_attn ............ [93m[NO][0m ....... [93m[NO][0m
+[default2]:[93m [WARNING] [0m async_io requires the dev libaio .so object and headers but these were not found.
+[default2]:[93m [WARNING] [0m async_io: please install the libaio-devel package with yum
+[default2]:[93m [WARNING] [0m If libaio is already installed (perhaps from source), try setting the CFLAGS and LDFLAGS environment variables to where it can be found.
+[default2]:async_io ............... [93m[NO][0m ....... [93m[NO][0m
+[default2]:cpu_adagrad ............ [93m[NO][0m ....... [92m[OKAY][0m
+[default2]:cpu_adam ............... [93m[NO][0m ....... [92m[OKAY][0m
+[default2]:fused_adam ............. [93m[NO][0m ....... [92m[OKAY][0m
+[default2]:fused_lamb ............. [93m[NO][0m ....... [92m[OKAY][0m
+[default2]:quantizer .............. [93m[NO][0m ....... [92m[OKAY][0m
+[default2]:random_ltd ............. [93m[NO][0m ....... [92m[OKAY][0m
+[default2]:[93m [WARNING] [0m please install triton==1.0.0 if you want to use sparse attention
+[default2]:sparse_attn ............ [93m[NO][0m ....... [93m[NO][0m
+[default2]:spatial_inference ...... [93m[NO][0m ....... [92m[OKAY][0m
+[default2]:transformer ............ [93m[NO][0m ....... [92m[OKAY][0m
+[default2]:stochastic_transformer . [93m[NO][0m ....... [92m[OKAY][0m
+[default2]:transformer_inference .. [93m[NO][0m ....... [92m[OKAY][0m
+[default2]:--------------------------------------------------
+[default0]:[93m [WARNING] [0m async_io requires the dev libaio .so object and headers but these were not found.
+[default3]:[93m [WARNING] [0m async_io requires the dev libaio .so object and headers but these were not found.
+[default3]:[93m [WARNING] [0m async_io: please install the libaio-devel package with yum
+[default3]:[93m [WARNING] [0m If libaio is already installed (perhaps from source), try setting the CFLAGS and LDFLAGS environment variables to where it can be found.
+[default3]:async_io ............... [93m[NO][0m ....... [93m[NO][0m
+[default3]:cpu_adagrad ............ [93m[NO][0m ....... [92m[OKAY][0m
+[default3]:cpu_adam ............... [93m[NO][0m ....... [92m[OKAY][0m
+[default3]:fused_adam ............. [93m[NO][0m ....... [92m[OKAY][0m
+[default3]:fused_lamb ............. [93m[NO][0m ....... [92m[OKAY][0m
+[default3]:quantizer .............. [93m[NO][0m ....... [92m[OKAY][0m
+[default3]:random_ltd ............. [93m[NO][0m ....... [92m[OKAY][0m
+[default3]:[93m [WARNING] [0m please install triton==1.0.0 if you want to use sparse attention
+[default3]:sparse_attn ............ [93m[NO][0m ....... [93m[NO][0m
+[default3]:spatial_inference ...... [93m[NO][0m ....... [92m[OKAY][0m
+[default3]:transformer ............ [93m[NO][0m ....... [92m[OKAY][0m
+[default3]:stochastic_transformer . [93m[NO][0m ....... [92m[OKAY][0m
+[default3]:transformer_inference .. [93m[NO][0m ....... [92m[OKAY][0m
+[default3]:--------------------------------------------------
+[default3]:DeepSpeed general environment info:
+[default3]:torch install path ............... ['/opt/software/pc2/EB-SW/software/PyTorch/1.12.0-foss-2022a-CUDA-11.7.0/lib/python3.10/site-packages/torch']
+[default3]:torch version .................... 1.12.0
+[default3]:deepspeed install path ........... ['/scratch/hpc-prf-lola/lib_repo/custom-venvs/lola1/lib/python3.10/site-packages/deepspeed']
+[default3]:deepspeed info ................... 0.10.0, unknown, unknown
+[default3]:torch cuda version ............... 11.7
+[default3]:torch hip version ................ None
+[default3]:nvcc version ..................... 11.7
+[default3]:deepspeed wheel compiled w. ...... torch 1.12, cuda 11.7
+[default0]:[93m [WARNING] [0m async_io: please install the libaio-devel package with yum
+[default0]:[93m [WARNING] [0m If libaio is already installed (perhaps from source), try setting the CFLAGS and LDFLAGS environment variables to where it can be found.
+[default0]:async_io ............... [93m[NO][0m ....... [93m[NO][0m
+[default0]:cpu_adagrad ............ [93m[NO][0m ....... [92m[OKAY][0m
+[default0]:cpu_adam ............... [93m[NO][0m ....... [92m[OKAY][0m
+[default0]:fused_adam ............. [93m[NO][0m ....... [92m[OKAY][0m
+[default0]:fused_lamb ............. [93m[NO][0m ....... [92m[OKAY][0m
+[default0]:quantizer .............. [93m[NO][0m ....... [92m[OKAY][0m
+[default0]:random_ltd ............. [93m[NO][0m ....... [92m[OKAY][0m
+[default0]:[93m [WARNING] [0m please install triton==1.0.0 if you want to use sparse attention
+[default0]:sparse_attn ............ [93m[NO][0m ....... [93m[NO][0m
+[default0]:spatial_inference ...... [93m[NO][0m ....... [92m[OKAY][0m
+[default0]:transformer ............ [93m[NO][0m ....... [92m[OKAY][0m
+[default0]:stochastic_transformer . [93m[NO][0m ....... [92m[OKAY][0m
+[default0]:transformer_inference .. [93m[NO][0m ....... [92m[OKAY][0m
+[default0]:--------------------------------------------------
+[default0]:DeepSpeed general environment info:
+[default0]:torch install path ............... ['/opt/software/pc2/EB-SW/software/PyTorch/1.12.0-foss-2022a-CUDA-11.7.0/lib/python3.10/site-packages/torch']
+[default0]:torch version .................... 1.12.0
+[default0]:deepspeed install path ........... ['/scratch/hpc-prf-lola/lib_repo/custom-venvs/lola1/lib/python3.10/site-packages/deepspeed']
+[default0]:deepspeed info ................... 0.10.0, unknown, unknown
+[default0]:torch cuda version ............... 11.7
+[default0]:torch hip version ................ None
+[default0]:nvcc version ..................... 11.7
+[default0]:deepspeed wheel compiled w. ...... torch 1.12, cuda 11.7
+[default2]:[93m [WARNING] [0m async_io: please install the libaio-devel package with yum
+[default2]:[93m [WARNING] [0m If libaio is already installed (perhaps from source), try setting the CFLAGS and LDFLAGS environment variables to where it can be found.
+[default2]:async_io ............... [93m[NO][0m ....... [93m[NO][0m
+[default2]:cpu_adagrad ............ [93m[NO][0m ....... [92m[OKAY][0m
+[default2]:cpu_adam ............... [93m[NO][0m ....... [92m[OKAY][0m
+[default2]:fused_adam ............. [93m[NO][0m ....... [92m[OKAY][0m
+[default2]:fused_lamb ............. [93m[NO][0m ....... [92m[OKAY][0m
+[default2]:quantizer .............. [93m[NO][0m ....... [92m[OKAY][0m
+[default2]:random_ltd ............. [93m[NO][0m ....... [92m[OKAY][0m
+[default2]:[93m [WARNING] [0m please install triton==1.0.0 if you want to use sparse attention
+[default2]:sparse_attn ............ [93m[NO][0m ....... [93m[NO][0m
+[default2]:spatial_inference ...... [93m[NO][0m ....... [92m[OKAY][0m
+[default2]:transformer ............ [93m[NO][0m ....... [92m[OKAY][0m
+[default2]:stochastic_transformer . [93m[NO][0m ....... [92m[OKAY][0m
+[default2]:transformer_inference .. [93m[NO][0m ....... [92m[OKAY][0m
+[default2]:--------------------------------------------------
+[default2]:DeepSpeed general environment info:
+[default2]:torch install path ............... ['/opt/software/pc2/EB-SW/software/PyTorch/1.12.0-foss-2022a-CUDA-11.7.0/lib/python3.10/site-packages/torch']
+[default2]:torch version .................... 1.12.0
+[default2]:deepspeed install path ........... ['/scratch/hpc-prf-lola/lib_repo/custom-venvs/lola1/lib/python3.10/site-packages/deepspeed']
+[default2]:deepspeed info ................... 0.10.0, unknown, unknown
+[default2]:torch cuda version ............... 11.7
+[default2]:torch hip version ................ None
+[default2]:nvcc version ..................... 11.7
+[default2]:deepspeed wheel compiled w. ...... torch 1.12, cuda 11.7
+[default3]:[93m [WARNING] [0m async_io requires the dev libaio .so object and headers but these were not found.
+[default3]:[93m [WARNING] [0m async_io: please install the libaio-devel package with yum
+[default3]:[93m [WARNING] [0m If libaio is already installed (perhaps from source), try setting the CFLAGS and LDFLAGS environment variables to where it can be found.
+[default3]:async_io ............... [93m[NO][0m ....... [93m[NO][0m
+[default3]:cpu_adagrad ............ [93m[NO][0m ....... [92m[OKAY][0m
+[default3]:cpu_adam ............... [93m[NO][0m ....... [92m[OKAY][0m
+[default3]:fused_adam ............. [93m[NO][0m ....... [92m[OKAY][0m
+[default3]:fused_lamb ............. [93m[NO][0m ....... [92m[OKAY][0m
+[default3]:quantizer .............. [93m[NO][0m ....... [92m[OKAY][0m
+[default3]:random_ltd ............. [93m[NO][0m ....... [92m[OKAY][0m
+[default3]:[93m [WARNING] [0m please install triton==1.0.0 if you want to use sparse attention
+[default3]:sparse_attn ............ [93m[NO][0m ....... [93m[NO][0m
+[default3]:spatial_inference ...... [93m[NO][0m ....... [92m[OKAY][0m
+[default3]:transformer ............ [93m[NO][0m ....... [92m[OKAY][0m
+[default3]:stochastic_transformer . [93m[NO][0m ....... [92m[OKAY][0m
+[default1]:[93m [WARNING] [0m async_io: please install the libaio-devel package with yum
+[default1]:[93m [WARNING] [0m If libaio is already installed (perhaps from source), try setting the CFLAGS and LDFLAGS environment variables to where it can be found.
+[default1]:async_io ............... [93m[NO][0m ....... [93m[NO][0m
+[default1]:cpu_adagrad ............ [93m[NO][0m ....... [92m[OKAY][0m
+[default1]:cpu_adam ............... [93m[NO][0m ....... [92m[OKAY][0m
+[default1]:fused_adam ............. [93m[NO][0m ....... [92m[OKAY][0m
+[default1]:fused_lamb ............. [93m[NO][0m ....... [92m[OKAY][0m
+[default1]:quantizer .............. [93m[NO][0m ....... [92m[OKAY][0m
+[default1]:random_ltd ............. [93m[NO][0m ....... [92m[OKAY][0m
+[default1]:[93m [WARNING] [0m please install triton==1.0.0 if you want to use sparse attention
+[default1]:sparse_attn ............ [93m[NO][0m ....... [93m[NO][0m
+[default1]:spatial_inference ...... [93m[NO][0m ....... [92m[OKAY][0m
+[default1]:transformer ............ [93m[NO][0m ....... [92m[OKAY][0m
+[default1]:stochastic_transformer . [93m[NO][0m ....... [92m[OKAY][0m
+[default1]:transformer_inference .. [93m[NO][0m ....... [92m[OKAY][0m
+[default1]:--------------------------------------------------
+[default1]:DeepSpeed general environment info:
+[default1]:torch install path ............... ['/opt/software/pc2/EB-SW/software/PyTorch/1.12.0-foss-2022a-CUDA-11.7.0/lib/python3.10/site-packages/torch']
+[default1]:torch version .................... 1.12.0
+[default1]:deepspeed install path ........... ['/scratch/hpc-prf-lola/lib_repo/custom-venvs/lola1/lib/python3.10/site-packages/deepspeed']
+[default1]:deepspeed info ................... 0.10.0, unknown, unknown
+[default1]:torch cuda version ............... 11.7
+[default1]:torch hip version ................ None
+[default1]:nvcc version ..................... 11.7
+[default1]:deepspeed wheel compiled w. ...... torch 1.12, cuda 11.7
+[default1]:spatial_inference ...... [93m[NO][0m ....... [92m[OKAY][0m
+[default1]:transformer ............ [93m[NO][0m ....... [92m[OKAY][0m
+[default1]:stochastic_transformer . [93m[NO][0m ....... [92m[OKAY][0m
+[default1]:transformer_inference .. [93m[NO][0m ....... [92m[OKAY][0m
+[default1]:--------------------------------------------------
+[default1]:DeepSpeed general environment info:
+[default1]:torch install path ............... ['/opt/software/pc2/EB-SW/software/PyTorch/1.12.0-foss-2022a-CUDA-11.7.0/lib/python3.10/site-packages/torch']
+[default1]:torch version .................... 1.12.0
+[default1]:deepspeed install path ........... ['/scratch/hpc-prf-lola/lib_repo/custom-venvs/lola1/lib/python3.10/site-packages/deepspeed']
+[default1]:deepspeed info ................... 0.10.0, unknown, unknown
+[default1]:torch cuda version ............... 11.7
+[default1]:torch hip version ................ None
+[default1]:nvcc version ..................... 11.7
+[default1]:deepspeed wheel compiled w. ...... torch 1.12, cuda 11.7
+[default2]:DeepSpeed general environment info:
+[default2]:torch install path ............... ['/opt/software/pc2/EB-SW/software/PyTorch/1.12.0-foss-2022a-CUDA-11.7.0/lib/python3.10/site-packages/torch']
+[default2]:torch version .................... 1.12.0
+[default2]:deepspeed install path ........... ['/scratch/hpc-prf-lola/lib_repo/custom-venvs/lola1/lib/python3.10/site-packages/deepspeed']
+[default2]:deepspeed info ................... 0.10.0, unknown, unknown
+[default2]:torch cuda version ............... 11.7
+[default2]:torch hip version ................ None
+[default2]:nvcc version ..................... 11.7
+[default2]:deepspeed wheel compiled w. ...... torch 1.12, cuda 11.7
+[default0]:[93m [WARNING] [0m async_io: please install the libaio-devel package with yum
+[default0]:[93m [WARNING] [0m If libaio is already installed (perhaps from source), try setting the CFLAGS and LDFLAGS environment variables to where it can be found.
+[default0]:async_io ............... [93m[NO][0m ....... [93m[NO][0m
+[default0]:cpu_adagrad ............ [93m[NO][0m ....... [92m[OKAY][0m
+[default0]:cpu_adam ............... [93m[NO][0m ....... [92m[OKAY][0m
+[default0]:fused_adam ............. [93m[NO][0m ....... [92m[OKAY][0m
+[default0]:fused_lamb ............. [93m[NO][0m ....... [92m[OKAY][0m
+[default0]:quantizer .............. [93m[NO][0m ....... [92m[OKAY][0m
+[default0]:random_ltd ............. [93m[NO][0m ....... [92m[OKAY][0m
+[default0]:[93m [WARNING] [0m please install triton==1.0.0 if you want to use sparse attention
+[default0]:sparse_attn ............ [93m[NO][0m ....... [93m[NO][0m
+[default0]:spatial_inference ...... [93m[NO][0m ....... [92m[OKAY][0m
+[default0]:transformer ............ [93m[NO][0m ....... [92m[OKAY][0m
+[default0]:stochastic_transformer . [93m[NO][0m ....... [92m[OKAY][0m
+[default0]:transformer_inference .. [93m[NO][0m ....... [92m[OKAY][0m
+[default0]:--------------------------------------------------
+[default0]:DeepSpeed general environment info:
+[default0]:torch install path ............... ['/opt/software/pc2/EB-SW/software/PyTorch/1.12.0-foss-2022a-CUDA-11.7.0/lib/python3.10/site-packages/torch']
+[default0]:torch version .................... 1.12.0
+[default0]:deepspeed install path ........... ['/scratch/hpc-prf-lola/lib_repo/custom-venvs/lola1/lib/python3.10/site-packages/deepspeed']
+[default0]:deepspeed info ................... 0.10.0, unknown, unknown
+[default0]:torch cuda version ............... 11.7
+[default0]:torch hip version ................ None
+[default0]:nvcc version ..................... 11.7
+[default0]:deepspeed wheel compiled w. ...... torch 1.12, cuda 11.7
+[default3]:transformer_inference .. [93m[NO][0m ....... [92m[OKAY][0m
+[default3]:--------------------------------------------------
+[default3]:DeepSpeed general environment info:
+[default3]:torch install path ............... ['/opt/software/pc2/EB-SW/software/PyTorch/1.12.0-foss-2022a-CUDA-11.7.0/lib/python3.10/site-packages/torch']
+[default3]:torch version .................... 1.12.0
+[default3]:deepspeed install path ........... ['/scratch/hpc-prf-lola/lib_repo/custom-venvs/lola1/lib/python3.10/site-packages/deepspeed']
+[default3]:deepspeed info ................... 0.10.0, unknown, unknown
+[default3]:torch cuda version ............... 11.7
+[default3]:torch hip version ................ None
+[default3]:nvcc version ..................... 11.7
+[default3]:deepspeed wheel compiled w. ...... torch 1.12, cuda 11.7
+[default2]:**** Git info for Megatron: git_hash=421a479 git_branch=main ****
+[default0]:**** Git info for Megatron: git_hash=421a479 git_branch=main ****
+[default3]:**** Git info for Megatron: git_hash=421a479 git_branch=main ****
+[default0]:**** Git info for Megatron: git_hash=421a479 git_branch=main ****
+[default0]:using world size: 8, data-parallel-size: 8, tensor-model-parallel size: 1, pipeline-model-parallel size: 1 
+[default0]:using torch.float16 for parameters ...
+[default0]:------------------------ arguments ------------------------
+[default0]:  accumulate_allreduce_grads_in_fp32 .............. False
+[default0]:  adam_beta1 ...................................... 0.9
+[default0]:  adam_beta2 ...................................... 0.95
+[default0]:  adam_eps ........................................ 1e-08
+[default0]:  add_bias_linear ................................. True
+[default0]:  add_position_embedding .......................... True
+[default0]:  adlr_autoresume ................................. False
+[default0]:  adlr_autoresume_interval ........................ 1000
+[default0]:  aml_data_download_path .......................... None
+[default0]:  apply_layernorm_1p .............................. False
+[default0]:  apply_query_key_layer_scaling ................... True
+[default0]:  apply_residual_connection_post_layernorm ........ False
+[default0]:  async_tensor_model_parallel_allreduce ........... False
+[default0]:  attention_dropout ............................... 0.1
+[default0]:  attention_softmax_in_fp32 ....................... False
+[default0]:  barrier_with_L1_time ............................ True
+[default0]:  bert_binary_head ................................ True
+[default0]:  bert_embedder_type .............................. megatron
+[default0]:  bert_load ....................................... None
+[default0]:  bf16 ............................................ False
+[default0]:  bias_dropout_fusion ............................. True
+[default0]:  bias_gelu_fusion ................................ True
+[default0]:  biencoder_projection_dim ........................ 0
+[default0]:  biencoder_shared_query_context_model ............ False
+[default0]:  block_data_path ................................. None
+[default0]:  checkpoint_activations .......................... True
+[default0]:  checkpoint_in_cpu ............................... False
+[default0]:  checkpoint_num_layers ........................... 1
+[default0]:  classes_fraction ................................ 1.0
+[default0]:  clip_grad ....................................... 1.0
+[default0]:  compression_training ............................ False
+[default0]:  consumed_train_samples .......................... 0
+[default0]:  consumed_train_tokens ........................... 0
+[default0]:  consumed_valid_samples .......................... 0
+[default0]:  contigious_checkpointing ........................ False
+[default0]:  cpu_optimizer ................................... False
+[default0]:  cpu_torch_adam .................................. False
+[default0]:  create_moe_param_group .......................... True
+[default0]:  curriculum_learning_legacy ...................... False
+[default0]:  data_cache_path ................................. None
+[default0]:  data_efficiency_curriculum_learning ............. False
+[default0]:  data_impl ....................................... mmap
+[default0]:  data_parallel_random_init ....................... False
+[default0]:  data_parallel_size .............................. 8
+[default0]:  data_path ....................................... ['/scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/data/meg-gpt2-oscar-en-10k_text_document']
+[default0]:  data_per_class_fraction ......................... 1.0
+[default0]:  data_sharding ................................... True
+[default0]:  dataloader_type ................................. single
+[default0]:  DDP_impl ........................................ local
+[default0]:  decoder_num_layers .............................. None
+[default0]:  decoder_seq_length .............................. None
+[default0]:  deepscale ....................................... False
+[default0]:  deepscale_config ................................ None
+[default0]:  deepspeed ....................................... True
+[default0]:  deepspeed_activation_checkpointing .............. True
+[default0]:  deepspeed_config ................................ /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/lola_ws/scaling_experiments/output/GPT_0.76B_MoE128_8BATCH_8GPU_2Node/ds_config_gpt_gpt-0.76B-lr-2.0e-4-minlr-2e-06-bs-64-gpus-8-mp-1-pp-1-ep-128-mlc-0.01-cap-1.0-drop-true.json
+[default0]:  deepspeed_mpi ................................... False
+[default0]:  dino_bottleneck_size ............................ 256
+[default0]:  dino_freeze_last_layer .......................... 1
+[default0]:  dino_head_hidden_size ........................... 2048
+[default0]:  dino_local_crops_number ......................... 10
+[default0]:  dino_local_img_size ............................. 96
+[default0]:  dino_norm_last_layer ............................ False
+[default0]:  dino_teacher_temp ............................... 0.07
+[default0]:  dino_warmup_teacher_temp ........................ 0.04
+[default0]:  dino_warmup_teacher_temp_epochs ................. 30
+[default0]:  distribute_checkpointed_activations ............. False
+[default0]:  distribute_saved_activations .................... False
+[default0]:  distributed_backend ............................. nccl
+[default0]:  distributed_timeout_minutes ..................... 10
+[default0]:  ds_inference .................................... False
+[default0]:  ds_pipeline_enabled ............................. False
+[default0]:  embedding_path .................................. None
+[default0]:  embedding_weights_in_fp32 ....................... False
+[default0]:  empty_unused_memory_level ....................... 0
+[default0]:  enable_expert_tensor_parallelism ................ False
+[default0]:  encoder_num_layers .............................. 24
+[default0]:  encoder_seq_length .............................. 2048
+[default0]:  end_weight_decay ................................ 0.1
+[default0]:  eod_mask_loss ................................... False
+[default0]:  eval_interval ................................... 100
+[default0]:  eval_iters ...................................... 50
+[default0]:  evidence_data_path .............................. None
+[default0]:  exit_duration_in_mins ........................... 30000000
+[default0]:  exit_interval ................................... None
+[default0]:  exit_on_missing_checkpoint ...................... False
+[default0]:  exit_signal_handler ............................. False
+[default0]:  expert_interval ................................. 2
+[default0]:  ffn_hidden_size ................................. 6144
+[default0]:  finetune ........................................ False
+[default0]:  fp16 ............................................ True
+[default0]:  fp16_lm_cross_entropy ........................... False
+[default0]:  fp32_residual_connection ........................ False
+[default0]:  fp8_amax_compute_algo ........................... most_recent
+[default0]:  fp8_amax_history_len ............................ 1
+[default0]:  fp8_e4m3 ........................................ False
+[default0]:  fp8_hybrid ...................................... False
+[default0]:  fp8_interval .................................... 1
+[default0]:  fp8_margin ...................................... 0
+[default0]:  fp8_wgrad ....................................... True
+[default0]:  global_batch_size ............................... 64
+[default0]:  gradient_accumulation_fusion .................... True
+[default0]:  head_lr_mult .................................... 1.0
+[default0]:  hidden_dropout .................................. 0.1
+[default0]:  hidden_size ..................................... 1536
+[default0]:  hidden_size_teacher ............................. None
+[default0]:  hysteresis ...................................... 2
+[default0]:  ict_head_size ................................... None
+[default0]:  ict_load ........................................ None
+[default0]:  img_h ........................................... 224
+[default0]:  img_w ........................................... 224
+[default0]:  indexer_batch_size .............................. 128
+[default0]:  indexer_log_interval ............................ 1000
+[default0]:  inference ....................................... False
+[default0]:  inference_batch_times_seqlen_threshold .......... 512
+[default0]:  init_method_std ................................. 0.01
+[default0]:  init_method_xavier_uniform ...................... False
+[default0]:  initial_loss_scale .............................. 4294967296
+[default0]:  iter_per_epoch .................................. 1250
+[default0]:  kd .............................................. False
+[default0]:  kd_alpha_ce ..................................... 1
+[default0]:  kd_beta_ce ...................................... 1
+[default0]:  kd_temp ......................................... 1.0
+[default0]:  kv_channels ..................................... 96
+[default0]:  layernorm_epsilon ............................... 1e-05
+[default0]:  lazy_mpu_init ................................... None
+[default0]:  load ............................................ /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/lola_ws/scaling_experiments/output/GPT_0.76B_MoE128_8BATCH_8GPU_2Node/checkpoint/gpt-0.76B-lr-2.0e-4-minlr-2e-06-bs-64-gpus-8-mp-1-pp-1-ep-128-mlc-0.01-cap-1.0-drop-true
+[default0]:  load_teacher .................................... None
+[default0]:  local_rank ...................................... None
+[default0]:  log_batch_size_to_tensorboard ................... True
+[default0]:  log_interval .................................... 5
+[default0]:  log_learning_rate_to_tensorboard ................ True
+[default0]:  log_loss_scale_to_tensorboard ................... True
+[default0]:  log_memory_to_tensorboard ....................... False
+[default0]:  log_num_zeros_in_grad ........................... False
+[default0]:  log_optimizer_states_to_tensorboard ............. False
+[default0]:  log_params_norm ................................. False
+[default0]:  log_timers_to_tensorboard ....................... True
+[default0]:  log_validation_ppl_to_tensorboard ............... True
+[default0]:  log_world_size_to_tensorboard ................... False
+[default0]:  loss_scale ...................................... None
+[default0]:  loss_scale_window ............................... 1000
+[default0]:  lr .............................................. 0.0002
+[default0]:  lr_decay_iters .................................. None
+[default0]:  lr_decay_samples ................................ None
+[default0]:  lr_decay_style .................................. cosine
+[default0]:  lr_decay_tokens ................................. 300000000000
+[default0]:  lr_warmup_fraction .............................. None
+[default0]:  lr_warmup_iters ................................. 0
+[default0]:  lr_warmup_samples ............................... 0
+[default0]:  lr_warmup_tokens ................................ 375000000
+[default0]:  make_vocab_size_divisible_by .................... 128
+[default0]:  mask_factor ..................................... 1.0
+[default0]:  mask_prob ....................................... 0.15
+[default0]:  mask_type ....................................... random
+[default0]:  masked_softmax_fusion ........................... True
+[default0]:  max_position_embeddings ......................... 2048
+[default0]:  max_tokens_to_oom ............................... 12000
+[default0]:  memory_centric_tiled_linear ..................... False
+[default0]:  merge_file ...................................... /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/data/gpt2-merges.txt
+[default0]:  micro_batch_size ................................ 8
+[default0]:  min_loss_scale .................................. 1.0
+[default0]:  min_lr .......................................... 2e-06
+[default0]:  mlp_type ........................................ standard
+[default0]:  mmap_warmup ..................................... False
+[default0]:  moe_eval_capacity_factor ........................ 1.0
+[default0]:  moe_expert_parallel_size ........................ 8
+[default0]:  moe_loss_coeff .................................. 0.01
+[default0]:  moe_min_capacity ................................ 4
+[default0]:  moe_token_dropping .............................. True
+[default0]:  moe_train_capacity_factor ....................... 1.0
+[default0]:  mos ............................................. False
+[default0]:  no_load_lr_state ................................ False
+[default0]:  no_load_optim ................................... None
+[default0]:  no_load_rng ..................................... None
+[default0]:  no_persist_layer_norm ........................... False
+[default0]:  no_pipeline_parallel ............................ True
+[default0]:  no_save_optim ................................... None
+[default0]:  no_save_rng ..................................... None
+[default0]:  normalization ................................... layernorm
+[default0]:  num_attention_heads ............................. 16
+[default0]:  num_attention_heads_teacher ..................... None
+[default0]:  num_channels .................................... 3
+[default0]:  num_classes ..................................... 1000
+[default0]:  num_experts ..................................... [128]
+[default0]:  num_experts_switch .............................. None
+[default0]:  num_experts_teacher ............................. [1]
+[default0]:  num_layers ...................................... 24
+[default0]:  num_layers_per_virtual_pipeline_stage ........... None
+[default0]:  num_layers_teacher .............................. None
+[default0]:  num_workers ..................................... 0
+[default0]:  onnx_safe ....................................... None
+[default0]:  openai_gelu ..................................... False
+[default0]:  optimizer ....................................... adam
+[default0]:  output_bert_embeddings .......................... False
+[default0]:  overlap_p2p_comm ................................ False
+[default0]:  override_opt_param_scheduler .................... True
+[default0]:  params_dtype .................................... torch.float16
+[default0]:  partition_activations ........................... False
+[default0]:  patch_dim ....................................... 16
+[default0]:  perform_initialization .......................... True
+[default0]:  pipeline_model_parallel_size .................... 1
+[default0]:  pipeline_model_parallel_split_rank .............. None
+[default0]:  profile_backward ................................ False
+[default0]:  query_in_block_prob ............................. 0.1
+[default0]:  rampup_batch_size ............................... None
+[default0]:  random_ltd ...................................... False
+[default0]:  rank ............................................ 0
+[default0]:  recompute_granularity ........................... None
+[default0]:  recompute_method ................................ None
+[default0]:  recompute_num_layers ............................ 1
+[default0]:  remote_device ................................... none
+[default0]:  reset_attention_mask ............................ False
+[default0]:  reset_iteration ................................. False
+[default0]:  reset_position_ids .............................. False
+[default0]:  retriever_report_topk_accuracies ................ []
+[default0]:  retriever_score_scaling ......................... False
+[default0]:  retriever_seq_length ............................ 256
+[default0]:  retro_add_retriever ............................. False
+[default0]:  retro_cyclic_train_iters ........................ None
+[default0]:  retro_encoder_attention_dropout ................. 0.1
+[default0]:  retro_encoder_hidden_dropout .................... 0.1
+[default0]:  retro_encoder_layers ............................ 2
+[default0]:  retro_num_neighbors ............................. 2
+[default0]:  retro_num_retrieved_chunks ...................... 2
+[default0]:  retro_return_doc_ids ............................ False
+[default0]:  retro_workdir ................................... None
+[default0]:  return_data_index ............................... False
+[default0]:  rotary_percent .................................. 1.0
+[default0]:  sample_rate ..................................... 1.0
+[default0]:  save ............................................ /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/lola_ws/scaling_experiments/output/GPT_0.76B_MoE128_8BATCH_8GPU_2Node/checkpoint/gpt-0.76B-lr-2.0e-4-minlr-2e-06-bs-64-gpus-8-mp-1-pp-1-ep-128-mlc-0.01-cap-1.0-drop-true
+[default0]:  save_interval ................................... 1000000
+[default0]:  scatter_gather_tensors_in_pipeline .............. True
+[default0]:  scattered_embeddings ............................ False
+[default0]:  seed ............................................ 1234
+[default0]:  seq_length ...................................... 2048
+[default0]:  sequence_parallel ............................... False
+[default0]:  sgd_momentum .................................... 0.9
+[default0]:  short_seq_prob .................................. 0.1
+[default0]:  skip_train ...................................... False
+[default0]:  split ........................................... 98,2,0
+[default0]:  split_transformers .............................. False
+[default0]:  squared_relu .................................... False
+[default0]:  standalone_embedding_stage ...................... False
+[default0]:  start_weight_decay .............................. 0.1
+[default0]:  swiglu .......................................... False
+[default0]:  swin_backbone_type .............................. tiny
+[default0]:  synchronize_each_layer .......................... False
+[default0]:  tensor_model_parallel_size ...................... 1
+[default0]:  tensorboard_dir ................................. /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/lola_ws/scaling_experiments/output/GPT_0.76B_MoE128_8BATCH_8GPU_2Node/tensorboard/gpt-0.76B-lr-2.0e-4-minlr-2e-06-bs-64-gpus-8-mp-1-pp-1-ep-128-mlc-0.01-cap-1.0-drop-true_n2gpu1211_2023.07.31-02.22.51
+[default0]:  tensorboard_log_interval ........................ 1
+[default0]:  tensorboard_queue_size .......................... 1
+[default0]:  test_data_path .................................. None
+[default0]:  tile_factor ..................................... 1
+[default0]:  timing_log_level ................................ 0
+[default0]:  timing_log_option ............................... minmax
+[default0]:  titles_data_path ................................ None
+[default0]:  tokenizer_model ................................. None
+[default0]:  tokenizer_type .................................. GPT2BPETokenizer
+[default0]:  topk ............................................ 1
+[default0]:  train_data_exact_num_epochs ..................... None
+[default0]:  train_data_path ................................. None
+[default0]:  train_desc_path ................................. None
+[default0]:  train_doc_idx_path .............................. None
+[default0]:  train_idx_path .................................. None
+[default0]:  train_iters ..................................... 6866455
+[default0]:  train_sample_idx_path ........................... None
+[default0]:  train_samples ................................... None
+[default0]:  train_shuffle_idx_path .......................... None
+[default0]:  train_tokens .................................... 300000000000
+[default0]:  transformer_impl ................................ local
+[default0]:  transformer_pipeline_model_parallel_size ........ 1
+[default0]:  untie_embeddings_and_output_weights ............. False
+[default0]:  use_checkpoint_args ............................. False
+[default0]:  use_checkpoint_opt_param_scheduler .............. False
+[default0]:  use_contiguous_buffers_in_local_ddp ............. True
+[default0]:  use_cpu_initialization .......................... None
+[default0]:  use_distributed_optimizer ....................... False
+[default0]:  use_flash_attn .................................. False
+[default0]:  use_one_sent_docs ............................... False
+[default0]:  use_pin_memory .................................. False
+[default0]:  use_ring_exchange_p2p ........................... False
+[default0]:  use_rotary_position_embeddings .................. False
+[default0]:  use_tutel ....................................... False
+[default0]:  valid_data_path ................................. None
+[default0]:  variable_seq_lengths ............................ False
+[default0]:  virtual_pipeline_model_parallel_size ............ None
+[default0]:  vision_backbone_type ............................ vit
+[default0]:  vision_pretraining .............................. False
+[default0]:  vision_pretraining_type ......................... classify
+[default0]:  vocab_extra_ids ................................. 0
+[default0]:  vocab_file ...................................... /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/data/gpt2-vocab.json
+[default0]:  vocab_size ...................................... None
+[default0]:  weight_decay .................................... 0.1
+[default0]:  weight_decay_incr_style ......................... constant
+[default0]:  world_size ...................................... 8
+[default0]:  zero_allgather_bucket_size ...................... 0.0
+[default0]:  zero_contigious_gradients ....................... False
+[default0]:  zero_reduce_bucket_size ......................... 0.0
+[default0]:  zero_reduce_scatter ............................. False
+[default0]:  zero_stage ...................................... 1.0
+[default0]:-------------------- end of arguments ---------------------
+[default0]:setting number of micro-batches to constant 1
+[default0]:> building GPT2BPETokenizer tokenizer ...
+[default2]:**** Git info for Megatron: git_hash=421a479 git_branch=main ****
+[default3]:**** Git info for Megatron: git_hash=421a479 git_branch=main ****
+[default1]:**** Git info for Megatron: git_hash=421a479 git_branch=main ****
+[default1]:**** Git info for Megatron: git_hash=421a479 git_branch=main ****
+[default1]:[2023-07-31 02:23:21,790] [WARNING] [comm.py:152:init_deepspeed_backend] NCCL backend in DeepSpeed not yet implemented
+[default1]:[2023-07-31 02:23:21,790] [INFO] [comm.py:616:init_distributed] cdb=None
+[default1]:[2023-07-31 02:23:21,776] [WARNING] [comm.py:152:init_deepspeed_backend] NCCL backend in DeepSpeed not yet implemented
+[default1]:[2023-07-31 02:23:21,776] [INFO] [comm.py:616:init_distributed] cdb=None
+[default2]:[2023-07-31 02:23:21,793] [WARNING] [comm.py:152:init_deepspeed_backend] NCCL backend in DeepSpeed not yet implemented
+[default2]:[2023-07-31 02:23:21,793] [INFO] [comm.py:616:init_distributed] cdb=None
+[default0]:[2023-07-31 02:23:21,793] [WARNING] [comm.py:152:init_deepspeed_backend] NCCL backend in DeepSpeed not yet implemented
+[default0]:[2023-07-31 02:23:21,794] [INFO] [comm.py:616:init_distributed] cdb=None
+[default0]: > padded vocab (size: 50257) with 47 dummy tokens (new size: 50304)
+[default0]:> initializing torch distributed ...
+[default0]:[2023-07-31 02:23:21,795] [WARNING] [comm.py:152:init_deepspeed_backend] NCCL backend in DeepSpeed not yet implemented
+[default0]:[2023-07-31 02:23:21,795] [INFO] [comm.py:616:init_distributed] cdb=None
+[default0]:[2023-07-31 02:23:21,795] [INFO] [comm.py:643:init_distributed] Initializing TorchBackend in DeepSpeed with backend nccl
+[default2]:[2023-07-31 02:23:21,794] [WARNING] [comm.py:152:init_deepspeed_backend] NCCL backend in DeepSpeed not yet implemented
+[default2]:[2023-07-31 02:23:21,794] [INFO] [comm.py:616:init_distributed] cdb=None
+[default3]:[2023-07-31 02:23:21,793] [WARNING] [comm.py:152:init_deepspeed_backend] NCCL backend in DeepSpeed not yet implemented
+[default3]:[2023-07-31 02:23:21,793] [INFO] [comm.py:616:init_distributed] cdb=None
+[default3]:> setting tensorboard ...
+[default3]:[2023-07-31 02:23:23,718] [WARNING] [comm.py:152:init_deepspeed_backend] NCCL backend in DeepSpeed not yet implemented
+[default3]:[2023-07-31 02:23:23,718] [INFO] [comm.py:616:init_distributed] cdb=None
+[default0]:> initialized tensor model parallel with size 1
+[default0]:> initialized pipeline model parallel with size 1
+[default0]:> setting random seeds to 1234 ...
+[default0]:> initializing model parallel cuda seeds on global rank 0, model parallel rank 0, and data parallel rank 0 with model parallel seed: 3952 and data parallel seed: 1234
+[default0]:> compiling dataset index builder ...
+[default0]:make: Entering directory '/scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/megatron/data'
+[default0]:make: Nothing to be done for 'default'.
+[default0]:make: Leaving directory '/scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/megatron/data'
+[default0]:>>> done with dataset index builder. Compilation time: 1.400 seconds
+[default0]:> compiling and loading fused kernels ...
+[default0]:Detected CUDA files, patching ldflags
+[default0]:Emitting ninja build file /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/megatron/fused_kernels/build/build.ninja...
+[default0]:Building extension module scaled_upper_triang_masked_softmax_cuda...
+[default0]:Allowing ninja to set a default number of workers... (overridable by setting the environment variable MAX_JOBS=N)
+[default0]:ninja: no work to do.
+[default0]:Loading extension module scaled_upper_triang_masked_softmax_cuda...
+[default0]:Detected CUDA files, patching ldflags
+[default0]:Emitting ninja build file /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/megatron/fused_kernels/build/build.ninja...
+[default0]:Building extension module scaled_masked_softmax_cuda...
+[default0]:Allowing ninja to set a default number of workers... (overridable by setting the environment variable MAX_JOBS=N)
+[default0]:ninja: no work to do.
+[default0]:Loading extension module scaled_masked_softmax_cuda...
+[default0]:Detected CUDA files, patching ldflags
+[default0]:Emitting ninja build file /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/megatron/fused_kernels/build/build.ninja...
+[default0]:Building extension module scaled_softmax_cuda...
+[default0]:Allowing ninja to set a default number of workers... (overridable by setting the environment variable MAX_JOBS=N)
+[default0]:ninja: no work to do.
+[default0]:Loading extension module scaled_softmax_cuda...
+[default0]:n2gpu1211:32599:32599 [0] NCCL INFO Bootstrap : Using ib1:10.10.103.79<0>
+[default0]:n2gpu1211:32599:32599 [0] NCCL INFO NET/Plugin : No plugin found (libnccl-net.so), using internal implementation
+[default0]:n2gpu1211:32599:32599 [0] NCCL INFO NET/IB : Using [0]mlx5_0:1/IB [1]mlx5_1:1/IB [RO]; OOB ib1:10.10.103.79<0>
+[default0]:n2gpu1211:32599:32599 [0] NCCL INFO Using network IB
+[default0]:NCCL version 2.12.12+cuda11.7
+[default2]:n2gpu1215:386406:386406 [2] NCCL INFO Bootstrap : Using ib1:10.10.103.83<0>
+[default2]:n2gpu1215:386406:386406 [2] NCCL INFO NET/Plugin : No plugin found (libnccl-net.so), using internal implementation
+[default1]:n2gpu1215:386405:386405 [1] NCCL INFO Bootstrap : Using ib1:10.10.103.83<0>
+[default1]:n2gpu1215:386405:386405 [1] NCCL INFO NET/Plugin : No plugin found (libnccl-net.so), using internal implementation
+[default0]:n2gpu1215:386404:386404 [0] NCCL INFO Bootstrap : Using ib1:10.10.103.83<0>
+[default0]:n2gpu1215:386404:386404 [0] NCCL INFO NET/Plugin : No plugin found (libnccl-net.so), using internal implementation
+[default3]:n2gpu1215:386407:386407 [3] NCCL INFO Bootstrap : Using ib1:10.10.103.83<0>
+[default3]:n2gpu1215:386407:386407 [3] NCCL INFO NET/Plugin : No plugin found (libnccl-net.so), using internal implementation
+[default3]:n2gpu1215:386407:386407 [3] NCCL INFO NET/IB : Using [0]mlx5_0:1/IB [1]mlx5_1:1/IB [RO]; OOB ib1:10.10.103.83<0>
+[default3]:n2gpu1215:386407:386407 [3] NCCL INFO Using network IB
+[default3]:n2gpu1211:32602:32602 [3] NCCL INFO Bootstrap : Using ib1:10.10.103.79<0>
+[default3]:n2gpu1211:32602:32602 [3] NCCL INFO NET/Plugin : No plugin found (libnccl-net.so), using internal implementation
+[default2]:n2gpu1211:32601:32601 [2] NCCL INFO Bootstrap : Using ib1:10.10.103.79<0>
+[default2]:n2gpu1211:32601:32601 [2] NCCL INFO NET/Plugin : No plugin found (libnccl-net.so), using internal implementation
+[default1]:n2gpu1215:386405:386405 [1] NCCL INFO NET/IB : Using [0]mlx5_0:1/IB [1]mlx5_1:1/IB [RO]; OOB ib1:10.10.103.83<0>
+[default1]:n2gpu1215:386405:386405 [1] NCCL INFO Using network IB
+[default0]:n2gpu1215:386404:386404 [0] NCCL INFO NET/IB : Using [0]mlx5_0:1/IB [1]mlx5_1:1/IB [RO]; OOB ib1:10.10.103.83<0>
+[default0]:n2gpu1215:386404:386404 [0] NCCL INFO Using network IB
+[default1]:n2gpu1211:32600:32600 [1] NCCL INFO Bootstrap : Using ib1:10.10.103.79<0>
+[default1]:n2gpu1211:32600:32600 [1] NCCL INFO NET/Plugin : No plugin found (libnccl-net.so), using internal implementation
+[default2]:n2gpu1215:386406:386406 [2] NCCL INFO NET/IB : Using [0]mlx5_0:1/IB [1]mlx5_1:1/IB [RO]; OOB ib1:10.10.103.83<0>
+[default2]:n2gpu1215:386406:386406 [2] NCCL INFO Using network IB
+[default3]:n2gpu1211:32602:32602 [3] NCCL INFO NET/IB : Using [0]mlx5_0:1/IB [1]mlx5_1:1/IB [RO]; OOB ib1:10.10.103.79<0>
+[default3]:n2gpu1211:32602:32602 [3] NCCL INFO Using network IB
+[default2]:n2gpu1211:32601:32601 [2] NCCL INFO NET/IB : Using [0]mlx5_0:1/IB [1]mlx5_1:1/IB [RO]; OOB ib1:10.10.103.79<0>
+[default2]:n2gpu1211:32601:32601 [2] NCCL INFO Using network IB
+[default1]:n2gpu1211:32600:32600 [1] NCCL INFO NET/IB : Using [0]mlx5_0:1/IB [1]mlx5_1:1/IB [RO]; OOB ib1:10.10.103.79<0>
+[default1]:n2gpu1211:32600:32600 [1] NCCL INFO Using network IB
+[default0]:n2gpu1215:386404:386587 [0] NCCL INFO Trees [0] 5/-1/-1->4->0 [1] 5/-1/-1->4->0 [2] 5/0/-1->4->-1 [3] 5/0/-1->4->-1
+[default3]:n2gpu1215:386407:386585 [3] NCCL INFO Trees [0] -1/-1/-1->7->6 [1] -1/-1/-1->7->6 [2] -1/-1/-1->7->6 [3] -1/-1/-1->7->6
+[default3]:n2gpu1211:32602:32880 [3] NCCL INFO Trees [0] -1/-1/-1->3->2 [1] -1/-1/-1->3->2 [2] -1/-1/-1->3->2 [3] -1/-1/-1->3->2
+[default1]:n2gpu1211:32600:32884 [1] NCCL INFO Trees [0] 2/-1/-1->1->0 [1] 2/-1/-1->1->0 [2] 2/-1/-1->1->0 [3] 2/-1/-1->1->0
+[default1]:n2gpu1215:386405:386589 [1] NCCL INFO Trees [0] 6/-1/-1->5->4 [1] 6/-1/-1->5->4 [2] 6/-1/-1->5->4 [3] 6/-1/-1->5->4
+[default0]:n2gpu1211:32599:32875 [0] NCCL INFO Channel 00/04 :    0   1   2   3   4   5   6   7
+[default0]:n2gpu1211:32599:32875 [0] NCCL INFO Channel 01/04 :    0   1   2   3   4   5   6   7
+[default0]:n2gpu1211:32599:32875 [0] NCCL INFO Channel 02/04 :    0   1   2   3   4   5   6   7
+[default0]:n2gpu1211:32599:32875 [0] NCCL INFO Channel 03/04 :    0   1   2   3   4   5   6   7
+[default0]:n2gpu1211:32599:32875 [0] NCCL INFO Trees [0] 1/4/-1->0->-1 [1] 1/4/-1->0->-1 [2] 1/-1/-1->0->4 [3] 1/-1/-1->0->4
+[default2]:n2gpu1215:386406:386591 [2] NCCL INFO Trees [0] 7/-1/-1->6->5 [1] 7/-1/-1->6->5 [2] 7/-1/-1->6->5 [3] 7/-1/-1->6->5
+[default0]:n2gpu1215:386404:386587 [0] NCCL INFO Channel 00/0 : 3[c4000] -> 4[3000] [receive] via NET/IB/0
+[default0]:n2gpu1215:386404:386587 [0] NCCL INFO Channel 01/0 : 3[c4000] -> 4[3000] [receive] via NET/IB/0
+[default2]:n2gpu1211:32601:32882 [2] NCCL INFO Trees [0] 3/-1/-1->2->1 [1] 3/-1/-1->2->1 [2] 3/-1/-1->2->1 [3] 3/-1/-1->2->1
+[default0]:n2gpu1211:32599:32875 [0] NCCL INFO Channel 00/0 : 7[c4000] -> 0[3000] [receive] via NET/IB/0
+[default0]:n2gpu1215:386404:386587 [0] NCCL INFO Channel 02/0 : 3[c4000] -> 4[3000] [receive] via NET/IB/0
+[default0]:n2gpu1211:32599:32875 [0] NCCL INFO Channel 01/0 : 7[c4000] -> 0[3000] [receive] via NET/IB/0
+[default0]:n2gpu1215:386404:386587 [0] NCCL INFO Channel 03/0 : 3[c4000] -> 4[3000] [receive] via NET/IB/0
+[default0]:n2gpu1215:386404:386587 [0] NCCL INFO Channel 00 : 4[3000] -> 5[44000] via P2P/IPC/read
+[default1]:n2gpu1211:32600:32884 [1] NCCL INFO Channel 00 : 1[44000] -> 2[84000] via P2P/IPC/read
+[default0]:n2gpu1211:32599:32875 [0] NCCL INFO Channel 02/0 : 7[c4000] -> 0[3000] [receive] via NET/IB/0
+[default0]:n2gpu1211:32599:32875 [0] NCCL INFO Channel 03/0 : 7[c4000] -> 0[3000] [receive] via NET/IB/0
+[default0]:n2gpu1211:32599:32875 [0] NCCL INFO Channel 00 : 0[3000] -> 1[44000] via P2P/IPC/read
+[default1]:n2gpu1215:386405:386589 [1] NCCL INFO Channel 00 : 5[44000] -> 6[84000] via P2P/IPC/read
+[default1]:n2gpu1211:32600:32884 [1] NCCL INFO Channel 01 : 1[44000] -> 2[84000] via P2P/IPC/read
+[default3]:n2gpu1211:32602:32880 [3] NCCL INFO Channel 00/0 : 3[c4000] -> 4[3000] [send] via NET/IB/0
+[default3]:n2gpu1211:32602:32880 [3] NCCL INFO Channel 01/0 : 3[c4000] -> 4[3000] [send] via NET/IB/0
+[default2]:n2gpu1215:386406:386591 [2] NCCL INFO Channel 00 : 6[84000] -> 7[c4000] via P2P/IPC/read
+[default0]:n2gpu1215:386404:386587 [0] NCCL INFO Channel 01 : 4[3000] -> 5[44000] via P2P/IPC/read
+[default3]:n2gpu1215:386407:386585 [3] NCCL INFO Channel 00/0 : 7[c4000] -> 0[3000] [send] via NET/IB/0
+[default3]:n2gpu1211:32602:32880 [3] NCCL INFO Channel 02/0 : 3[c4000] -> 4[3000] [send] via NET/IB/0
+[default2]:n2gpu1211:32601:32882 [2] NCCL INFO Channel 00 : 2[84000] -> 3[c4000] via P2P/IPC/read
+[default1]:n2gpu1215:386405:386589 [1] NCCL INFO Channel 01 : 5[44000] -> 6[84000] via P2P/IPC/read
+[default2]:n2gpu1215:386406:386591 [2] NCCL INFO Channel 01 : 6[84000] -> 7[c4000] via P2P/IPC/read
+[default0]:n2gpu1215:386404:386587 [0] NCCL INFO Channel 02 : 4[3000] -> 5[44000] via P2P/IPC/read
+[default1]:n2gpu1211:32600:32884 [1] NCCL INFO Channel 02 : 1[44000] -> 2[84000] via P2P/IPC/read
+[default3]:n2gpu1211:32602:32880 [3] NCCL INFO Channel 03/0 : 3[c4000] -> 4[3000] [send] via NET/IB/0
+[default2]:n2gpu1211:32601:32882 [2] NCCL INFO Channel 01 : 2[84000] -> 3[c4000] via P2P/IPC/read
+[default0]:n2gpu1211:32599:32875 [0] NCCL INFO Channel 01 : 0[3000] -> 1[44000] via P2P/IPC/read
+[default1]:n2gpu1215:386405:386589 [1] NCCL INFO Channel 02 : 5[44000] -> 6[84000] via P2P/IPC/read
+[default3]:n2gpu1215:386407:386585 [3] NCCL INFO Channel 01/0 : 7[c4000] -> 0[3000] [send] via NET/IB/0
+[default0]:n2gpu1211:32599:32875 [0] NCCL INFO Channel 02 : 0[3000] -> 1[44000] via P2P/IPC/read
+[default0]:n2gpu1215:386404:386587 [0] NCCL INFO Channel 03 : 4[3000] -> 5[44000] via P2P/IPC/read
+[default3]:n2gpu1215:386407:386585 [3] NCCL INFO Channel 02/0 : 7[c4000] -> 0[3000] [send] via NET/IB/0
+[default2]:n2gpu1215:386406:386591 [2] NCCL INFO Channel 02 : 6[84000] -> 7[c4000] via P2P/IPC/read
+[default1]:n2gpu1211:32600:32884 [1] NCCL INFO Channel 03 : 1[44000] -> 2[84000] via P2P/IPC/read
+[default2]:n2gpu1211:32601:32882 [2] NCCL INFO Channel 02 : 2[84000] -> 3[c4000] via P2P/IPC/read
+[default1]:n2gpu1215:386405:386589 [1] NCCL INFO Channel 03 : 5[44000] -> 6[84000] via P2P/IPC/read
+[default3]:n2gpu1215:386407:386585 [3] NCCL INFO Channel 03/0 : 7[c4000] -> 0[3000] [send] via NET/IB/0
+[default0]:n2gpu1211:32599:32875 [0] NCCL INFO Channel 03 : 0[3000] -> 1[44000] via P2P/IPC/read
+[default2]:n2gpu1215:386406:386591 [2] NCCL INFO Channel 03 : 6[84000] -> 7[c4000] via P2P/IPC/read
+[default2]:n2gpu1211:32601:32882 [2] NCCL INFO Channel 03 : 2[84000] -> 3[c4000] via P2P/IPC/read
+[default2]:n2gpu1215:386406:386591 [2] NCCL INFO Connected all rings
+[default1]:n2gpu1215:386405:386589 [1] NCCL INFO Connected all rings
+[default1]:n2gpu1211:32600:32884 [1] NCCL INFO Connected all rings
+[default2]:n2gpu1211:32601:32882 [2] NCCL INFO Connected all rings
+[default0]:n2gpu1211:32599:32875 [0] NCCL INFO Connected all rings
+[default3]:n2gpu1211:32602:32880 [3] NCCL INFO Connected all rings
+[default3]:n2gpu1211:32602:32880 [3] NCCL INFO Channel 00 : 3[c4000] -> 2[84000] via P2P/IPC/read
+[default3]:n2gpu1215:386407:386585 [3] NCCL INFO Connected all rings
+[default3]:n2gpu1215:386407:386585 [3] NCCL INFO Channel 00 : 7[c4000] -> 6[84000] via P2P/IPC/read
+[default0]:n2gpu1211:32599:32875 [0] NCCL INFO Channel 00/0 : 4[3000] -> 0[3000] [receive] via NET/IB/1
+[default3]:n2gpu1215:386407:386585 [3] NCCL INFO Channel 01 : 7[c4000] -> 6[84000] via P2P/IPC/read
+[default2]:n2gpu1211:32601:32882 [2] NCCL INFO Channel 00 : 2[84000] -> 1[44000] via P2P/IPC/read
+[default3]:n2gpu1211:32602:32880 [3] NCCL INFO Channel 01 : 3[c4000] -> 2[84000] via P2P/IPC/read
+[default0]:n2gpu1215:386404:386587 [0] NCCL INFO Connected all rings
+[default0]:n2gpu1215:386404:386587 [0] NCCL INFO Channel 00/0 : 0[3000] -> 4[3000] [receive] via NET/IB/1
+[default1]:n2gpu1215:386405:386589 [1] NCCL INFO Channel 00 : 5[44000] -> 4[3000] via P2P/IPC/read
+[default0]:n2gpu1211:32599:32875 [0] NCCL INFO Channel 01/0 : 4[3000] -> 0[3000] [receive] via NET/IB/1
+[default0]:n2gpu1211:32599:32875 [0] NCCL INFO Channel 02/0 : 4[3000] -> 0[3000] [receive] via NET/IB/1
+[default2]:n2gpu1215:386406:386591 [2] NCCL INFO Channel 00 : 6[84000] -> 5[44000] via P2P/IPC/read
+[default3]:n2gpu1215:386407:386585 [3] NCCL INFO Channel 02 : 7[c4000] -> 6[84000] via P2P/IPC/read
+[default1]:n2gpu1211:32600:32884 [1] NCCL INFO Channel 00 : 1[44000] -> 0[3000] via P2P/IPC/read
+[default2]:n2gpu1211:32601:32882 [2] NCCL INFO Channel 01 : 2[84000] -> 1[44000] via P2P/IPC/read
+[default3]:n2gpu1211:32602:32880 [3] NCCL INFO Channel 02 : 3[c4000] -> 2[84000] via P2P/IPC/read
+[default0]:n2gpu1215:386404:386587 [0] NCCL INFO Channel 01/0 : 0[3000] -> 4[3000] [receive] via NET/IB/1
+[default1]:n2gpu1215:386405:386589 [1] NCCL INFO Channel 01 : 5[44000] -> 4[3000] via P2P/IPC/read
+[default1]:n2gpu1211:32600:32884 [1] NCCL INFO Channel 01 : 1[44000] -> 0[3000] via P2P/IPC/read
+[default2]:n2gpu1215:386406:386591 [2] NCCL INFO Channel 01 : 6[84000] -> 5[44000] via P2P/IPC/read
+[default0]:n2gpu1215:386404:386587 [0] NCCL INFO Channel 02/0 : 0[3000] -> 4[3000] [receive] via NET/IB/1
+[default3]:n2gpu1215:386407:386585 [3] NCCL INFO Channel 03 : 7[c4000] -> 6[84000] via P2P/IPC/read
+[default2]:n2gpu1211:32601:32882 [2] NCCL INFO Channel 02 : 2[84000] -> 1[44000] via P2P/IPC/read
+[default3]:n2gpu1211:32602:32880 [3] NCCL INFO Channel 03 : 3[c4000] -> 2[84000] via P2P/IPC/read
+[default0]:n2gpu1211:32599:32875 [0] NCCL INFO Channel 03/0 : 4[3000] -> 0[3000] [receive] via NET/IB/1
+[default1]:n2gpu1215:386405:386589 [1] NCCL INFO Channel 02 : 5[44000] -> 4[3000] via P2P/IPC/read
+[default1]:n2gpu1215:386405:386589 [1] NCCL INFO Channel 03 : 5[44000] -> 4[3000] via P2P/IPC/read
+[default1]:n2gpu1211:32600:32884 [1] NCCL INFO Channel 02 : 1[44000] -> 0[3000] via P2P/IPC/read
+[default2]:n2gpu1211:32601:32882 [2] NCCL INFO Channel 03 : 2[84000] -> 1[44000] via P2P/IPC/read
+[default0]:n2gpu1211:32599:32875 [0] NCCL INFO Channel 00/0 : 0[3000] -> 4[3000] [send] via NET/IB/1
+[default2]:n2gpu1215:386406:386591 [2] NCCL INFO Channel 02 : 6[84000] -> 5[44000] via P2P/IPC/read
+[default0]:n2gpu1215:386404:386587 [0] NCCL INFO Channel 03/0 : 0[3000] -> 4[3000] [receive] via NET/IB/1
+[default0]:n2gpu1211:32599:32875 [0] NCCL INFO Channel 01/0 : 0[3000] -> 4[3000] [send] via NET/IB/1
+[default1]:n2gpu1211:32600:32884 [1] NCCL INFO Channel 03 : 1[44000] -> 0[3000] via P2P/IPC/read
+[default3]:n2gpu1211:32602:32880 [3] NCCL INFO Connected all trees
+[default3]:n2gpu1211:32602:32880 [3] NCCL INFO threadThresholds 8/8/64 | 64/8/64 | 8/8/512
+[default3]:n2gpu1211:32602:32880 [3] NCCL INFO 4 coll channels, 4 p2p channels, 2 p2p channels per peer
+[default2]:n2gpu1215:386406:386591 [2] NCCL INFO Channel 03 : 6[84000] -> 5[44000] via P2P/IPC/read
+[default0]:n2gpu1215:386404:386587 [0] NCCL INFO Channel 00/0 : 4[3000] -> 0[3000] [send] via NET/IB/1
+[default0]:n2gpu1211:32599:32875 [0] NCCL INFO Channel 02/0 : 0[3000] -> 4[3000] [send] via NET/IB/1
+[default2]:n2gpu1215:386406:386591 [2] NCCL INFO Connected all trees
+[default2]:n2gpu1215:386406:386591 [2] NCCL INFO threadThresholds 8/8/64 | 64/8/64 | 8/8/512
+[default2]:n2gpu1215:386406:386591 [2] NCCL INFO 4 coll channels, 4 p2p channels, 2 p2p channels per peer
+[default0]:n2gpu1215:386404:386587 [0] NCCL INFO Channel 01/0 : 4[3000] -> 0[3000] [send] via NET/IB/1
+[default3]:n2gpu1215:386407:386585 [3] NCCL INFO Connected all trees
+[default3]:n2gpu1215:386407:386585 [3] NCCL INFO threadThresholds 8/8/64 | 64/8/64 | 8/8/512
+[default3]:n2gpu1215:386407:386585 [3] NCCL INFO 4 coll channels, 4 p2p channels, 2 p2p channels per peer
+[default2]:n2gpu1211:32601:32882 [2] NCCL INFO Connected all trees
+[default2]:n2gpu1211:32601:32882 [2] NCCL INFO threadThresholds 8/8/64 | 64/8/64 | 8/8/512
+[default2]:n2gpu1211:32601:32882 [2] NCCL INFO 4 coll channels, 4 p2p channels, 2 p2p channels per peer
+[default0]:n2gpu1211:32599:32875 [0] NCCL INFO Channel 03/0 : 0[3000] -> 4[3000] [send] via NET/IB/1
+[default0]:n2gpu1215:386404:386587 [0] NCCL INFO Channel 02/0 : 4[3000] -> 0[3000] [send] via NET/IB/1
+[default0]:n2gpu1215:386404:386587 [0] NCCL INFO Channel 03/0 : 4[3000] -> 0[3000] [send] via NET/IB/1
+[default0]:n2gpu1215:386404:386587 [0] NCCL INFO Connected all trees
+[default0]:n2gpu1215:386404:386587 [0] NCCL INFO threadThresholds 8/8/64 | 64/8/64 | 8/8/512
+[default0]:n2gpu1215:386404:386587 [0] NCCL INFO 4 coll channels, 4 p2p channels, 2 p2p channels per peer
+[default0]:n2gpu1211:32599:32875 [0] NCCL INFO Connected all trees
+[default0]:n2gpu1211:32599:32875 [0] NCCL INFO threadThresholds 8/8/64 | 64/8/64 | 8/8/512
+[default0]:n2gpu1211:32599:32875 [0] NCCL INFO 4 coll channels, 4 p2p channels, 2 p2p channels per peer
+[default1]:n2gpu1211:32600:32884 [1] NCCL INFO Connected all trees
+[default1]:n2gpu1211:32600:32884 [1] NCCL INFO threadThresholds 8/8/64 | 64/8/64 | 8/8/512
+[default1]:n2gpu1211:32600:32884 [1] NCCL INFO 4 coll channels, 4 p2p channels, 2 p2p channels per peer
+[default1]:n2gpu1215:386405:386589 [1] NCCL INFO Connected all trees
+[default1]:n2gpu1215:386405:386589 [1] NCCL INFO threadThresholds 8/8/64 | 64/8/64 | 8/8/512
+[default1]:n2gpu1215:386405:386589 [1] NCCL INFO 4 coll channels, 4 p2p channels, 2 p2p channels per peer
+[default1]:n2gpu1211:32600:32884 [1] NCCL INFO comm 0x146f980090d0 rank 1 nranks 8 cudaDev 1 busId 44000 - Init COMPLETE
+[default2]:n2gpu1211:32601:32882 [2] NCCL INFO comm 0x14e1ac0090d0 rank 2 nranks 8 cudaDev 2 busId 84000 - Init COMPLETE
+[default3]:n2gpu1211:32602:32880 [3] NCCL INFO comm 0x14b5100090d0 rank 3 nranks 8 cudaDev 3 busId c4000 - Init COMPLETE
+[default0]:n2gpu1211:32599:32875 [0] NCCL INFO comm 0x149f300090d0 rank 0 nranks 8 cudaDev 0 busId 3000 - Init COMPLETE
+[default0]:n2gpu1211:32599:32599 [0] NCCL INFO Launch mode Parallel
+[default2]:n2gpu1215:386406:386591 [2] NCCL INFO comm 0x1521980090d0 rank 6 nranks 8 cudaDev 2 busId 84000 - Init COMPLETE
+[default0]:n2gpu1215:386404:386587 [0] NCCL INFO comm 0x14fadc0090d0 rank 4 nranks 8 cudaDev 0 busId 3000 - Init COMPLETE
+[default3]:n2gpu1215:386407:386585 [3] NCCL INFO comm 0x14fbf80090d0 rank 7 nranks 8 cudaDev 3 busId c4000 - Init COMPLETE
+[default1]:n2gpu1215:386405:386589 [1] NCCL INFO comm 0x152d940090d0 rank 5 nranks 8 cudaDev 1 busId 44000 - Init COMPLETE
+[default0]:>>> done with compiling and loading fused kernels. Compilation time: 10.922 seconds
+[default0]:time to initialize megatron (seconds): 19.186
+[default0]:[after megatron is initialized] datetime: 2023-07-31 02:23:39 
+[default0]:building GPT model ...
+[default0]:[2023-07-31 02:23:39,560] [INFO] [utils.py:785:see_memory_usage] Before Building Model
+[default0]:[2023-07-31 02:23:39,561] [INFO] [utils.py:786:see_memory_usage] MA 0.0 GB         Max_MA 3.19 GB         CA 0.0 GB         Max_CA 3 GB 
+[default0]:[2023-07-31 02:23:39,561] [INFO] [utils.py:793:see_memory_usage] CPU Virtual Memory:  used = 20.77 GB, percent = 4.1%
+[default2]:param_group keyset: dict_keys(['name', 'params', 'wd_mult', 'lr_mult'])
+[default3]:param_group keyset: dict_keys(['name', 'params', 'wd_mult', 'lr_mult'])
+[default3]:param_group keyset: dict_keys(['name', 'params', 'wd_mult', 'lr_mult'])
+[default2]:param_group keyset: dict_keys(['name', 'params', 'wd_mult', 'lr_mult'])
+[default1]:param_group keyset: dict_keys(['name', 'params', 'wd_mult', 'lr_mult'])
+[default0]:param_group keyset: dict_keys(['name', 'params', 'wd_mult', 'lr_mult'])
+[default1]:param_group keyset: dict_keys(['name', 'params', 'wd_mult', 'lr_mult'])
+[default0]:[2023-07-31 02:23:40,043] [INFO] [utils.py:785:see_memory_usage] After Building Model
+[default0]:[2023-07-31 02:23:40,044] [INFO] [utils.py:786:see_memory_usage] MA 1.41 GB         Max_MA 1.41 GB         CA 1.47 GB         Max_CA 1 GB 
+[default0]:[2023-07-31 02:23:40,044] [INFO] [utils.py:793:see_memory_usage] CPU Virtual Memory:  used = 20.82 GB, percent = 4.1%
+[default0]: > number of parameters on (tensor, pipeline) model parallel rank (0, 0): 760372224
+[default0]:param_group keyset: dict_keys(['name', 'params', 'wd_mult', 'lr_mult'])
+[default0]:> learning rate decay style: cosine
+[default0]:DeepSpeed is enabled.
+[default0]:[2023-07-31 02:23:40,047] [INFO] [logging.py:96:log_dist] [Rank 0] DeepSpeed info: version=0.10.0, git-hash=unknown, git-branch=unknown
+[default3]:n2gpu1215:386407:386605 [3] NCCL INFO Trees [0] -1/-1/-1->7->6 [1] -1/-1/-1->7->6 [2] -1/-1/-1->7->6 [3] -1/-1/-1->7->6
+[default2]:n2gpu1215:386406:386607 [2] NCCL INFO Trees [0] 7/-1/-1->6->5 [1] 7/-1/-1->6->5 [2] 7/-1/-1->6->5 [3] 7/-1/-1->6->5
+[default0]:n2gpu1211:32599:32937 [0] NCCL INFO Channel 00/04 :    0   1   2   3   4   5   6   7
+[default0]:n2gpu1211:32599:32937 [0] NCCL INFO Channel 01/04 :    0   1   2   3   4   5   6   7
+[default0]:n2gpu1211:32599:32937 [0] NCCL INFO Channel 02/04 :    0   1   2   3   4   5   6   7
+[default0]:n2gpu1211:32599:32937 [0] NCCL INFO Channel 03/04 :    0   1   2   3   4   5   6   7
+[default0]:n2gpu1211:32599:32937 [0] NCCL INFO Trees [0] 1/4/-1->0->-1 [1] 1/4/-1->0->-1 [2] 1/-1/-1->0->4 [3] 1/-1/-1->0->4
+[default2]:n2gpu1211:32601:32939 [2] NCCL INFO Trees [0] 3/-1/-1->2->1 [1] 3/-1/-1->2->1 [2] 3/-1/-1->2->1 [3] 3/-1/-1->2->1
+[default1]:n2gpu1211:32600:32940 [1] NCCL INFO Trees [0] 2/-1/-1->1->0 [1] 2/-1/-1->1->0 [2] 2/-1/-1->1->0 [3] 2/-1/-1->1->0
+[default3]:n2gpu1211:32602:32938 [3] NCCL INFO Trees [0] -1/-1/-1->3->2 [1] -1/-1/-1->3->2 [2] -1/-1/-1->3->2 [3] -1/-1/-1->3->2
+[default0]:n2gpu1215:386404:386608 [0] NCCL INFO Trees [0] 5/-1/-1->4->0 [1] 5/-1/-1->4->0 [2] 5/0/-1->4->-1 [3] 5/0/-1->4->-1
+[default0]:n2gpu1211:32599:32937 [0] NCCL INFO Channel 00/0 : 7[c4000] -> 0[3000] [receive] via NET/IB/0
+[default1]:n2gpu1215:386405:386606 [1] NCCL INFO Trees [0] 6/-1/-1->5->4 [1] 6/-1/-1->5->4 [2] 6/-1/-1->5->4 [3] 6/-1/-1->5->4
+[default0]:n2gpu1211:32599:32937 [0] NCCL INFO Channel 01/0 : 7[c4000] -> 0[3000] [receive] via NET/IB/0
+[default0]:n2gpu1215:386404:386608 [0] NCCL INFO Channel 00/0 : 3[c4000] -> 4[3000] [receive] via NET/IB/0
+[default0]:n2gpu1215:386404:386608 [0] NCCL INFO Channel 01/0 : 3[c4000] -> 4[3000] [receive] via NET/IB/0
+[default0]:n2gpu1211:32599:32937 [0] NCCL INFO Channel 02/0 : 7[c4000] -> 0[3000] [receive] via NET/IB/0
+[default2]:n2gpu1211:32601:32939 [2] NCCL INFO Channel 00 : 2[84000] -> 3[c4000] via P2P/IPC/read
+[default2]:n2gpu1215:386406:386607 [2] NCCL INFO Channel 00 : 6[84000] -> 7[c4000] via P2P/IPC/read
+[default0]:n2gpu1211:32599:32937 [0] NCCL INFO Channel 03/0 : 7[c4000] -> 0[3000] [receive] via NET/IB/0
+[default0]:n2gpu1211:32599:32937 [0] NCCL INFO Channel 00 : 0[3000] -> 1[44000] via P2P/IPC/read
+[default3]:n2gpu1215:386407:386605 [3] NCCL INFO Channel 00/0 : 7[c4000] -> 0[3000] [send] via NET/IB/0
+[default2]:n2gpu1215:386406:386607 [2] NCCL INFO Channel 01 : 6[84000] -> 7[c4000] via P2P/IPC/read
+[default3]:n2gpu1211:32602:32938 [3] NCCL INFO Channel 00/0 : 3[c4000] -> 4[3000] [send] via NET/IB/0
+[default1]:n2gpu1211:32600:32940 [1] NCCL INFO Channel 00 : 1[44000] -> 2[84000] via P2P/IPC/read
+[default0]:n2gpu1215:386404:386608 [0] NCCL INFO Channel 02/0 : 3[c4000] -> 4[3000] [receive] via NET/IB/0
+[default0]:n2gpu1211:32599:32937 [0] NCCL INFO Channel 01 : 0[3000] -> 1[44000] via P2P/IPC/read
+[default3]:n2gpu1211:32602:32938 [3] NCCL INFO Channel 01/0 : 3[c4000] -> 4[3000] [send] via NET/IB/0
+[default2]:n2gpu1211:32601:32939 [2] NCCL INFO Channel 01 : 2[84000] -> 3[c4000] via P2P/IPC/read
+[default1]:n2gpu1211:32600:32940 [1] NCCL INFO Channel 01 : 1[44000] -> 2[84000] via P2P/IPC/read
+[default3]:n2gpu1215:386407:386605 [3] NCCL INFO Channel 01/0 : 7[c4000] -> 0[3000] [send] via NET/IB/0
+[default2]:n2gpu1215:386406:386607 [2] NCCL INFO Channel 02 : 6[84000] -> 7[c4000] via P2P/IPC/read
+[default0]:n2gpu1215:386404:386608 [0] NCCL INFO Channel 03/0 : 3[c4000] -> 4[3000] [receive] via NET/IB/0
+[default0]:n2gpu1215:386404:386608 [0] NCCL INFO Channel 00 : 4[3000] -> 5[44000] via P2P/IPC/read
+[default3]:n2gpu1211:32602:32938 [3] NCCL INFO Channel 02/0 : 3[c4000] -> 4[3000] [send] via NET/IB/0
+[default2]:n2gpu1211:32601:32939 [2] NCCL INFO Channel 02 : 2[84000] -> 3[c4000] via P2P/IPC/read
+[default3]:n2gpu1215:386407:386605 [3] NCCL INFO Channel 02/0 : 7[c4000] -> 0[3000] [send] via NET/IB/0
+[default1]:n2gpu1215:386405:386606 [1] NCCL INFO Channel 00 : 5[44000] -> 6[84000] via P2P/IPC/read
+[default0]:n2gpu1211:32599:32937 [0] NCCL INFO Channel 02 : 0[3000] -> 1[44000] via P2P/IPC/read
+[default2]:n2gpu1211:32601:32939 [2] NCCL INFO Channel 03 : 2[84000] -> 3[c4000] via P2P/IPC/read
+[default1]:n2gpu1211:32600:32940 [1] NCCL INFO Channel 02 : 1[44000] -> 2[84000] via P2P/IPC/read
+[default3]:n2gpu1215:386407:386605 [3] NCCL INFO Channel 03/0 : 7[c4000] -> 0[3000] [send] via NET/IB/0
+[default2]:n2gpu1215:386406:386607 [2] NCCL INFO Channel 03 : 6[84000] -> 7[c4000] via P2P/IPC/read
+[default1]:n2gpu1215:386405:386606 [1] NCCL INFO Channel 01 : 5[44000] -> 6[84000] via P2P/IPC/read
+[default0]:n2gpu1215:386404:386608 [0] NCCL INFO Channel 01 : 4[3000] -> 5[44000] via P2P/IPC/read
+[default0]:n2gpu1211:32599:32937 [0] NCCL INFO Channel 03 : 0[3000] -> 1[44000] via P2P/IPC/read
+[default3]:n2gpu1211:32602:32938 [3] NCCL INFO Channel 03/0 : 3[c4000] -> 4[3000] [send] via NET/IB/0
+[default1]:n2gpu1211:32600:32940 [1] NCCL INFO Channel 03 : 1[44000] -> 2[84000] via P2P/IPC/read
+[default1]:n2gpu1211:32600:32940 [1] NCCL INFO Connected all rings
+[default1]:n2gpu1215:386405:386606 [1] NCCL INFO Channel 02 : 5[44000] -> 6[84000] via P2P/IPC/read
+[default0]:n2gpu1215:386404:386608 [0] NCCL INFO Channel 02 : 4[3000] -> 5[44000] via P2P/IPC/read
+[default2]:n2gpu1211:32601:32939 [2] NCCL INFO Connected all rings
+[default0]:n2gpu1215:386404:386608 [0] NCCL INFO Channel 03 : 4[3000] -> 5[44000] via P2P/IPC/read
+[default1]:n2gpu1215:386405:386606 [1] NCCL INFO Channel 03 : 5[44000] -> 6[84000] via P2P/IPC/read
+[default3]:n2gpu1215:386407:386605 [3] NCCL INFO Connected all rings
+[default3]:n2gpu1215:386407:386605 [3] NCCL INFO Channel 00 : 7[c4000] -> 6[84000] via P2P/IPC/read
+[default1]:n2gpu1215:386405:386606 [1] NCCL INFO Connected all rings
+[default2]:n2gpu1215:386406:386607 [2] NCCL INFO Connected all rings
+[default3]:n2gpu1211:32602:32938 [3] NCCL INFO Connected all rings
+[default3]:n2gpu1211:32602:32938 [3] NCCL INFO Channel 00 : 3[c4000] -> 2[84000] via P2P/IPC/read
+[default3]:n2gpu1215:386407:386605 [3] NCCL INFO Channel 01 : 7[c4000] -> 6[84000] via P2P/IPC/read
+[default0]:n2gpu1211:32599:32937 [0] NCCL INFO Connected all rings
+[default0]:n2gpu1211:32599:32937 [0] NCCL INFO Channel 00/0 : 4[3000] -> 0[3000] [receive] via NET/IB/1
+[default3]:n2gpu1215:386407:386605 [3] NCCL INFO Channel 02 : 7[c4000] -> 6[84000] via P2P/IPC/read
+[default3]:n2gpu1211:32602:32938 [3] NCCL INFO Channel 01 : 3[c4000] -> 2[84000] via P2P/IPC/read
+[default2]:n2gpu1211:32601:32939 [2] NCCL INFO Channel 00 : 2[84000] -> 1[44000] via P2P/IPC/read
+[default0]:n2gpu1215:386404:386608 [0] NCCL INFO Connected all rings
+[default3]:n2gpu1211:32602:32938 [3] NCCL INFO Channel 02 : 3[c4000] -> 2[84000] via P2P/IPC/read
+[default1]:n2gpu1211:32600:32940 [1] NCCL INFO Channel 00 : 1[44000] -> 0[3000] via P2P/IPC/read
+[default3]:n2gpu1215:386407:386605 [3] NCCL INFO Channel 03 : 7[c4000] -> 6[84000] via P2P/IPC/read
+[default0]:n2gpu1211:32599:32937 [0] NCCL INFO Channel 01/0 : 4[3000] -> 0[3000] [receive] via NET/IB/1
+[default0]:n2gpu1211:32599:32937 [0] NCCL INFO Channel 02/0 : 4[3000] -> 0[3000] [receive] via NET/IB/1
+[default0]:n2gpu1215:386404:386608 [0] NCCL INFO Channel 00/0 : 0[3000] -> 4[3000] [receive] via NET/IB/1
+[default2]:n2gpu1211:32601:32939 [2] NCCL INFO Channel 01 : 2[84000] -> 1[44000] via P2P/IPC/read
+[default1]:n2gpu1215:386405:386606 [1] NCCL INFO Channel 00 : 5[44000] -> 4[3000] via P2P/IPC/read
+[default0]:n2gpu1215:386404:386608 [0] NCCL INFO Channel 01/0 : 0[3000] -> 4[3000] [receive] via NET/IB/1
+[default3]:n2gpu1211:32602:32938 [3] NCCL INFO Channel 03 : 3[c4000] -> 2[84000] via P2P/IPC/read
+[default1]:n2gpu1211:32600:32940 [1] NCCL INFO Channel 01 : 1[44000] -> 0[3000] via P2P/IPC/read
+[default0]:n2gpu1211:32599:32937 [0] NCCL INFO Channel 03/0 : 4[3000] -> 0[3000] [receive] via NET/IB/1
+[default1]:n2gpu1215:386405:386606 [1] NCCL INFO Channel 01 : 5[44000] -> 4[3000] via P2P/IPC/read
+[default2]:n2gpu1211:32601:32939 [2] NCCL INFO Channel 02 : 2[84000] -> 1[44000] via P2P/IPC/read
+[default1]:n2gpu1211:32600:32940 [1] NCCL INFO Channel 02 : 1[44000] -> 0[3000] via P2P/IPC/read
+[default2]:n2gpu1215:386406:386607 [2] NCCL INFO Channel 00 : 6[84000] -> 5[44000] via P2P/IPC/read
+[default0]:n2gpu1211:32599:32937 [0] NCCL INFO Channel 00/0 : 0[3000] -> 4[3000] [send] via NET/IB/1
+[default0]:n2gpu1211:32599:32937 [0] NCCL INFO Channel 01/0 : 0[3000] -> 4[3000] [send] via NET/IB/1
+[default0]:n2gpu1215:386404:386608 [0] NCCL INFO Channel 02/0 : 0[3000] -> 4[3000] [receive] via NET/IB/1
+[default2]:n2gpu1211:32601:32939 [2] NCCL INFO Channel 03 : 2[84000] -> 1[44000] via P2P/IPC/read
+[default2]:n2gpu1215:386406:386607 [2] NCCL INFO Channel 01 : 6[84000] -> 5[44000] via P2P/IPC/read
+[default0]:n2gpu1211:32599:32937 [0] NCCL INFO Channel 02/0 : 0[3000] -> 4[3000] [send] via NET/IB/1
+[default1]:n2gpu1215:386405:386606 [1] NCCL INFO Channel 02 : 5[44000] -> 4[3000] via P2P/IPC/read
+[default1]:n2gpu1211:32600:32940 [1] NCCL INFO Channel 03 : 1[44000] -> 0[3000] via P2P/IPC/read
+[default0]:n2gpu1211:32599:32937 [0] NCCL INFO Channel 03/0 : 0[3000] -> 4[3000] [send] via NET/IB/1
+[default0]:n2gpu1215:386404:386608 [0] NCCL INFO Channel 03/0 : 0[3000] -> 4[3000] [receive] via NET/IB/1
+[default3]:n2gpu1211:32602:32938 [3] NCCL INFO Connected all trees
+[default3]:n2gpu1211:32602:32938 [3] NCCL INFO threadThresholds 8/8/64 | 64/8/64 | 8/8/512
+[default3]:n2gpu1211:32602:32938 [3] NCCL INFO 4 coll channels, 4 p2p channels, 2 p2p channels per peer
+[default2]:n2gpu1215:386406:386607 [2] NCCL INFO Channel 02 : 6[84000] -> 5[44000] via P2P/IPC/read
+[default1]:n2gpu1215:386405:386606 [1] NCCL INFO Channel 03 : 5[44000] -> 4[3000] via P2P/IPC/read
+[default0]:n2gpu1215:386404:386608 [0] NCCL INFO Channel 00/0 : 4[3000] -> 0[3000] [send] via NET/IB/1
+[default2]:n2gpu1211:32601:32939 [2] NCCL INFO Connected all trees
+[default2]:n2gpu1211:32601:32939 [2] NCCL INFO threadThresholds 8/8/64 | 64/8/64 | 8/8/512
+[default2]:n2gpu1211:32601:32939 [2] NCCL INFO 4 coll channels, 4 p2p channels, 2 p2p channels per peer
+[default0]:n2gpu1215:386404:386608 [0] NCCL INFO Channel 01/0 : 4[3000] -> 0[3000] [send] via NET/IB/1
+[default0]:n2gpu1215:386404:386608 [0] NCCL INFO Channel 02/0 : 4[3000] -> 0[3000] [send] via NET/IB/1
+[default2]:n2gpu1215:386406:386607 [2] NCCL INFO Channel 03 : 6[84000] -> 5[44000] via P2P/IPC/read
+[default3]:n2gpu1215:386407:386605 [3] NCCL INFO Connected all trees
+[default3]:n2gpu1215:386407:386605 [3] NCCL INFO threadThresholds 8/8/64 | 64/8/64 | 8/8/512
+[default3]:n2gpu1215:386407:386605 [3] NCCL INFO 4 coll channels, 4 p2p channels, 2 p2p channels per peer
+[default2]:n2gpu1215:386406:386607 [2] NCCL INFO Connected all trees
+[default2]:n2gpu1215:386406:386607 [2] NCCL INFO threadThresholds 8/8/64 | 64/8/64 | 8/8/512
+[default2]:n2gpu1215:386406:386607 [2] NCCL INFO 4 coll channels, 4 p2p channels, 2 p2p channels per peer
+[default0]:n2gpu1215:386404:386608 [0] NCCL INFO Channel 03/0 : 4[3000] -> 0[3000] [send] via NET/IB/1
+[default1]:n2gpu1211:32600:32940 [1] NCCL INFO Connected all trees
+[default1]:n2gpu1211:32600:32940 [1] NCCL INFO threadThresholds 8/8/64 | 64/8/64 | 8/8/512
+[default1]:n2gpu1211:32600:32940 [1] NCCL INFO 4 coll channels, 4 p2p channels, 2 p2p channels per peer
+[default0]:n2gpu1211:32599:32937 [0] NCCL INFO Connected all trees
+[default0]:n2gpu1211:32599:32937 [0] NCCL INFO threadThresholds 8/8/64 | 64/8/64 | 8/8/512
+[default0]:n2gpu1211:32599:32937 [0] NCCL INFO 4 coll channels, 4 p2p channels, 2 p2p channels per peer
+[default0]:n2gpu1211:32599:32937 [0] NCCL INFO comm 0x149e980090d0 rank 0 nranks 8 cudaDev 0 busId 3000 - Init COMPLETE
+[default1]:n2gpu1215:386405:386606 [1] NCCL INFO Connected all trees
+[default1]:n2gpu1215:386405:386606 [1] NCCL INFO threadThresholds 8/8/64 | 64/8/64 | 8/8/512
+[default1]:n2gpu1215:386405:386606 [1] NCCL INFO 4 coll channels, 4 p2p channels, 2 p2p channels per peer
+[default0]:n2gpu1215:386404:386608 [0] NCCL INFO Connected all trees
+[default0]:n2gpu1215:386404:386608 [0] NCCL INFO threadThresholds 8/8/64 | 64/8/64 | 8/8/512
+[default0]:n2gpu1215:386404:386608 [0] NCCL INFO 4 coll channels, 4 p2p channels, 2 p2p channels per peer
+[default2]:n2gpu1211:32601:32939 [2] NCCL INFO comm 0x14e1180090d0 rank 2 nranks 8 cudaDev 2 busId 84000 - Init COMPLETE
+[default3]:n2gpu1211:32602:32938 [3] NCCL INFO comm 0x14b4840090d0 rank 3 nranks 8 cudaDev 3 busId c4000 - Init COMPLETE
+[default1]:n2gpu1211:32600:32940 [1] NCCL INFO comm 0x146f040090d0 rank 1 nranks 8 cudaDev 1 busId 44000 - Init COMPLETE
+[default0]:n2gpu1211:32599:32599 [0] NCCL INFO Launch mode Parallel
+[default1]:n2gpu1215:386405:386606 [1] NCCL INFO comm 0x152d000090d0 rank 5 nranks 8 cudaDev 1 busId 44000 - Init COMPLETE
+[default0]:n2gpu1215:386404:386608 [0] NCCL INFO comm 0x14fa440090d0 rank 4 nranks 8 cudaDev 0 busId 3000 - Init COMPLETE
+[default3]:n2gpu1215:386407:386605 [3] NCCL INFO comm 0x14fb6c0090d0 rank 7 nranks 8 cudaDev 3 busId c4000 - Init COMPLETE
+[default2]:n2gpu1215:386406:386607 [2] NCCL INFO comm 0x1521040090d0 rank 6 nranks 8 cudaDev 2 busId 84000 - Init COMPLETE
+[default0]:[2023-07-31 02:23:58,464] [INFO] [logging.py:96:log_dist] [Rank 0] DeepSpeed Flops Profiler Enabled: False
+[default0]:[2023-07-31 02:23:58,485] [INFO] [logging.py:96:log_dist] [Rank 0] Removing param_group that has no 'params' in the client Optimizer
+[default0]:[2023-07-31 02:23:58,485] [INFO] [logging.py:96:log_dist] [Rank 0] Using client Optimizer as basic optimizer
+[default0]:[2023-07-31 02:23:58,523] [INFO] [logging.py:96:log_dist] [Rank 0] DeepSpeed Basic Optimizer = FusedAdam
+[default0]:[2023-07-31 02:23:58,523] [INFO] [utils.py:54:is_zero_supported_optimizer] Checking ZeRO support for optimizer=FusedAdam type=<class 'apex.optimizers.fused_adam.FusedAdam'>
+[default0]:[2023-07-31 02:23:58,523] [INFO] [logging.py:96:log_dist] [Rank 0] Creating torch.float16 ZeRO stage 2 optimizer
+[default0]:[2023-07-31 02:23:58,523] [INFO] [stage_1_and_2.py:133:__init__] Reduce bucket size 500,000,000
+[default0]:[2023-07-31 02:23:58,523] [INFO] [stage_1_and_2.py:134:__init__] Allgather bucket size 500,000,000
+[default0]:[2023-07-31 02:23:58,524] [INFO] [stage_1_and_2.py:135:__init__] CPU Offload: False
+[default0]:[2023-07-31 02:23:58,524] [INFO] [stage_1_and_2.py:136:__init__] Round robin gradient partitioning: False
+[default0]:Rank: 0 partition count [8, 8] and sizes[(94986240, False), (60288, False)] 
+[default1]:Rank: 1 partition count [8, 8] and sizes[(94986240, False), (60288, False)] 
+[default3]:Rank: 3 partition count [8, 8] and sizes[(94986240, False), (60288, False)] 
+[default0]:Rank: 4 partition count [8, 8] and sizes[(94986240, False), (60288, False)] 
+[default2]:Rank: 6 partition count [8, 8] and sizes[(94986240, False), (60288, False)] 
+[default3]:Rank: 7 partition count [8, 8] and sizes[(94986240, False), (60288, False)] 
+[default1]:Rank: 5 partition count [8, 8] and sizes[(94986240, False), (60288, False)] 
+[default2]:Rank: 2 partition count [8, 8] and sizes[(94986240, False), (60288, False)] 
+[default0]:[2023-07-31 02:24:03,364] [INFO] [utils.py:785:see_memory_usage] Before initializing optimizer states
+[default0]:[2023-07-31 02:24:03,365] [INFO] [utils.py:786:see_memory_usage] MA 1.77 GB         Max_MA 1.77 GB         CA 1.77 GB         Max_CA 2 GB 
+[default0]:[2023-07-31 02:24:03,365] [INFO] [utils.py:793:see_memory_usage] CPU Virtual Memory:  used = 22.27 GB, percent = 4.4%
+[default0]:[2023-07-31 02:24:03,483] [INFO] [utils.py:785:see_memory_usage] After initializing optimizer states
+[default0]:[2023-07-31 02:24:03,484] [INFO] [utils.py:786:see_memory_usage] MA 2.48 GB         Max_MA 2.83 GB         CA 2.84 GB         Max_CA 3 GB 
+[default0]:[2023-07-31 02:24:03,484] [INFO] [utils.py:793:see_memory_usage] CPU Virtual Memory:  used = 22.27 GB, percent = 4.4%
+[default0]:[2023-07-31 02:24:03,484] [INFO] [stage_1_and_2.py:493:__init__] optimizer state initialized
+[default0]:[2023-07-31 02:24:03,575] [INFO] [utils.py:785:see_memory_usage] After initializing ZeRO optimizer
+[default0]:[2023-07-31 02:24:03,575] [INFO] [utils.py:786:see_memory_usage] MA 2.48 GB         Max_MA 2.48 GB         CA 2.84 GB         Max_CA 3 GB 
+[default0]:[2023-07-31 02:24:03,575] [INFO] [utils.py:793:see_memory_usage] CPU Virtual Memory:  used = 22.27 GB, percent = 4.4%
+[default0]:[2023-07-31 02:24:03,576] [INFO] [logging.py:96:log_dist] [Rank 0] DeepSpeed Final Optimizer = FusedAdam
+[default0]:[2023-07-31 02:24:03,577] [INFO] [logging.py:96:log_dist] [Rank 0] DeepSpeed using client LR scheduler
+[default0]:[2023-07-31 02:24:03,577] [INFO] [logging.py:96:log_dist] [Rank 0] DeepSpeed LR Scheduler = <megatron.optimizer_param_scheduler.OptimizerParamScheduler object at 0x149fae34bfa0>
+[default0]:[2023-07-31 02:24:03,577] [INFO] [logging.py:96:log_dist] [Rank 0] step=0, skipped=0, lr=[0.0, 0.0], mom=[(0.9, 0.95), (0.9, 0.95)]
+[default0]:[2023-07-31 02:24:03,577] [INFO] [config.py:960:print] DeepSpeedEngine configuration:
+[default0]:[2023-07-31 02:24:03,577] [INFO] [config.py:964:print]   activation_checkpointing_config  {
+[default0]:    "partition_activations": false, 
+[default0]:    "contiguous_memory_optimization": false, 
+[default0]:    "cpu_checkpointing": false, 
+[default0]:    "number_checkpoints": null, 
+[default0]:    "synchronize_checkpoint_boundary": false, 
+[default0]:    "profile": false
+[default0]:}
+[default0]:[2023-07-31 02:24:03,577] [INFO] [config.py:964:print]   aio_config ................... {'block_size': 1048576, 'queue_depth': 8, 'thread_count': 1, 'single_submit': False, 'overlap_events': True}
+[default0]:[2023-07-31 02:24:03,578] [INFO] [config.py:964:print]   amp_enabled .................. False
+[default0]:[2023-07-31 02:24:03,578] [INFO] [config.py:964:print]   amp_params ................... False
+[default0]:[2023-07-31 02:24:03,611] [INFO] [config.py:964:print]   autotuning_config ............ {
+[default0]:    "enabled": false, 
+[default0]:    "start_step": null, 
+[default0]:    "end_step": null, 
+[default0]:    "metric_path": null, 
+[default0]:    "arg_mappings": null, 
+[default0]:    "metric": "throughput", 
+[default0]:    "model_info": null, 
+[default0]:    "results_dir": "autotuning_results", 
+[default0]:    "exps_dir": "autotuning_exps", 
+[default0]:    "overwrite": true, 
+[default0]:    "fast": true, 
+[default0]:    "start_profile_step": 3, 
+[default0]:    "end_profile_step": 5, 
+[default0]:    "tuner_type": "gridsearch", 
+[default0]:    "tuner_early_stopping": 5, 
+[default0]:    "tuner_num_trials": 50, 
+[default0]:    "model_info_path": null, 
+[default0]:    "mp_size": 1, 
+[default0]:    "max_train_batch_size": null, 
+[default0]:    "min_train_batch_size": 1, 
+[default0]:    "max_train_micro_batch_size_per_gpu": 1.024000e+03, 
+[default0]:    "min_train_micro_batch_size_per_gpu": 1, 
+[default0]:    "num_tuning_micro_batch_sizes": 3
+[default0]:}
+[default0]:[2023-07-31 02:24:03,611] [INFO] [config.py:964:print]   bfloat16_enabled ............. False
+[default0]:[2023-07-31 02:24:03,611] [INFO] [config.py:964:print]   checkpoint_parallel_write_pipeline  False
+[default0]:[2023-07-31 02:24:03,611] [INFO] [config.py:964:print]   checkpoint_tag_validation_enabled  True
+[default0]:[2023-07-31 02:24:03,611] [INFO] [config.py:964:print]   checkpoint_tag_validation_fail  False
+[default0]:[2023-07-31 02:24:03,611] [INFO] [config.py:964:print]   comms_config ................. <deepspeed.comm.config.DeepSpeedCommsConfig object at 0x149fae34b970>
+[default0]:[2023-07-31 02:24:03,611] [INFO] [config.py:964:print]   communication_data_type ...... None
+[default0]:[2023-07-31 02:24:03,611] [INFO] [config.py:964:print]   compression_config ........... {'weight_quantization': {'shared_parameters': {'enabled': False, 'quantizer_kernel': False, 'schedule_offset': 0, 'quantize_groups': 1, 'quantize_verbose': False, 'quantization_type': 'symmetric', 'quantize_weight_in_forward': False, 'rounding': 'nearest', 'fp16_mixed_quantize': False, 'quantize_change_ratio': 0.001}, 'different_groups': {}}, 'activation_quantization': {'shared_parameters': {'enabled': False, 'quantization_type': 'symmetric', 'range_calibration': 'dynamic', 'schedule_offset': 1000}, 'different_groups': {}}, 'sparse_pruning': {'shared_parameters': {'enabled': False, 'method': 'l1', 'schedule_offset': 1000}, 'different_groups': {}}, 'row_pruning': {'shared_parameters': {'enabled': False, 'method': 'l1', 'schedule_offset': 1000}, 'different_groups': {}}, 'head_pruning': {'shared_parameters': {'enabled': False, 'method': 'topk', 'schedule_offset': 1000}, 'different_groups': {}}, 'channel_pruning': {'shared_parameters': {'enabled': False, 'method': 'l1', 'schedule_offset': 1000}, 'different_groups': {}}, 'layer_reduction': {'enabled': False}}
+[default0]:[2023-07-31 02:24:03,611] [INFO] [config.py:964:print]   curriculum_enabled_legacy .... False
+[default0]:[2023-07-31 02:24:03,611] [INFO] [config.py:964:print]   curriculum_params_legacy ..... {'curriculum_type': 'seqlen', 'min_difficulty': 80, 'max_difficulty': 2048, 'schedule_type': 'fixed_linear', 'schedule_config': {'total_curriculum_step': 881109, 'difficulty_step': 8}}
+[default0]:[2023-07-31 02:24:03,611] [INFO] [config.py:964:print]   data_efficiency_config ....... {'enabled': False, 'seed': 1234, 'data_sampling': {'enabled': False, 'num_epochs': 1000, 'num_workers': 0, 'curriculum_learning': {'enabled': False}}, 'data_routing': {'enabled': False, 'random_ltd': {'enabled': False, 'layer_token_lr_schedule': {'enabled': False}}}}
+[default0]:[2023-07-31 02:24:03,611] [INFO] [config.py:964:print]   data_efficiency_enabled ...... False
+[default0]:[2023-07-31 02:24:03,612] [INFO] [config.py:964:print]   dataloader_drop_last ......... False
+[default0]:[2023-07-31 02:24:03,612] [INFO] [config.py:964:print]   disable_allgather ............ False
+[default0]:[2023-07-31 02:24:03,612] [INFO] [config.py:964:print]   dump_state ................... False
+[default0]:[2023-07-31 02:24:03,612] [INFO] [config.py:964:print]   dynamic_loss_scale_args ...... {'init_scale': 2048, 'scale_window': 500, 'delayed_shift': 2, 'consecutive_hysteresis': False, 'min_scale': 1}
+[default0]:[2023-07-31 02:24:03,612] [INFO] [config.py:964:print]   eigenvalue_enabled ........... False
+[default0]:[2023-07-31 02:24:03,612] [INFO] [config.py:964:print]   eigenvalue_gas_boundary_resolution  1
+[default0]:[2023-07-31 02:24:03,612] [INFO] [config.py:964:print]   eigenvalue_layer_name ........ bert.encoder.layer
+[default0]:[2023-07-31 02:24:03,612] [INFO] [config.py:964:print]   eigenvalue_layer_num ......... 0
+[default0]:[2023-07-31 02:24:03,612] [INFO] [config.py:964:print]   eigenvalue_max_iter .......... 100
+[default0]:[2023-07-31 02:24:03,612] [INFO] [config.py:964:print]   eigenvalue_stability ......... 1e-06
+[default0]:[2023-07-31 02:24:03,612] [INFO] [config.py:964:print]   eigenvalue_tol ............... 0.01
+[default0]:[2023-07-31 02:24:03,612] [INFO] [config.py:964:print]   eigenvalue_verbose ........... False
+[default0]:[2023-07-31 02:24:03,612] [INFO] [config.py:964:print]   elasticity_enabled ........... False
+[default0]:[2023-07-31 02:24:03,612] [INFO] [config.py:964:print]   flops_profiler_config ........ {
+[default0]:    "enabled": false, 
+[default0]:    "recompute_fwd_factor": 0.0, 
+[default0]:    "profile_step": 1, 
+[default0]:    "module_depth": -1, 
+[default0]:    "top_modules": 1, 
+[default0]:    "detailed": true, 
+[default0]:    "output_file": null
+[default0]:}
+[default0]:[2023-07-31 02:24:03,612] [INFO] [config.py:964:print]   fp16_auto_cast ............... False
+[default0]:[2023-07-31 02:24:03,612] [INFO] [config.py:964:print]   fp16_enabled ................. True
+[default0]:[2023-07-31 02:24:03,612] [INFO] [config.py:964:print]   fp16_master_weights_and_gradients  False
+[default0]:[2023-07-31 02:24:03,613] [INFO] [config.py:964:print]   global_rank .................. 0
+[default0]:[2023-07-31 02:24:03,613] [INFO] [config.py:964:print]   grad_accum_dtype ............. None
+[default0]:[2023-07-31 02:24:03,613] [INFO] [config.py:964:print]   gradient_accumulation_steps .. 1
+[default0]:[2023-07-31 02:24:03,613] [INFO] [config.py:964:print]   gradient_clipping ............ 1
+[default0]:[2023-07-31 02:24:03,613] [INFO] [config.py:964:print]   gradient_predivide_factor .... 1.0
+[default3]:[2023-07-31 02:24:03,794] [WARNING] [engine.py:2635:load_checkpoint] Unable to find latest file at /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/lola_ws/scaling_experiments/output/GPT_0.76B_MoE128_8BATCH_8GPU_2Node/checkpoint/gpt-0.76B-lr-2.0e-4-minlr-2e-06-bs-64-gpus-8-mp-1-pp-1-ep-128-mlc-0.01-cap-1.0-drop-true/latest, if trying to load latest checkpoint please ensure this file exists or pass an explicit checkpoint tag when loading a checkpoint.
+[default2]:[2023-07-31 02:24:03,815] [WARNING] [engine.py:2635:load_checkpoint] Unable to find latest file at /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/lola_ws/scaling_experiments/output/GPT_0.76B_MoE128_8BATCH_8GPU_2Node/checkpoint/gpt-0.76B-lr-2.0e-4-minlr-2e-06-bs-64-gpus-8-mp-1-pp-1-ep-128-mlc-0.01-cap-1.0-drop-true/latest, if trying to load latest checkpoint please ensure this file exists or pass an explicit checkpoint tag when loading a checkpoint.
+[default0]:[2023-07-31 02:24:03,777] [INFO] [config.py:964:print]   hybrid_engine ................ enabled=False max_out_tokens=512 inference_tp_size=1 release_inference_cache=False pin_parameters=True tp_gather_partition_size=8
+[default0]:[2023-07-31 02:24:03,777] [INFO] [config.py:964:print]   initial_dynamic_scale ........ 2048
+[default0]:[2023-07-31 02:24:03,777] [INFO] [config.py:964:print]   load_universal_checkpoint .... False
+[default0]:[2023-07-31 02:24:03,777] [INFO] [config.py:964:print]   loss_scale ................... 0
+[default0]:[2023-07-31 02:24:03,777] [INFO] [config.py:964:print]   memory_breakdown ............. False
+[default0]:[2023-07-31 02:24:03,777] [INFO] [config.py:964:print]   mics_hierarchial_params_gather  False
+[default0]:[2023-07-31 02:24:03,777] [INFO] [config.py:964:print]   mics_shard_size .............. -1
+[default0]:[2023-07-31 02:24:03,777] [INFO] [config.py:964:print]   monitor_config ............... tensorboard=TensorBoardConfig(enabled=False, output_path='', job_name='DeepSpeedJobName') wandb=WandbConfig(enabled=False, group=None, team=None, project='deepspeed') csv_monitor=CSVConfig(enabled=False, output_path='', job_name='DeepSpeedJobName') enabled=False
+[default0]:[2023-07-31 02:24:03,777] [INFO] [config.py:964:print]   nebula_config ................ {
+[default0]:    "enabled": false, 
+[default0]:    "persistent_storage_path": null, 
+[default0]:    "persistent_time_interval": 100, 
+[default0]:    "num_of_version_in_retention": 2, 
+[default0]:    "enable_nebula_load": true, 
+[default0]:    "load_path": null
+[default0]:}
+[default0]:[2023-07-31 02:24:03,777] [INFO] [config.py:964:print]   optimizer_legacy_fusion ...... False
+[default0]:[2023-07-31 02:24:03,777] [INFO] [config.py:964:print]   optimizer_name ............... None
+[default0]:[2023-07-31 02:24:03,777] [INFO] [config.py:964:print]   optimizer_params ............. None
+[default0]:[2023-07-31 02:24:03,778] [INFO] [config.py:964:print]   pipeline ..................... {'stages': 'auto', 'partition': 'best', 'seed_layers': False, 'activation_checkpoint_interval': 0}
+[default0]:[2023-07-31 02:24:03,778] [INFO] [config.py:964:print]   pld_enabled .................. False
+[default0]:[2023-07-31 02:24:03,778] [INFO] [config.py:964:print]   pld_params ................... False
+[default0]:[2023-07-31 02:24:03,778] [INFO] [config.py:964:print]   prescale_gradients ........... False
+[default0]:[2023-07-31 02:24:03,778] [INFO] [config.py:964:print]   scheduler_name ............... None
+[default0]:[2023-07-31 02:24:03,778] [INFO] [config.py:964:print]   scheduler_params ............. None
+[default0]:[2023-07-31 02:24:03,778] [INFO] [config.py:964:print]   sparse_attention ............. None
+[default0]:[2023-07-31 02:24:03,778] [INFO] [config.py:964:print]   sparse_gradients_enabled ..... False
+[default0]:[2023-07-31 02:24:03,778] [INFO] [config.py:964:print]   steps_per_print .............. 5
+[default0]:[2023-07-31 02:24:03,778] [INFO] [config.py:964:print]   train_batch_size ............. 64
+[default0]:[2023-07-31 02:24:03,778] [INFO] [config.py:964:print]   train_micro_batch_size_per_gpu  8
+[default0]:[2023-07-31 02:24:03,778] [INFO] [config.py:964:print]   use_node_local_storage ....... False
+[default0]:[2023-07-31 02:24:03,778] [INFO] [config.py:964:print]   wall_clock_breakdown ......... False
+[default0]:[2023-07-31 02:24:03,778] [INFO] [config.py:964:print]   world_size ................... 8
+[default0]:[2023-07-31 02:24:03,778] [INFO] [config.py:964:print]   zero_allow_untested_optimizer  False
+[default0]:[2023-07-31 02:24:03,778] [INFO] [config.py:964:print]   zero_config .................. stage=2 contiguous_gradients=True reduce_scatter=True reduce_bucket_size=500,000,000 allgather_partitions=True allgather_bucket_size=500,000,000 overlap_comm=False load_from_fp32_weights=True elastic_checkpoint=False offload_param=None offload_optimizer=None sub_group_size=1,000,000,000 cpu_offload_param=None cpu_offload_use_pin_memory=None cpu_offload=None prefetch_bucket_size=50,000,000 param_persistence_threshold=100,000 model_persistence_threshold=sys.maxsize max_live_parameters=1,000,000,000 max_reuse_distance=1,000,000,000 gather_16bit_weights_on_model_save=False stage3_gather_fp16_weights_on_model_save=False ignore_unused_parameters=True legacy_stage1=False round_robin_gradients=False zero_hpz_partition_size=1 zero_quantized_weights=False zero_quantized_gradients=False mics_shard_size=-1 mics_hierarchical_params_gather=False memory_efficient_linear=True
+[default0]:[2023-07-31 02:24:03,778] [INFO] [config.py:964:print]   zero_enabled ................. True
+[default0]:[2023-07-31 02:24:03,779] [INFO] [config.py:964:print]   zero_force_ds_cpu_optimizer .. True
+[default0]:[2023-07-31 02:24:03,779] [INFO] [config.py:964:print]   zero_optimization_stage ...... 2
+[default0]:[2023-07-31 02:24:03,779] [INFO] [config.py:950:print_user_config]   json = {
+[default0]:    "train_batch_size": 64, 
+[default0]:    "train_micro_batch_size_per_gpu": 8, 
+[default0]:    "steps_per_print": 5, 
+[default0]:    "zero_optimization": {
+[default0]:        "stage": 2
+[default0]:    }, 
+[default0]:    "gradient_clipping": 1, 
+[default0]:    "prescale_gradients": false, 
+[default0]:    "fp16": {
+[default0]:        "enabled": true, 
+[default0]:        "loss_scale": 0, 
+[default0]:        "loss_scale_window": 500, 
+[default0]:        "hysteresis": 2, 
+[default0]:        "min_loss_scale": 1, 
+[default0]:        "initial_scale_power": 11
+[default0]:    }, 
+[default0]:    "bf16": {
+[default0]:        "enabled": false
+[default0]:    }, 
+[default0]:    "curriculum_learning": {
+[default0]:        "enabled": false, 
+[default0]:        "curriculum_type": "seqlen", 
+[default0]:        "min_difficulty": 80, 
+[default0]:        "max_difficulty": 2.048000e+03, 
+[default0]:        "schedule_type": "fixed_linear", 
+[default0]:        "schedule_config": {
+[default0]:            "total_curriculum_step": 8.811090e+05, 
+[default0]:            "difficulty_step": 8
+[default0]:        }
+[default0]:    }, 
+[default0]:    "wall_clock_breakdown": false
+[default0]:}
+[default0]:[2023-07-31 02:24:03,794] [WARNING] [engine.py:2635:load_checkpoint] Unable to find latest file at /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/lola_ws/scaling_experiments/output/GPT_0.76B_MoE128_8BATCH_8GPU_2Node/checkpoint/gpt-0.76B-lr-2.0e-4-minlr-2e-06-bs-64-gpus-8-mp-1-pp-1-ep-128-mlc-0.01-cap-1.0-drop-true/latest, if trying to load latest checkpoint please ensure this file exists or pass an explicit checkpoint tag when loading a checkpoint.
+[default0]:WARNING: could not find the metadata file /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/lola_ws/scaling_experiments/output/GPT_0.76B_MoE128_8BATCH_8GPU_2Node/checkpoint/gpt-0.76B-lr-2.0e-4-minlr-2e-06-bs-64-gpus-8-mp-1-pp-1-ep-128-mlc-0.01-cap-1.0-drop-true 
+[default0]:    will not load any checkpoints and will start from random
+[default1]:[2023-07-31 02:24:03,804] [WARNING] [engine.py:2635:load_checkpoint] Unable to find latest file at /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/lola_ws/scaling_experiments/output/GPT_0.76B_MoE128_8BATCH_8GPU_2Node/checkpoint/gpt-0.76B-lr-2.0e-4-minlr-2e-06-bs-64-gpus-8-mp-1-pp-1-ep-128-mlc-0.01-cap-1.0-drop-true/latest, if trying to load latest checkpoint please ensure this file exists or pass an explicit checkpoint tag when loading a checkpoint.
+[default3]:[2023-07-31 02:24:03,821] [WARNING] [engine.py:2635:load_checkpoint] Unable to find latest file at /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/lola_ws/scaling_experiments/output/GPT_0.76B_MoE128_8BATCH_8GPU_2Node/checkpoint/gpt-0.76B-lr-2.0e-4-minlr-2e-06-bs-64-gpus-8-mp-1-pp-1-ep-128-mlc-0.01-cap-1.0-drop-true/latest, if trying to load latest checkpoint please ensure this file exists or pass an explicit checkpoint tag when loading a checkpoint.
+[default0]:[2023-07-31 02:24:03,823] [WARNING] [engine.py:2635:load_checkpoint] Unable to find latest file at /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/lola_ws/scaling_experiments/output/GPT_0.76B_MoE128_8BATCH_8GPU_2Node/checkpoint/gpt-0.76B-lr-2.0e-4-minlr-2e-06-bs-64-gpus-8-mp-1-pp-1-ep-128-mlc-0.01-cap-1.0-drop-true/latest, if trying to load latest checkpoint please ensure this file exists or pass an explicit checkpoint tag when loading a checkpoint.
+[default2]:[2023-07-31 02:24:03,834] [WARNING] [engine.py:2635:load_checkpoint] Unable to find latest file at /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/lola_ws/scaling_experiments/output/GPT_0.76B_MoE128_8BATCH_8GPU_2Node/checkpoint/gpt-0.76B-lr-2.0e-4-minlr-2e-06-bs-64-gpus-8-mp-1-pp-1-ep-128-mlc-0.01-cap-1.0-drop-true/latest, if trying to load latest checkpoint please ensure this file exists or pass an explicit checkpoint tag when loading a checkpoint.
+[default1]:[2023-07-31 02:24:03,812] [WARNING] [engine.py:2635:load_checkpoint] Unable to find latest file at /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/lola_ws/scaling_experiments/output/GPT_0.76B_MoE128_8BATCH_8GPU_2Node/checkpoint/gpt-0.76B-lr-2.0e-4-minlr-2e-06-bs-64-gpus-8-mp-1-pp-1-ep-128-mlc-0.01-cap-1.0-drop-true/latest, if trying to load latest checkpoint please ensure this file exists or pass an explicit checkpoint tag when loading a checkpoint.
+[default3]:(min, max) time across ranks (ms):
+[default3]:    load-checkpoint ................................: (52.39, 142.66)
+[default0]:[after model, optimizer, and learning rate scheduler are built] datetime: 2023-07-31 02:24:04 
+[default0]:> building train, validation, and test datasets ...
+[default0]: > datasets target sizes (minimum size):
+[default0]:    train:      439453120
+[default0]:    validation: 219728000
+[default0]:    test:       3200
+[default0]:> building train, validation, and test datasets for GPT ...
+[default0]:Single data path provided for train, valid & test
+[default0]: > building dataset index ...
+[default0]:    reading sizes...
+[default0]:    reading pointers...
+[default0]:    reading document index...
+[default0]:    creating numpy buffer of mmap...
+[default0]:    creating memory view of numpy buffer...
+[default0]: > finished creating indexed dataset in 0.030829 seconds
+[default0]:    number of documents: 10000
+[default0]: > dataset split:
+[default0]:    train:
+[default0]:     document indices in [0, 9800) total of 9800 documents
+[default0]:    validation:
+[default0]:     document indices in [9800, 10000) total of 200 documents
+[default0]:    test:
+[default0]:     document indices in [10000, 10000) total of 0 documents
+[default2]:NCCL version 2.12.12+cuda11.7
+[default0]:NCCL version 2.12.12+cuda11.7
+[default2]:NCCL version 2.12.12+cuda11.7
+[default3]:NCCL version 2.12.12+cuda11.7
+[default1]:NCCL version 2.12.12+cuda11.7
+[default1]:NCCL version 2.12.12+cuda11.7
+[default3]:NCCL version 2.12.12+cuda11.7
+[default0]:n2gpu1215:386404:386625 [0] NCCL INFO Channel 00/32 :    0
+[default0]:n2gpu1215:386404:386625 [0] NCCL INFO Channel 01/32 :    0
+[default0]:n2gpu1215:386404:386625 [0] NCCL INFO Channel 02/32 :    0
+[default0]:n2gpu1215:386404:386625 [0] NCCL INFO Channel 03/32 :    0
+[default0]:n2gpu1215:386404:386625 [0] NCCL INFO Channel 04/32 :    0
+[default0]:n2gpu1215:386404:386625 [0] NCCL INFO Channel 05/32 :    0
+[default0]:n2gpu1215:386404:386625 [0] NCCL INFO Channel 06/32 :    0
+[default0]:n2gpu1215:386404:386625 [0] NCCL INFO Channel 07/32 :    0
+[default0]:n2gpu1215:386404:386625 [0] NCCL INFO Channel 08/32 :    0
+[default0]:n2gpu1215:386404:386625 [0] NCCL INFO Channel 09/32 :    0
+[default0]:n2gpu1215:386404:386625 [0] NCCL INFO Channel 10/32 :    0
+[default0]:n2gpu1215:386404:386625 [0] NCCL INFO Channel 11/32 :    0
+[default0]:n2gpu1215:386404:386625 [0] NCCL INFO Channel 12/32 :    0
+[default0]:n2gpu1215:386404:386625 [0] NCCL INFO Channel 13/32 :    0
+[default0]:n2gpu1215:386404:386625 [0] NCCL INFO Channel 14/32 :    0
+[default0]:n2gpu1215:386404:386625 [0] NCCL INFO Channel 15/32 :    0
+[default0]:n2gpu1215:386404:386625 [0] NCCL INFO Channel 16/32 :    0
+[default0]:n2gpu1215:386404:386625 [0] NCCL INFO Channel 17/32 :    0
+[default0]:n2gpu1215:386404:386625 [0] NCCL INFO Channel 18/32 :    0
+[default0]:n2gpu1215:386404:386625 [0] NCCL INFO Channel 19/32 :    0
+[default0]:n2gpu1215:386404:386625 [0] NCCL INFO Channel 20/32 :    0
+[default0]:n2gpu1215:386404:386625 [0] NCCL INFO Channel 21/32 :    0
+[default0]:n2gpu1215:386404:386625 [0] NCCL INFO Channel 22/32 :    0
+[default0]:n2gpu1215:386404:386625 [0] NCCL INFO Channel 23/32 :    0
+[default0]:n2gpu1215:386404:386625 [0] NCCL INFO Channel 24/32 :    0
+[default0]:n2gpu1215:386404:386625 [0] NCCL INFO Channel 25/32 :    0
+[default0]:n2gpu1215:386404:386625 [0] NCCL INFO Channel 26/32 :    0
+[default0]:n2gpu1215:386404:386625 [0] NCCL INFO Channel 27/32 :    0
+[default0]:n2gpu1215:386404:386625 [0] NCCL INFO Channel 28/32 :    0
+[default0]:n2gpu1215:386404:386625 [0] NCCL INFO Channel 29/32 :    0
+[default0]:n2gpu1215:386404:386625 [0] NCCL INFO Channel 30/32 :    0
+[default0]:n2gpu1215:386404:386625 [0] NCCL INFO Channel 31/32 :    0
+[default0]:n2gpu1215:386404:386625 [0] NCCL INFO Trees [0] -1/-1/-1->0->-1 [1] -1/-1/-1->0->-1 [2] -1/-1/-1->0->-1 [3] -1/-1/-1->0->-1 [4] -1/-1/-1->0->-1 [5] -1/-1/-1->0->-1 [6] -1/-1/-1->0->-1 [7] -1/-1/-1->0->-1 [8] -1/-1/-1->0->-1 [9] -1/-1/-1->0->-1 [10] -1/-1/-1->0->-1 [11] -1/-1/-1->0->-1 [12] -1/-1/-1->0->-1 [13] -1/-1/-1->0->-1 [14] -1/-1/-1->0->-1 [15] -1/-1/-1->0->-1 [16] -1/-1/-1->0->-1 [17] -1/-1/-1->0->-1 [18] -1/-1/-1->0->-1 [19] -1/-1/-1->0->-1 [20] -1/-1/-1->0->-1 [21] -1/-1/-1->0->-1 [22] -1/-1/-1->0->-1 [23] -1/-1/-1->0->-1 [24] -1/-1/-1->0->-1 [25] -1/-1/-1->0->-1 [26] -1/-1/-1->0->-1 [27] -1/-1/-1->0->-1 [28] -1/-1/-1->0->-1 [29] -1/-1/-1->0->-1 [30] -1/-1/-1->0->-1 [31] -1/-1/-1->0->-1
+[default2]:n2gpu1215:386406:386627 [2] NCCL INFO Channel 00/32 :    0
+[default2]:n2gpu1215:386406:386627 [2] NCCL INFO Channel 01/32 :    0
+[default2]:n2gpu1215:386406:386627 [2] NCCL INFO Channel 02/32 :    0
+[default2]:n2gpu1215:386406:386627 [2] NCCL INFO Channel 03/32 :    0
+[default2]:n2gpu1215:386406:386627 [2] NCCL INFO Channel 04/32 :    0
+[default2]:n2gpu1215:386406:386627 [2] NCCL INFO Channel 05/32 :    0
+[default2]:n2gpu1215:386406:386627 [2] NCCL INFO Channel 06/32 :    0
+[default2]:n2gpu1215:386406:386627 [2] NCCL INFO Channel 07/32 :    0
+[default2]:n2gpu1215:386406:386627 [2] NCCL INFO Channel 08/32 :    0
+[default2]:n2gpu1215:386406:386627 [2] NCCL INFO Channel 09/32 :    0
+[default2]:n2gpu1215:386406:386627 [2] NCCL INFO Channel 10/32 :    0
+[default2]:n2gpu1215:386406:386627 [2] NCCL INFO Channel 11/32 :    0
+[default2]:n2gpu1215:386406:386627 [2] NCCL INFO Channel 12/32 :    0
+[default2]:n2gpu1215:386406:386627 [2] NCCL INFO Channel 13/32 :    0
+[default2]:n2gpu1215:386406:386627 [2] NCCL INFO Channel 14/32 :    0
+[default2]:n2gpu1215:386406:386627 [2] NCCL INFO Channel 15/32 :    0
+[default2]:n2gpu1215:386406:386627 [2] NCCL INFO Channel 16/32 :    0
+[default2]:n2gpu1215:386406:386627 [2] NCCL INFO Channel 17/32 :    0
+[default2]:n2gpu1215:386406:386627 [2] NCCL INFO Channel 18/32 :    0
+[default2]:n2gpu1215:386406:386627 [2] NCCL INFO Channel 19/32 :    0
+[default2]:n2gpu1215:386406:386627 [2] NCCL INFO Channel 20/32 :    0
+[default2]:n2gpu1215:386406:386627 [2] NCCL INFO Channel 21/32 :    0
+[default2]:n2gpu1215:386406:386627 [2] NCCL INFO Channel 22/32 :    0
+[default2]:n2gpu1215:386406:386627 [2] NCCL INFO Channel 23/32 :    0
+[default2]:n2gpu1215:386406:386627 [2] NCCL INFO Channel 24/32 :    0
+[default2]:n2gpu1215:386406:386627 [2] NCCL INFO Channel 25/32 :    0
+[default2]:n2gpu1215:386406:386627 [2] NCCL INFO Channel 26/32 :    0
+[default2]:n2gpu1215:386406:386627 [2] NCCL INFO Channel 27/32 :    0
+[default2]:n2gpu1215:386406:386627 [2] NCCL INFO Channel 28/32 :    0
+[default2]:n2gpu1215:386406:386627 [2] NCCL INFO Channel 29/32 :    0
+[default2]:n2gpu1215:386406:386627 [2] NCCL INFO Channel 30/32 :    0
+[default2]:n2gpu1215:386406:386627 [2] NCCL INFO Channel 31/32 :    0
+[default2]:n2gpu1215:386406:386627 [2] NCCL INFO Trees [0] -1/-1/-1->0->-1 [1] -1/-1/-1->0->-1 [2] -1/-1/-1->0->-1 [3] -1/-1/-1->0->-1 [4] -1/-1/-1->0->-1 [5] -1/-1/-1->0->-1 [6] -1/-1/-1->0->-1 [7] -1/-1/-1->0->-1 [8] -1/-1/-1->0->-1 [9] -1/-1/-1->0->-1 [10] -1/-1/-1->0->-1 [11] -1/-1/-1->0->-1 [12] -1/-1/-1->0->-1 [13] -1/-1/-1->0->-1 [14] -1/-1/-1->0->-1 [15] -1/-1/-1->0->-1 [16] -1/-1/-1->0->-1 [17] -1/-1/-1->0->-1 [18] -1/-1/-1->0->-1 [19] -1/-1/-1->0->-1 [20] -1/-1/-1->0->-1 [21] -1/-1/-1->0->-1 [22] -1/-1/-1->0->-1 [23] -1/-1/-1->0->-1 [24] -1/-1/-1->0->-1 [25] -1/-1/-1->0->-1 [26] -1/-1/-1->0->-1 [27] -1/-1/-1->0->-1 [28] -1/-1/-1->0->-1 [29] -1/-1/-1->0->-1 [30] -1/-1/-1->0->-1 [31] -1/-1/-1->0->-1
+[default3]:n2gpu1215:386407:386631 [3] NCCL INFO Channel 00/32 :    0
+[default3]:n2gpu1215:386407:386631 [3] NCCL INFO Channel 01/32 :    0
+[default3]:n2gpu1215:386407:386631 [3] NCCL INFO Channel 02/32 :    0
+[default3]:n2gpu1215:386407:386631 [3] NCCL INFO Channel 03/32 :    0
+[default3]:n2gpu1215:386407:386631 [3] NCCL INFO Channel 04/32 :    0
+[default3]:n2gpu1215:386407:386631 [3] NCCL INFO Channel 05/32 :    0
+[default3]:n2gpu1215:386407:386631 [3] NCCL INFO Channel 06/32 :    0
+[default3]:n2gpu1215:386407:386631 [3] NCCL INFO Channel 07/32 :    0
+[default3]:n2gpu1215:386407:386631 [3] NCCL INFO Channel 08/32 :    0
+[default3]:n2gpu1215:386407:386631 [3] NCCL INFO Channel 09/32 :    0
+[default3]:n2gpu1215:386407:386631 [3] NCCL INFO Channel 10/32 :    0
+[default3]:n2gpu1215:386407:386631 [3] NCCL INFO Channel 11/32 :    0
+[default3]:n2gpu1215:386407:386631 [3] NCCL INFO Channel 12/32 :    0
+[default3]:n2gpu1215:386407:386631 [3] NCCL INFO Channel 13/32 :    0
+[default3]:n2gpu1215:386407:386631 [3] NCCL INFO Channel 14/32 :    0
+[default3]:n2gpu1215:386407:386631 [3] NCCL INFO Channel 15/32 :    0
+[default3]:n2gpu1215:386407:386631 [3] NCCL INFO Channel 16/32 :    0
+[default3]:n2gpu1215:386407:386631 [3] NCCL INFO Channel 17/32 :    0
+[default3]:n2gpu1215:386407:386631 [3] NCCL INFO Channel 18/32 :    0
+[default3]:n2gpu1215:386407:386631 [3] NCCL INFO Channel 19/32 :    0
+[default3]:n2gpu1215:386407:386631 [3] NCCL INFO Channel 20/32 :    0
+[default3]:n2gpu1215:386407:386631 [3] NCCL INFO Channel 21/32 :    0
+[default3]:n2gpu1215:386407:386631 [3] NCCL INFO Channel 22/32 :    0
+[default3]:n2gpu1215:386407:386631 [3] NCCL INFO Channel 23/32 :    0
+[default3]:n2gpu1215:386407:386631 [3] NCCL INFO Channel 24/32 :    0
+[default3]:n2gpu1215:386407:386631 [3] NCCL INFO Channel 25/32 :    0
+[default3]:n2gpu1215:386407:386631 [3] NCCL INFO Channel 26/32 :    0
+[default3]:n2gpu1215:386407:386631 [3] NCCL INFO Channel 27/32 :    0
+[default3]:n2gpu1215:386407:386631 [3] NCCL INFO Channel 28/32 :    0
+[default3]:n2gpu1215:386407:386631 [3] NCCL INFO Channel 29/32 :    0
+[default3]:n2gpu1215:386407:386631 [3] NCCL INFO Channel 30/32 :    0
+[default3]:n2gpu1215:386407:386631 [3] NCCL INFO Channel 31/32 :    0
+[default3]:n2gpu1215:386407:386631 [3] NCCL INFO Trees [0] -1/-1/-1->0->-1 [1] -1/-1/-1->0->-1 [2] -1/-1/-1->0->-1 [3] -1/-1/-1->0->-1 [4] -1/-1/-1->0->-1 [5] -1/-1/-1->0->-1 [6] -1/-1/-1->0->-1 [7] -1/-1/-1->0->-1 [8] -1/-1/-1->0->-1 [9] -1/-1/-1->0->-1 [10] -1/-1/-1->0->-1 [11] -1/-1/-1->0->-1 [12] -1/-1/-1->0->-1 [13] -1/-1/-1->0->-1 [14] -1/-1/-1->0->-1 [15] -1/-1/-1->0->-1 [16] -1/-1/-1->0->-1 [17] -1/-1/-1->0->-1 [18] -1/-1/-1->0->-1 [19] -1/-1/-1->0->-1 [20] -1/-1/-1->0->-1 [21] -1/-1/-1->0->-1 [22] -1/-1/-1->0->-1 [23] -1/-1/-1->0->-1 [24] -1/-1/-1->0->-1 [25] -1/-1/-1->0->-1 [26] -1/-1/-1->0->-1 [27] -1/-1/-1->0->-1 [28] -1/-1/-1->0->-1 [29] -1/-1/-1->0->-1 [30] -1/-1/-1->0->-1 [31] -1/-1/-1->0->-1
+[default2]:n2gpu1211:32601:32987 [2] NCCL INFO Channel 00/32 :    0
+[default2]:n2gpu1211:32601:32987 [2] NCCL INFO Channel 01/32 :    0
+[default2]:n2gpu1211:32601:32987 [2] NCCL INFO Channel 02/32 :    0
+[default2]:n2gpu1211:32601:32987 [2] NCCL INFO Channel 03/32 :    0
+[default2]:n2gpu1211:32601:32987 [2] NCCL INFO Channel 04/32 :    0
+[default2]:n2gpu1211:32601:32987 [2] NCCL INFO Channel 05/32 :    0
+[default2]:n2gpu1211:32601:32987 [2] NCCL INFO Channel 06/32 :    0
+[default2]:n2gpu1211:32601:32987 [2] NCCL INFO Channel 07/32 :    0
+[default2]:n2gpu1211:32601:32987 [2] NCCL INFO Channel 08/32 :    0
+[default2]:n2gpu1211:32601:32987 [2] NCCL INFO Channel 09/32 :    0
+[default2]:n2gpu1211:32601:32987 [2] NCCL INFO Channel 10/32 :    0
+[default2]:n2gpu1211:32601:32987 [2] NCCL INFO Channel 11/32 :    0
+[default2]:n2gpu1211:32601:32987 [2] NCCL INFO Channel 12/32 :    0
+[default2]:n2gpu1211:32601:32987 [2] NCCL INFO Channel 13/32 :    0
+[default2]:n2gpu1211:32601:32987 [2] NCCL INFO Channel 14/32 :    0
+[default2]:n2gpu1211:32601:32987 [2] NCCL INFO Channel 15/32 :    0
+[default2]:n2gpu1211:32601:32987 [2] NCCL INFO Channel 16/32 :    0
+[default2]:n2gpu1211:32601:32987 [2] NCCL INFO Channel 17/32 :    0
+[default2]:n2gpu1211:32601:32987 [2] NCCL INFO Channel 18/32 :    0
+[default2]:n2gpu1211:32601:32987 [2] NCCL INFO Channel 19/32 :    0
+[default2]:n2gpu1211:32601:32987 [2] NCCL INFO Channel 20/32 :    0
+[default2]:n2gpu1211:32601:32987 [2] NCCL INFO Channel 21/32 :    0
+[default2]:n2gpu1211:32601:32987 [2] NCCL INFO Channel 22/32 :    0
+[default2]:n2gpu1211:32601:32987 [2] NCCL INFO Channel 23/32 :    0
+[default2]:n2gpu1211:32601:32987 [2] NCCL INFO Channel 24/32 :    0
+[default2]:n2gpu1211:32601:32987 [2] NCCL INFO Channel 25/32 :    0
+[default2]:n2gpu1211:32601:32987 [2] NCCL INFO Channel 26/32 :    0
+[default2]:n2gpu1211:32601:32987 [2] NCCL INFO Channel 27/32 :    0
+[default2]:n2gpu1211:32601:32987 [2] NCCL INFO Channel 28/32 :    0
+[default2]:n2gpu1211:32601:32987 [2] NCCL INFO Channel 29/32 :    0
+[default2]:n2gpu1211:32601:32987 [2] NCCL INFO Channel 30/32 :    0
+[default2]:n2gpu1211:32601:32987 [2] NCCL INFO Channel 31/32 :    0
+[default2]:n2gpu1211:32601:32987 [2] NCCL INFO Trees [0] -1/-1/-1->0->-1 [1] -1/-1/-1->0->-1 [2] -1/-1/-1->0->-1 [3] -1/-1/-1->0->-1 [4] -1/-1/-1->0->-1 [5] -1/-1/-1->0->-1 [6] -1/-1/-1->0->-1 [7] -1/-1/-1->0->-1 [8] -1/-1/-1->0->-1 [9] -1/-1/-1->0->-1 [10] -1/-1/-1->0->-1 [11] -1/-1/-1->0->-1 [12] -1/-1/-1->0->-1 [13] -1/-1/-1->0->-1 [14] -1/-1/-1->0->-1 [15] -1/-1/-1->0->-1 [16] -1/-1/-1->0->-1 [17] -1/-1/-1->0->-1 [18] -1/-1/-1->0->-1 [19] -1/-1/-1->0->-1 [20] -1/-1/-1->0->-1 [21] -1/-1/-1->0->-1 [22] -1/-1/-1->0->-1 [23] -1/-1/-1->0->-1 [24] -1/-1/-1->0->-1 [25] -1/-1/-1->0->-1 [26] -1/-1/-1->0->-1 [27] -1/-1/-1->0->-1 [28] -1/-1/-1->0->-1 [29] -1/-1/-1->0->-1 [30] -1/-1/-1->0->-1 [31] -1/-1/-1->0->-1
+[default0]:n2gpu1211:32599:32989 [0] NCCL INFO Channel 00/32 :    0
+[default0]:n2gpu1211:32599:32989 [0] NCCL INFO Channel 01/32 :    0
+[default0]:n2gpu1211:32599:32989 [0] NCCL INFO Channel 02/32 :    0
+[default0]:n2gpu1211:32599:32989 [0] NCCL INFO Channel 03/32 :    0
+[default0]:n2gpu1211:32599:32989 [0] NCCL INFO Channel 04/32 :    0
+[default0]:n2gpu1211:32599:32989 [0] NCCL INFO Channel 05/32 :    0
+[default0]:n2gpu1211:32599:32989 [0] NCCL INFO Channel 06/32 :    0
+[default0]:n2gpu1211:32599:32989 [0] NCCL INFO Channel 07/32 :    0
+[default0]:n2gpu1211:32599:32989 [0] NCCL INFO Channel 08/32 :    0
+[default0]:n2gpu1211:32599:32989 [0] NCCL INFO Channel 09/32 :    0
+[default0]:n2gpu1211:32599:32989 [0] NCCL INFO Channel 10/32 :    0
+[default0]:n2gpu1211:32599:32989 [0] NCCL INFO Channel 11/32 :    0
+[default0]:n2gpu1211:32599:32989 [0] NCCL INFO Channel 12/32 :    0
+[default0]:n2gpu1211:32599:32989 [0] NCCL INFO Channel 13/32 :    0
+[default0]:n2gpu1211:32599:32989 [0] NCCL INFO Channel 14/32 :    0
+[default0]:n2gpu1211:32599:32989 [0] NCCL INFO Channel 15/32 :    0
+[default0]:n2gpu1211:32599:32989 [0] NCCL INFO Channel 16/32 :    0
+[default0]:n2gpu1211:32599:32989 [0] NCCL INFO Channel 17/32 :    0
+[default0]:n2gpu1211:32599:32989 [0] NCCL INFO Channel 18/32 :    0
+[default0]:n2gpu1211:32599:32989 [0] NCCL INFO Channel 19/32 :    0
+[default0]:n2gpu1211:32599:32989 [0] NCCL INFO Channel 20/32 :    0
+[default0]:n2gpu1211:32599:32989 [0] NCCL INFO Channel 21/32 :    0
+[default0]:n2gpu1211:32599:32989 [0] NCCL INFO Channel 22/32 :    0
+[default0]:n2gpu1211:32599:32989 [0] NCCL INFO Channel 23/32 :    0
+[default0]:n2gpu1211:32599:32989 [0] NCCL INFO Channel 24/32 :    0
+[default0]:n2gpu1211:32599:32989 [0] NCCL INFO Channel 25/32 :    0
+[default0]:n2gpu1211:32599:32989 [0] NCCL INFO Channel 26/32 :    0
+[default0]:n2gpu1211:32599:32989 [0] NCCL INFO Channel 27/32 :    0
+[default0]:n2gpu1211:32599:32989 [0] NCCL INFO Channel 28/32 :    0
+[default0]:n2gpu1211:32599:32989 [0] NCCL INFO Channel 29/32 :    0
+[default0]:n2gpu1211:32599:32989 [0] NCCL INFO Channel 30/32 :    0
+[default0]:n2gpu1211:32599:32989 [0] NCCL INFO Channel 31/32 :    0
+[default0]:n2gpu1211:32599:32989 [0] NCCL INFO Trees [0] -1/-1/-1->0->-1 [1] -1/-1/-1->0->-1 [2] -1/-1/-1->0->-1 [3] -1/-1/-1->0->-1 [4] -1/-1/-1->0->-1 [5] -1/-1/-1->0->-1 [6] -1/-1/-1->0->-1 [7] -1/-1/-1->0->-1 [8] -1/-1/-1->0->-1 [9] -1/-1/-1->0->-1 [10] -1/-1/-1->0->-1 [11] -1/-1/-1->0->-1 [12] -1/-1/-1->0->-1 [13] -1/-1/-1->0->-1 [14] -1/-1/-1->0->-1 [15] -1/-1/-1->0->-1 [16] -1/-1/-1->0->-1 [17] -1/-1/-1->0->-1 [18] -1/-1/-1->0->-1 [19] -1/-1/-1->0->-1 [20] -1/-1/-1->0->-1 [21] -1/-1/-1->0->-1 [22] -1/-1/-1->0->-1 [23] -1/-1/-1->0->-1 [24] -1/-1/-1->0->-1 [25] -1/-1/-1->0->-1 [26] -1/-1/-1->0->-1 [27] -1/-1/-1->0->-1 [28] -1/-1/-1->0->-1 [29] -1/-1/-1->0->-1 [30] -1/-1/-1->0->-1 [31] -1/-1/-1->0->-1
+[default1]:n2gpu1211:32600:32993 [1] NCCL INFO Channel 00/32 :    0
+[default1]:n2gpu1211:32600:32993 [1] NCCL INFO Channel 01/32 :    0
+[default1]:n2gpu1211:32600:32993 [1] NCCL INFO Channel 02/32 :    0
+[default1]:n2gpu1211:32600:32993 [1] NCCL INFO Channel 03/32 :    0
+[default1]:n2gpu1211:32600:32993 [1] NCCL INFO Channel 04/32 :    0
+[default1]:n2gpu1211:32600:32993 [1] NCCL INFO Channel 05/32 :    0
+[default1]:n2gpu1211:32600:32993 [1] NCCL INFO Channel 06/32 :    0
+[default1]:n2gpu1211:32600:32993 [1] NCCL INFO Channel 07/32 :    0
+[default1]:n2gpu1211:32600:32993 [1] NCCL INFO Channel 08/32 :    0
+[default1]:n2gpu1211:32600:32993 [1] NCCL INFO Channel 09/32 :    0
+[default1]:n2gpu1211:32600:32993 [1] NCCL INFO Channel 10/32 :    0
+[default1]:n2gpu1211:32600:32993 [1] NCCL INFO Channel 11/32 :    0
+[default1]:n2gpu1211:32600:32993 [1] NCCL INFO Channel 12/32 :    0
+[default1]:n2gpu1211:32600:32993 [1] NCCL INFO Channel 13/32 :    0
+[default1]:n2gpu1211:32600:32993 [1] NCCL INFO Channel 14/32 :    0
+[default1]:n2gpu1211:32600:32993 [1] NCCL INFO Channel 15/32 :    0
+[default1]:n2gpu1211:32600:32993 [1] NCCL INFO Channel 16/32 :    0
+[default1]:n2gpu1211:32600:32993 [1] NCCL INFO Channel 17/32 :    0
+[default1]:n2gpu1211:32600:32993 [1] NCCL INFO Channel 18/32 :    0
+[default1]:n2gpu1211:32600:32993 [1] NCCL INFO Channel 19/32 :    0
+[default1]:n2gpu1211:32600:32993 [1] NCCL INFO Channel 20/32 :    0
+[default1]:n2gpu1211:32600:32993 [1] NCCL INFO Channel 21/32 :    0
+[default1]:n2gpu1211:32600:32993 [1] NCCL INFO Channel 22/32 :    0
+[default1]:n2gpu1211:32600:32993 [1] NCCL INFO Channel 23/32 :    0
+[default1]:n2gpu1211:32600:32993 [1] NCCL INFO Channel 24/32 :    0
+[default1]:n2gpu1211:32600:32993 [1] NCCL INFO Channel 25/32 :    0
+[default1]:n2gpu1211:32600:32993 [1] NCCL INFO Channel 26/32 :    0
+[default1]:n2gpu1211:32600:32993 [1] NCCL INFO Channel 27/32 :    0
+[default1]:n2gpu1211:32600:32993 [1] NCCL INFO Channel 28/32 :    0
+[default1]:n2gpu1211:32600:32993 [1] NCCL INFO Channel 29/32 :    0
+[default1]:n2gpu1211:32600:32993 [1] NCCL INFO Channel 30/32 :    0
+[default1]:n2gpu1211:32600:32993 [1] NCCL INFO Channel 31/32 :    0
+[default1]:n2gpu1211:32600:32993 [1] NCCL INFO Trees [0] -1/-1/-1->0->-1 [1] -1/-1/-1->0->-1 [2] -1/-1/-1->0->-1 [3] -1/-1/-1->0->-1 [4] -1/-1/-1->0->-1 [5] -1/-1/-1->0->-1 [6] -1/-1/-1->0->-1 [7] -1/-1/-1->0->-1 [8] -1/-1/-1->0->-1 [9] -1/-1/-1->0->-1 [10] -1/-1/-1->0->-1 [11] -1/-1/-1->0->-1 [12] -1/-1/-1->0->-1 [13] -1/-1/-1->0->-1 [14] -1/-1/-1->0->-1 [15] -1/-1/-1->0->-1 [16] -1/-1/-1->0->-1 [17] -1/-1/-1->0->-1 [18] -1/-1/-1->0->-1 [19] -1/-1/-1->0->-1 [20] -1/-1/-1->0->-1 [21] -1/-1/-1->0->-1 [22] -1/-1/-1->0->-1 [23] -1/-1/-1->0->-1 [24] -1/-1/-1->0->-1 [25] -1/-1/-1->0->-1 [26] -1/-1/-1->0->-1 [27] -1/-1/-1->0->-1 [28] -1/-1/-1->0->-1 [29] -1/-1/-1->0->-1 [30] -1/-1/-1->0->-1 [31] -1/-1/-1->0->-1
+[default3]:n2gpu1211:32602:32991 [3] NCCL INFO Channel 00/32 :    0
+[default3]:n2gpu1211:32602:32991 [3] NCCL INFO Channel 01/32 :    0
+[default3]:n2gpu1211:32602:32991 [3] NCCL INFO Channel 02/32 :    0
+[default3]:n2gpu1211:32602:32991 [3] NCCL INFO Channel 03/32 :    0
+[default3]:n2gpu1211:32602:32991 [3] NCCL INFO Channel 04/32 :    0
+[default3]:n2gpu1211:32602:32991 [3] NCCL INFO Channel 05/32 :    0
+[default3]:n2gpu1211:32602:32991 [3] NCCL INFO Channel 06/32 :    0
+[default3]:n2gpu1211:32602:32991 [3] NCCL INFO Channel 07/32 :    0
+[default3]:n2gpu1211:32602:32991 [3] NCCL INFO Channel 08/32 :    0
+[default3]:n2gpu1211:32602:32991 [3] NCCL INFO Channel 09/32 :    0
+[default3]:n2gpu1211:32602:32991 [3] NCCL INFO Channel 10/32 :    0
+[default3]:n2gpu1211:32602:32991 [3] NCCL INFO Channel 11/32 :    0
+[default3]:n2gpu1211:32602:32991 [3] NCCL INFO Channel 12/32 :    0
+[default3]:n2gpu1211:32602:32991 [3] NCCL INFO Channel 13/32 :    0
+[default3]:n2gpu1211:32602:32991 [3] NCCL INFO Channel 14/32 :    0
+[default3]:n2gpu1211:32602:32991 [3] NCCL INFO Channel 15/32 :    0
+[default3]:n2gpu1211:32602:32991 [3] NCCL INFO Channel 16/32 :    0
+[default3]:n2gpu1211:32602:32991 [3] NCCL INFO Channel 17/32 :    0
+[default3]:n2gpu1211:32602:32991 [3] NCCL INFO Channel 18/32 :    0
+[default3]:n2gpu1211:32602:32991 [3] NCCL INFO Channel 19/32 :    0
+[default3]:n2gpu1211:32602:32991 [3] NCCL INFO Channel 20/32 :    0
+[default3]:n2gpu1211:32602:32991 [3] NCCL INFO Channel 21/32 :    0
+[default3]:n2gpu1211:32602:32991 [3] NCCL INFO Channel 22/32 :    0
+[default3]:n2gpu1211:32602:32991 [3] NCCL INFO Channel 23/32 :    0
+[default3]:n2gpu1211:32602:32991 [3] NCCL INFO Channel 24/32 :    0
+[default3]:n2gpu1211:32602:32991 [3] NCCL INFO Channel 25/32 :    0
+[default3]:n2gpu1211:32602:32991 [3] NCCL INFO Channel 26/32 :    0
+[default3]:n2gpu1211:32602:32991 [3] NCCL INFO Channel 27/32 :    0
+[default3]:n2gpu1211:32602:32991 [3] NCCL INFO Channel 28/32 :    0
+[default3]:n2gpu1211:32602:32991 [3] NCCL INFO Channel 29/32 :    0
+[default3]:n2gpu1211:32602:32991 [3] NCCL INFO Channel 30/32 :    0
+[default3]:n2gpu1211:32602:32991 [3] NCCL INFO Channel 31/32 :    0
+[default3]:n2gpu1211:32602:32991 [3] NCCL INFO Trees [0] -1/-1/-1->0->-1 [1] -1/-1/-1->0->-1 [2] -1/-1/-1->0->-1 [3] -1/-1/-1->0->-1 [4] -1/-1/-1->0->-1 [5] -1/-1/-1->0->-1 [6] -1/-1/-1->0->-1 [7] -1/-1/-1->0->-1 [8] -1/-1/-1->0->-1 [9] -1/-1/-1->0->-1 [10] -1/-1/-1->0->-1 [11] -1/-1/-1->0->-1 [12] -1/-1/-1->0->-1 [13] -1/-1/-1->0->-1 [14] -1/-1/-1->0->-1 [15] -1/-1/-1->0->-1 [16] -1/-1/-1->0->-1 [17] -1/-1/-1->0->-1 [18] -1/-1/-1->0->-1 [19] -1/-1/-1->0->-1 [20] -1/-1/-1->0->-1 [21] -1/-1/-1->0->-1 [22] -1/-1/-1->0->-1 [23] -1/-1/-1->0->-1 [24] -1/-1/-1->0->-1 [25] -1/-1/-1->0->-1 [26] -1/-1/-1->0->-1 [27] -1/-1/-1->0->-1 [28] -1/-1/-1->0->-1 [29] -1/-1/-1->0->-1 [30] -1/-1/-1->0->-1 [31] -1/-1/-1->0->-1
+[default0]:n2gpu1215:386404:386625 [0] NCCL INFO Connected all rings
+[default0]:n2gpu1215:386404:386625 [0] NCCL INFO Connected all trees
+[default0]:n2gpu1215:386404:386625 [0] NCCL INFO 32 coll channels, 32 p2p channels, 32 p2p channels per peer
+[default2]:n2gpu1215:386406:386627 [2] NCCL INFO Connected all rings
+[default2]:n2gpu1215:386406:386627 [2] NCCL INFO Connected all trees
+[default2]:n2gpu1215:386406:386627 [2] NCCL INFO 32 coll channels, 32 p2p channels, 32 p2p channels per peer
+[default3]:n2gpu1215:386407:386631 [3] NCCL INFO Connected all rings
+[default3]:n2gpu1215:386407:386631 [3] NCCL INFO Connected all trees
+[default3]:n2gpu1215:386407:386631 [3] NCCL INFO 32 coll channels, 32 p2p channels, 32 p2p channels per peer
+[default1]:n2gpu1215:386405:386629 [1] NCCL INFO Channel 00/32 :    0
+[default1]:n2gpu1215:386405:386629 [1] NCCL INFO Channel 01/32 :    0
+[default1]:n2gpu1215:386405:386629 [1] NCCL INFO Channel 02/32 :    0
+[default1]:n2gpu1215:386405:386629 [1] NCCL INFO Channel 03/32 :    0
+[default1]:n2gpu1215:386405:386629 [1] NCCL INFO Channel 04/32 :    0
+[default1]:n2gpu1215:386405:386629 [1] NCCL INFO Channel 05/32 :    0
+[default1]:n2gpu1215:386405:386629 [1] NCCL INFO Channel 06/32 :    0
+[default1]:n2gpu1215:386405:386629 [1] NCCL INFO Channel 07/32 :    0
+[default1]:n2gpu1215:386405:386629 [1] NCCL INFO Channel 08/32 :    0
+[default1]:n2gpu1215:386405:386629 [1] NCCL INFO Channel 09/32 :    0
+[default1]:n2gpu1215:386405:386629 [1] NCCL INFO Channel 10/32 :    0
+[default1]:n2gpu1215:386405:386629 [1] NCCL INFO Channel 11/32 :    0
+[default1]:n2gpu1215:386405:386629 [1] NCCL INFO Channel 12/32 :    0
+[default1]:n2gpu1215:386405:386629 [1] NCCL INFO Channel 13/32 :    0
+[default1]:n2gpu1215:386405:386629 [1] NCCL INFO Channel 14/32 :    0
+[default1]:n2gpu1215:386405:386629 [1] NCCL INFO Channel 15/32 :    0
+[default1]:n2gpu1215:386405:386629 [1] NCCL INFO Channel 16/32 :    0
+[default1]:n2gpu1215:386405:386629 [1] NCCL INFO Channel 17/32 :    0
+[default1]:n2gpu1215:386405:386629 [1] NCCL INFO Channel 18/32 :    0
+[default1]:n2gpu1215:386405:386629 [1] NCCL INFO Channel 19/32 :    0
+[default1]:n2gpu1215:386405:386629 [1] NCCL INFO Channel 20/32 :    0
+[default1]:n2gpu1215:386405:386629 [1] NCCL INFO Channel 21/32 :    0
+[default1]:n2gpu1215:386405:386629 [1] NCCL INFO Channel 22/32 :    0
+[default1]:n2gpu1215:386405:386629 [1] NCCL INFO Channel 23/32 :    0
+[default1]:n2gpu1215:386405:386629 [1] NCCL INFO Channel 24/32 :    0
+[default1]:n2gpu1215:386405:386629 [1] NCCL INFO Channel 25/32 :    0
+[default1]:n2gpu1215:386405:386629 [1] NCCL INFO Channel 26/32 :    0
+[default1]:n2gpu1215:386405:386629 [1] NCCL INFO Channel 27/32 :    0
+[default1]:n2gpu1215:386405:386629 [1] NCCL INFO Channel 28/32 :    0
+[default1]:n2gpu1215:386405:386629 [1] NCCL INFO Channel 29/32 :    0
+[default1]:n2gpu1215:386405:386629 [1] NCCL INFO Channel 30/32 :    0
+[default1]:n2gpu1215:386405:386629 [1] NCCL INFO Channel 31/32 :    0
+[default1]:n2gpu1215:386405:386629 [1] NCCL INFO Trees [0] -1/-1/-1->0->-1 [1] -1/-1/-1->0->-1 [2] -1/-1/-1->0->-1 [3] -1/-1/-1->0->-1 [4] -1/-1/-1->0->-1 [5] -1/-1/-1->0->-1 [6] -1/-1/-1->0->-1 [7] -1/-1/-1->0->-1 [8] -1/-1/-1->0->-1 [9] -1/-1/-1->0->-1 [10] -1/-1/-1->0->-1 [11] -1/-1/-1->0->-1 [12] -1/-1/-1->0->-1 [13] -1/-1/-1->0->-1 [14] -1/-1/-1->0->-1 [15] -1/-1/-1->0->-1 [16] -1/-1/-1->0->-1 [17] -1/-1/-1->0->-1 [18] -1/-1/-1->0->-1 [19] -1/-1/-1->0->-1 [20] -1/-1/-1->0->-1 [21] -1/-1/-1->0->-1 [22] -1/-1/-1->0->-1 [23] -1/-1/-1->0->-1 [24] -1/-1/-1->0->-1 [25] -1/-1/-1->0->-1 [26] -1/-1/-1->0->-1 [27] -1/-1/-1->0->-1 [28] -1/-1/-1->0->-1 [29] -1/-1/-1->0->-1 [30] -1/-1/-1->0->-1 [31] -1/-1/-1->0->-1
+[default2]:n2gpu1211:32601:32987 [2] NCCL INFO Connected all rings
+[default2]:n2gpu1211:32601:32987 [2] NCCL INFO Connected all trees
+[default2]:n2gpu1211:32601:32987 [2] NCCL INFO 32 coll channels, 32 p2p channels, 32 p2p channels per peer
+[default0]:n2gpu1211:32599:32989 [0] NCCL INFO Connected all rings
+[default0]:n2gpu1211:32599:32989 [0] NCCL INFO Connected all trees
+[default0]:n2gpu1211:32599:32989 [0] NCCL INFO 32 coll channels, 32 p2p channels, 32 p2p channels per peer
+[default1]:n2gpu1211:32600:32993 [1] NCCL INFO Connected all rings
+[default1]:n2gpu1211:32600:32993 [1] NCCL INFO Connected all trees
+[default1]:n2gpu1211:32600:32993 [1] NCCL INFO 32 coll channels, 32 p2p channels, 32 p2p channels per peer
+[default3]:n2gpu1211:32602:32991 [3] NCCL INFO Connected all rings
+[default3]:n2gpu1211:32602:32991 [3] NCCL INFO Connected all trees
+[default3]:n2gpu1211:32602:32991 [3] NCCL INFO 32 coll channels, 32 p2p channels, 32 p2p channels per peer
+[default0]:n2gpu1215:386404:386625 [0] NCCL INFO comm 0x14fa780090d0 rank 0 nranks 1 cudaDev 0 busId 3000 - Init COMPLETE
+[default2]:n2gpu1215:386406:386627 [2] NCCL INFO comm 0x15213c0090d0 rank 0 nranks 1 cudaDev 2 busId 84000 - Init COMPLETE
+[default3]:n2gpu1215:386407:386631 [3] NCCL INFO comm 0x14fb600090d0 rank 0 nranks 1 cudaDev 3 busId c4000 - Init COMPLETE
+[default1]:n2gpu1215:386405:386629 [1] NCCL INFO Connected all rings
+[default1]:n2gpu1215:386405:386629 [1] NCCL INFO Connected all trees
+[default1]:n2gpu1215:386405:386629 [1] NCCL INFO 32 coll channels, 32 p2p channels, 32 p2p channels per peer
+[default1]:n2gpu1215:386405:386629 [1] NCCL INFO comm 0x152cec0090d0 rank 0 nranks 1 cudaDev 1 busId 44000 - Init COMPLETE
+[default2]:n2gpu1211:32601:32987 [2] NCCL INFO comm 0x14e1500090d0 rank 0 nranks 1 cudaDev 2 busId 84000 - Init COMPLETE
+[default0]:n2gpu1211:32599:32989 [0] NCCL INFO comm 0x149ed40090d0 rank 0 nranks 1 cudaDev 0 busId 3000 - Init COMPLETE
+[default0]: > loading doc-idx mapping from /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/data/index-cache/3e541422cadca564d1c62edd2b40c688_doc_idx.npy
+[default0]: > loading sample-idx mapping from /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/data/index-cache/3e541422cadca564d1c62edd2b40c688_sample_idx.npy
+[default0]: > loading shuffle-idx mapping from /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/data/index-cache/3e541422cadca564d1c62edd2b40c688_shuffle_idx.npy
+[default0]:    loaded indexed file in 0.033 seconds
+[default0]:    total number of samples: 439466004
+[default0]:    total number of epochs: 30909
+[default1]:n2gpu1211:32600:32993 [1] NCCL INFO comm 0x146f3c0090d0 rank 0 nranks 1 cudaDev 1 busId 44000 - Init COMPLETE
+[default3]:n2gpu1211:32602:32991 [3] NCCL INFO comm 0x14b46c0090d0 rank 0 nranks 1 cudaDev 3 busId c4000 - Init COMPLETE
+[default0]: > loading doc-idx mapping from /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/data/index-cache/69af514fe2150c1f13702f1a290e289e_doc_idx.npy
+[default0]: > loading sample-idx mapping from /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/data/index-cache/69af514fe2150c1f13702f1a290e289e_sample_idx.npy
+[default0]: > loading shuffle-idx mapping from /scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/data/index-cache/69af514fe2150c1f13702f1a290e289e_shuffle_idx.npy
+[default0]:    loaded indexed file in 0.032 seconds
+[default0]:    total number of samples: 219728165
+[default0]:    total number of epochs: 648119
+[default0]:> finished creating GPT datasets ...
+[default0]:n2gpu1215:386404:386643 [0] NCCL INFO Channel 00/32 :    0
+[default0]:n2gpu1215:386404:386643 [0] NCCL INFO Channel 01/32 :    0
+[default0]:n2gpu1215:386404:386643 [0] NCCL INFO Channel 02/32 :    0
+[default0]:n2gpu1215:386404:386643 [0] NCCL INFO Channel 03/32 :    0
+[default0]:n2gpu1215:386404:386643 [0] NCCL INFO Channel 04/32 :    0
+[default0]:n2gpu1215:386404:386643 [0] NCCL INFO Channel 05/32 :    0
+[default0]:n2gpu1215:386404:386643 [0] NCCL INFO Channel 06/32 :    0
+[default0]:n2gpu1215:386404:386643 [0] NCCL INFO Channel 07/32 :    0
+[default0]:n2gpu1215:386404:386643 [0] NCCL INFO Channel 08/32 :    0
+[default0]:n2gpu1215:386404:386643 [0] NCCL INFO Channel 09/32 :    0
+[default0]:n2gpu1215:386404:386643 [0] NCCL INFO Channel 10/32 :    0
+[default0]:n2gpu1215:386404:386643 [0] NCCL INFO Channel 11/32 :    0
+[default0]:n2gpu1215:386404:386643 [0] NCCL INFO Channel 12/32 :    0
+[default0]:n2gpu1215:386404:386643 [0] NCCL INFO Channel 13/32 :    0
+[default0]:n2gpu1215:386404:386643 [0] NCCL INFO Channel 14/32 :    0
+[default0]:n2gpu1215:386404:386643 [0] NCCL INFO Channel 15/32 :    0
+[default0]:n2gpu1215:386404:386643 [0] NCCL INFO Channel 16/32 :    0
+[default0]:n2gpu1215:386404:386643 [0] NCCL INFO Channel 17/32 :    0
+[default0]:n2gpu1215:386404:386643 [0] NCCL INFO Channel 18/32 :    0
+[default0]:n2gpu1215:386404:386643 [0] NCCL INFO Channel 19/32 :    0
+[default0]:n2gpu1215:386404:386643 [0] NCCL INFO Channel 20/32 :    0
+[default0]:n2gpu1215:386404:386643 [0] NCCL INFO Channel 21/32 :    0
+[default0]:n2gpu1215:386404:386643 [0] NCCL INFO Channel 22/32 :    0
+[default0]:n2gpu1215:386404:386643 [0] NCCL INFO Channel 23/32 :    0
+[default0]:n2gpu1215:386404:386643 [0] NCCL INFO Channel 24/32 :    0
+[default0]:n2gpu1215:386404:386643 [0] NCCL INFO Channel 25/32 :    0
+[default0]:n2gpu1215:386404:386643 [0] NCCL INFO Channel 26/32 :    0
+[default0]:n2gpu1215:386404:386643 [0] NCCL INFO Channel 27/32 :    0
+[default0]:n2gpu1215:386404:386643 [0] NCCL INFO Channel 28/32 :    0
+[default0]:n2gpu1215:386404:386643 [0] NCCL INFO Channel 29/32 :    0
+[default0]:n2gpu1215:386404:386643 [0] NCCL INFO Channel 30/32 :    0
+[default0]:n2gpu1215:386404:386643 [0] NCCL INFO Channel 31/32 :    0
+[default0]:n2gpu1215:386404:386643 [0] NCCL INFO Trees [0] -1/-1/-1->0->-1 [1] -1/-1/-1->0->-1 [2] -1/-1/-1->0->-1 [3] -1/-1/-1->0->-1 [4] -1/-1/-1->0->-1 [5] -1/-1/-1->0->-1 [6] -1/-1/-1->0->-1 [7] -1/-1/-1->0->-1 [8] -1/-1/-1->0->-1 [9] -1/-1/-1->0->-1 [10] -1/-1/-1->0->-1 [11] -1/-1/-1->0->-1 [12] -1/-1/-1->0->-1 [13] -1/-1/-1->0->-1 [14] -1/-1/-1->0->-1 [15] -1/-1/-1->0->-1 [16] -1/-1/-1->0->-1 [17] -1/-1/-1->0->-1 [18] -1/-1/-1->0->-1 [19] -1/-1/-1->0->-1 [20] -1/-1/-1->0->-1 [21] -1/-1/-1->0->-1 [22] -1/-1/-1->0->-1 [23] -1/-1/-1->0->-1 [24] -1/-1/-1->0->-1 [25] -1/-1/-1->0->-1 [26] -1/-1/-1->0->-1 [27] -1/-1/-1->0->-1 [28] -1/-1/-1->0->-1 [29] -1/-1/-1->0->-1 [30] -1/-1/-1->0->-1 [31] -1/-1/-1->0->-1
+[default3]:n2gpu1215:386407:386641 [3] NCCL INFO Channel 00/32 :    0
+[default3]:n2gpu1215:386407:386641 [3] NCCL INFO Channel 01/32 :    0
+[default3]:n2gpu1215:386407:386641 [3] NCCL INFO Channel 02/32 :    0
+[default3]:n2gpu1215:386407:386641 [3] NCCL INFO Channel 03/32 :    0
+[default3]:n2gpu1215:386407:386641 [3] NCCL INFO Channel 04/32 :    0
+[default3]:n2gpu1215:386407:386641 [3] NCCL INFO Channel 05/32 :    0
+[default3]:n2gpu1215:386407:386641 [3] NCCL INFO Channel 06/32 :    0
+[default3]:n2gpu1215:386407:386641 [3] NCCL INFO Channel 07/32 :    0
+[default3]:n2gpu1215:386407:386641 [3] NCCL INFO Channel 08/32 :    0
+[default3]:n2gpu1215:386407:386641 [3] NCCL INFO Channel 09/32 :    0
+[default3]:n2gpu1215:386407:386641 [3] NCCL INFO Channel 10/32 :    0
+[default3]:n2gpu1215:386407:386641 [3] NCCL INFO Channel 11/32 :    0
+[default3]:n2gpu1215:386407:386641 [3] NCCL INFO Channel 12/32 :    0
+[default3]:n2gpu1215:386407:386641 [3] NCCL INFO Channel 13/32 :    0
+[default3]:n2gpu1215:386407:386641 [3] NCCL INFO Channel 14/32 :    0
+[default3]:n2gpu1215:386407:386641 [3] NCCL INFO Channel 15/32 :    0
+[default3]:n2gpu1215:386407:386641 [3] NCCL INFO Channel 16/32 :    0
+[default3]:n2gpu1215:386407:386641 [3] NCCL INFO Channel 17/32 :    0
+[default3]:n2gpu1215:386407:386641 [3] NCCL INFO Channel 18/32 :    0
+[default3]:n2gpu1215:386407:386641 [3] NCCL INFO Channel 19/32 :    0
+[default3]:n2gpu1215:386407:386641 [3] NCCL INFO Channel 20/32 :    0
+[default3]:n2gpu1215:386407:386641 [3] NCCL INFO Channel 21/32 :    0
+[default3]:n2gpu1215:386407:386641 [3] NCCL INFO Channel 22/32 :    0
+[default3]:n2gpu1215:386407:386641 [3] NCCL INFO Channel 23/32 :    0
+[default3]:n2gpu1215:386407:386641 [3] NCCL INFO Channel 24/32 :    0
+[default3]:n2gpu1215:386407:386641 [3] NCCL INFO Channel 25/32 :    0
+[default3]:n2gpu1215:386407:386641 [3] NCCL INFO Channel 26/32 :    0
+[default3]:n2gpu1215:386407:386641 [3] NCCL INFO Channel 27/32 :    0
+[default3]:n2gpu1215:386407:386641 [3] NCCL INFO Channel 28/32 :    0
+[default3]:n2gpu1215:386407:386641 [3] NCCL INFO Channel 29/32 :    0
+[default3]:n2gpu1215:386407:386641 [3] NCCL INFO Channel 30/32 :    0
+[default3]:n2gpu1215:386407:386641 [3] NCCL INFO Channel 31/32 :    0
+[default3]:n2gpu1215:386407:386641 [3] NCCL INFO Trees [0] -1/-1/-1->0->-1 [1] -1/-1/-1->0->-1 [2] -1/-1/-1->0->-1 [3] -1/-1/-1->0->-1 [4] -1/-1/-1->0->-1 [5] -1/-1/-1->0->-1 [6] -1/-1/-1->0->-1 [7] -1/-1/-1->0->-1 [8] -1/-1/-1->0->-1 [9] -1/-1/-1->0->-1 [10] -1/-1/-1->0->-1 [11] -1/-1/-1->0->-1 [12] -1/-1/-1->0->-1 [13] -1/-1/-1->0->-1 [14] -1/-1/-1->0->-1 [15] -1/-1/-1->0->-1 [16] -1/-1/-1->0->-1 [17] -1/-1/-1->0->-1 [18] -1/-1/-1->0->-1 [19] -1/-1/-1->0->-1 [20] -1/-1/-1->0->-1 [21] -1/-1/-1->0->-1 [22] -1/-1/-1->0->-1 [23] -1/-1/-1->0->-1 [24] -1/-1/-1->0->-1 [25] -1/-1/-1->0->-1 [26] -1/-1/-1->0->-1 [27] -1/-1/-1->0->-1 [28] -1/-1/-1->0->-1 [29] -1/-1/-1->0->-1 [30] -1/-1/-1->0->-1 [31] -1/-1/-1->0->-1
+[default0]:n2gpu1211:32599:33005 [0] NCCL INFO Channel 00/32 :    0
+[default0]:n2gpu1211:32599:33005 [0] NCCL INFO Channel 01/32 :    0
+[default0]:n2gpu1211:32599:33005 [0] NCCL INFO Channel 02/32 :    0
+[default0]:n2gpu1211:32599:33005 [0] NCCL INFO Channel 03/32 :    0
+[default0]:n2gpu1211:32599:33005 [0] NCCL INFO Channel 04/32 :    0
+[default0]:n2gpu1211:32599:33005 [0] NCCL INFO Channel 05/32 :    0
+[default0]:n2gpu1211:32599:33005 [0] NCCL INFO Channel 06/32 :    0
+[default0]:n2gpu1211:32599:33005 [0] NCCL INFO Channel 07/32 :    0
+[default0]:n2gpu1211:32599:33005 [0] NCCL INFO Channel 08/32 :    0
+[default0]:n2gpu1211:32599:33005 [0] NCCL INFO Channel 09/32 :    0
+[default0]:n2gpu1211:32599:33005 [0] NCCL INFO Channel 10/32 :    0
+[default0]:n2gpu1211:32599:33005 [0] NCCL INFO Channel 11/32 :    0
+[default0]:n2gpu1211:32599:33005 [0] NCCL INFO Channel 12/32 :    0
+[default0]:n2gpu1211:32599:33005 [0] NCCL INFO Channel 13/32 :    0
+[default0]:n2gpu1211:32599:33005 [0] NCCL INFO Channel 14/32 :    0
+[default0]:n2gpu1211:32599:33005 [0] NCCL INFO Channel 15/32 :    0
+[default0]:n2gpu1211:32599:33005 [0] NCCL INFO Channel 16/32 :    0
+[default0]:n2gpu1211:32599:33005 [0] NCCL INFO Channel 17/32 :    0
+[default0]:n2gpu1211:32599:33005 [0] NCCL INFO Channel 18/32 :    0
+[default0]:n2gpu1211:32599:33005 [0] NCCL INFO Channel 19/32 :    0
+[default0]:n2gpu1211:32599:33005 [0] NCCL INFO Channel 20/32 :    0
+[default0]:n2gpu1211:32599:33005 [0] NCCL INFO Channel 21/32 :    0
+[default0]:n2gpu1211:32599:33005 [0] NCCL INFO Channel 22/32 :    0
+[default0]:n2gpu1211:32599:33005 [0] NCCL INFO Channel 23/32 :    0
+[default0]:n2gpu1211:32599:33005 [0] NCCL INFO Channel 24/32 :    0
+[default0]:n2gpu1211:32599:33005 [0] NCCL INFO Channel 25/32 :    0
+[default0]:n2gpu1211:32599:33005 [0] NCCL INFO Channel 26/32 :    0
+[default0]:n2gpu1211:32599:33005 [0] NCCL INFO Channel 27/32 :    0
+[default0]:n2gpu1211:32599:33005 [0] NCCL INFO Channel 28/32 :    0
+[default0]:n2gpu1211:32599:33005 [0] NCCL INFO Channel 29/32 :    0
+[default0]:n2gpu1211:32599:33005 [0] NCCL INFO Channel 30/32 :    0
+[default0]:n2gpu1211:32599:33005 [0] NCCL INFO Channel 31/32 :    0
+[default0]:n2gpu1211:32599:33005 [0] NCCL INFO Trees [0] -1/-1/-1->0->-1 [1] -1/-1/-1->0->-1 [2] -1/-1/-1->0->-1 [3] -1/-1/-1->0->-1 [4] -1/-1/-1->0->-1 [5] -1/-1/-1->0->-1 [6] -1/-1/-1->0->-1 [7] -1/-1/-1->0->-1 [8] -1/-1/-1->0->-1 [9] -1/-1/-1->0->-1 [10] -1/-1/-1->0->-1 [11] -1/-1/-1->0->-1 [12] -1/-1/-1->0->-1 [13] -1/-1/-1->0->-1 [14] -1/-1/-1->0->-1 [15] -1/-1/-1->0->-1 [16] -1/-1/-1->0->-1 [17] -1/-1/-1->0->-1 [18] -1/-1/-1->0->-1 [19] -1/-1/-1->0->-1 [20] -1/-1/-1->0->-1 [21] -1/-1/-1->0->-1 [22] -1/-1/-1->0->-1 [23] -1/-1/-1->0->-1 [24] -1/-1/-1->0->-1 [25] -1/-1/-1->0->-1 [26] -1/-1/-1->0->-1 [27] -1/-1/-1->0->-1 [28] -1/-1/-1->0->-1 [29] -1/-1/-1->0->-1 [30] -1/-1/-1->0->-1 [31] -1/-1/-1->0->-1
+[default2]:n2gpu1211:32601:33007 [2] NCCL INFO Channel 00/32 :    0
+[default2]:n2gpu1211:32601:33007 [2] NCCL INFO Channel 01/32 :    0
+[default2]:n2gpu1211:32601:33007 [2] NCCL INFO Channel 02/32 :    0
+[default2]:n2gpu1211:32601:33007 [2] NCCL INFO Channel 03/32 :    0
+[default2]:n2gpu1211:32601:33007 [2] NCCL INFO Channel 04/32 :    0
+[default2]:n2gpu1211:32601:33007 [2] NCCL INFO Channel 05/32 :    0
+[default2]:n2gpu1211:32601:33007 [2] NCCL INFO Channel 06/32 :    0
+[default2]:n2gpu1211:32601:33007 [2] NCCL INFO Channel 07/32 :    0
+[default2]:n2gpu1211:32601:33007 [2] NCCL INFO Channel 08/32 :    0
+[default2]:n2gpu1211:32601:33007 [2] NCCL INFO Channel 09/32 :    0
+[default2]:n2gpu1211:32601:33007 [2] NCCL INFO Channel 10/32 :    0
+[default2]:n2gpu1211:32601:33007 [2] NCCL INFO Channel 11/32 :    0
+[default2]:n2gpu1211:32601:33007 [2] NCCL INFO Channel 12/32 :    0
+[default2]:n2gpu1211:32601:33007 [2] NCCL INFO Channel 13/32 :    0
+[default2]:n2gpu1211:32601:33007 [2] NCCL INFO Channel 14/32 :    0
+[default2]:n2gpu1211:32601:33007 [2] NCCL INFO Channel 15/32 :    0
+[default2]:n2gpu1211:32601:33007 [2] NCCL INFO Channel 16/32 :    0
+[default2]:n2gpu1211:32601:33007 [2] NCCL INFO Channel 17/32 :    0
+[default2]:n2gpu1211:32601:33007 [2] NCCL INFO Channel 18/32 :    0
+[default2]:n2gpu1211:32601:33007 [2] NCCL INFO Channel 19/32 :    0
+[default2]:n2gpu1211:32601:33007 [2] NCCL INFO Channel 20/32 :    0
+[default2]:n2gpu1211:32601:33007 [2] NCCL INFO Channel 21/32 :    0
+[default2]:n2gpu1211:32601:33007 [2] NCCL INFO Channel 22/32 :    0
+[default2]:n2gpu1211:32601:33007 [2] NCCL INFO Channel 23/32 :    0
+[default2]:n2gpu1211:32601:33007 [2] NCCL INFO Channel 24/32 :    0
+[default2]:n2gpu1211:32601:33007 [2] NCCL INFO Channel 25/32 :    0
+[default2]:n2gpu1211:32601:33007 [2] NCCL INFO Channel 26/32 :    0
+[default2]:n2gpu1211:32601:33007 [2] NCCL INFO Channel 27/32 :    0
+[default2]:n2gpu1211:32601:33007 [2] NCCL INFO Channel 28/32 :    0
+[default2]:n2gpu1211:32601:33007 [2] NCCL INFO Channel 29/32 :    0
+[default2]:n2gpu1211:32601:33007 [2] NCCL INFO Channel 30/32 :    0
+[default2]:n2gpu1211:32601:33007 [2] NCCL INFO Channel 31/32 :    0
+[default2]:n2gpu1211:32601:33007 [2] NCCL INFO Trees [0] -1/-1/-1->0->-1 [1] -1/-1/-1->0->-1 [2] -1/-1/-1->0->-1 [3] -1/-1/-1->0->-1 [4] -1/-1/-1->0->-1 [5] -1/-1/-1->0->-1 [6] -1/-1/-1->0->-1 [7] -1/-1/-1->0->-1 [8] -1/-1/-1->0->-1 [9] -1/-1/-1->0->-1 [10] -1/-1/-1->0->-1 [11] -1/-1/-1->0->-1 [12] -1/-1/-1->0->-1 [13] -1/-1/-1->0->-1 [14] -1/-1/-1->0->-1 [15] -1/-1/-1->0->-1 [16] -1/-1/-1->0->-1 [17] -1/-1/-1->0->-1 [18] -1/-1/-1->0->-1 [19] -1/-1/-1->0->-1 [20] -1/-1/-1->0->-1 [21] -1/-1/-1->0->-1 [22] -1/-1/-1->0->-1 [23] -1/-1/-1->0->-1 [24] -1/-1/-1->0->-1 [25] -1/-1/-1->0->-1 [26] -1/-1/-1->0->-1 [27] -1/-1/-1->0->-1 [28] -1/-1/-1->0->-1 [29] -1/-1/-1->0->-1 [30] -1/-1/-1->0->-1 [31] -1/-1/-1->0->-1
+[default1]:n2gpu1211:32600:33009 [1] NCCL INFO Channel 00/32 :    0
+[default1]:n2gpu1211:32600:33009 [1] NCCL INFO Channel 01/32 :    0
+[default1]:n2gpu1211:32600:33009 [1] NCCL INFO Channel 02/32 :    0
+[default1]:n2gpu1211:32600:33009 [1] NCCL INFO Channel 03/32 :    0
+[default1]:n2gpu1211:32600:33009 [1] NCCL INFO Channel 04/32 :    0
+[default1]:n2gpu1211:32600:33009 [1] NCCL INFO Channel 05/32 :    0
+[default1]:n2gpu1211:32600:33009 [1] NCCL INFO Channel 06/32 :    0
+[default1]:n2gpu1211:32600:33009 [1] NCCL INFO Channel 07/32 :    0
+[default1]:n2gpu1211:32600:33009 [1] NCCL INFO Channel 08/32 :    0
+[default1]:n2gpu1211:32600:33009 [1] NCCL INFO Channel 09/32 :    0
+[default1]:n2gpu1211:32600:33009 [1] NCCL INFO Channel 10/32 :    0
+[default1]:n2gpu1211:32600:33009 [1] NCCL INFO Channel 11/32 :    0
+[default1]:n2gpu1211:32600:33009 [1] NCCL INFO Channel 12/32 :    0
+[default1]:n2gpu1211:32600:33009 [1] NCCL INFO Channel 13/32 :    0
+[default1]:n2gpu1211:32600:33009 [1] NCCL INFO Channel 14/32 :    0
+[default1]:n2gpu1211:32600:33009 [1] NCCL INFO Channel 15/32 :    0
+[default1]:n2gpu1211:32600:33009 [1] NCCL INFO Channel 16/32 :    0
+[default1]:n2gpu1211:32600:33009 [1] NCCL INFO Channel 17/32 :    0
+[default1]:n2gpu1211:32600:33009 [1] NCCL INFO Channel 18/32 :    0
+[default1]:n2gpu1211:32600:33009 [1] NCCL INFO Channel 19/32 :    0
+[default1]:n2gpu1211:32600:33009 [1] NCCL INFO Channel 20/32 :    0
+[default1]:n2gpu1211:32600:33009 [1] NCCL INFO Channel 21/32 :    0
+[default1]:n2gpu1211:32600:33009 [1] NCCL INFO Channel 22/32 :    0
+[default1]:n2gpu1211:32600:33009 [1] NCCL INFO Channel 23/32 :    0
+[default1]:n2gpu1211:32600:33009 [1] NCCL INFO Channel 24/32 :    0
+[default1]:n2gpu1211:32600:33009 [1] NCCL INFO Channel 25/32 :    0
+[default1]:n2gpu1211:32600:33009 [1] NCCL INFO Channel 26/32 :    0
+[default1]:n2gpu1211:32600:33009 [1] NCCL INFO Channel 27/32 :    0
+[default1]:n2gpu1211:32600:33009 [1] NCCL INFO Channel 28/32 :    0
+[default1]:n2gpu1211:32600:33009 [1] NCCL INFO Channel 29/32 :    0
+[default1]:n2gpu1211:32600:33009 [1] NCCL INFO Channel 30/32 :    0
+[default1]:n2gpu1211:32600:33009 [1] NCCL INFO Channel 31/32 :    0
+[default1]:n2gpu1211:32600:33009 [1] NCCL INFO Trees [0] -1/-1/-1->0->-1 [1] -1/-1/-1->0->-1 [2] -1/-1/-1->0->-1 [3] -1/-1/-1->0->-1 [4] -1/-1/-1->0->-1 [5] -1/-1/-1->0->-1 [6] -1/-1/-1->0->-1 [7] -1/-1/-1->0->-1 [8] -1/-1/-1->0->-1 [9] -1/-1/-1->0->-1 [10] -1/-1/-1->0->-1 [11] -1/-1/-1->0->-1 [12] -1/-1/-1->0->-1 [13] -1/-1/-1->0->-1 [14] -1/-1/-1->0->-1 [15] -1/-1/-1->0->-1 [16] -1/-1/-1->0->-1 [17] -1/-1/-1->0->-1 [18] -1/-1/-1->0->-1 [19] -1/-1/-1->0->-1 [20] -1/-1/-1->0->-1 [21] -1/-1/-1->0->-1 [22] -1/-1/-1->0->-1 [23] -1/-1/-1->0->-1 [24] -1/-1/-1->0->-1 [25] -1/-1/-1->0->-1 [26] -1/-1/-1->0->-1 [27] -1/-1/-1->0->-1 [28] -1/-1/-1->0->-1 [29] -1/-1/-1->0->-1 [30] -1/-1/-1->0->-1 [31] -1/-1/-1->0->-1
+[default3]:n2gpu1211:32602:33003 [3] NCCL INFO Channel 00/32 :    0
+[default3]:n2gpu1211:32602:33003 [3] NCCL INFO Channel 01/32 :    0
+[default3]:n2gpu1211:32602:33003 [3] NCCL INFO Channel 02/32 :    0
+[default3]:n2gpu1211:32602:33003 [3] NCCL INFO Channel 03/32 :    0
+[default3]:n2gpu1211:32602:33003 [3] NCCL INFO Channel 04/32 :    0
+[default3]:n2gpu1211:32602:33003 [3] NCCL INFO Channel 05/32 :    0
+[default3]:n2gpu1211:32602:33003 [3] NCCL INFO Channel 06/32 :    0
+[default3]:n2gpu1211:32602:33003 [3] NCCL INFO Channel 07/32 :    0
+[default3]:n2gpu1211:32602:33003 [3] NCCL INFO Channel 08/32 :    0
+[default3]:n2gpu1211:32602:33003 [3] NCCL INFO Channel 09/32 :    0
+[default3]:n2gpu1211:32602:33003 [3] NCCL INFO Channel 10/32 :    0
+[default3]:n2gpu1211:32602:33003 [3] NCCL INFO Channel 11/32 :    0
+[default3]:n2gpu1211:32602:33003 [3] NCCL INFO Channel 12/32 :    0
+[default3]:n2gpu1211:32602:33003 [3] NCCL INFO Channel 13/32 :    0
+[default3]:n2gpu1211:32602:33003 [3] NCCL INFO Channel 14/32 :    0
+[default3]:n2gpu1211:32602:33003 [3] NCCL INFO Channel 15/32 :    0
+[default3]:n2gpu1211:32602:33003 [3] NCCL INFO Channel 16/32 :    0
+[default3]:n2gpu1211:32602:33003 [3] NCCL INFO Channel 17/32 :    0
+[default3]:n2gpu1211:32602:33003 [3] NCCL INFO Channel 18/32 :    0
+[default3]:n2gpu1211:32602:33003 [3] NCCL INFO Channel 19/32 :    0
+[default3]:n2gpu1211:32602:33003 [3] NCCL INFO Channel 20/32 :    0
+[default3]:n2gpu1211:32602:33003 [3] NCCL INFO Channel 21/32 :    0
+[default3]:n2gpu1211:32602:33003 [3] NCCL INFO Channel 22/32 :    0
+[default3]:n2gpu1211:32602:33003 [3] NCCL INFO Channel 23/32 :    0
+[default3]:n2gpu1211:32602:33003 [3] NCCL INFO Channel 24/32 :    0
+[default3]:n2gpu1211:32602:33003 [3] NCCL INFO Channel 25/32 :    0
+[default3]:n2gpu1211:32602:33003 [3] NCCL INFO Channel 26/32 :    0
+[default3]:n2gpu1211:32602:33003 [3] NCCL INFO Channel 27/32 :    0
+[default3]:n2gpu1211:32602:33003 [3] NCCL INFO Channel 28/32 :    0
+[default3]:n2gpu1211:32602:33003 [3] NCCL INFO Channel 29/32 :    0
+[default3]:n2gpu1211:32602:33003 [3] NCCL INFO Channel 30/32 :    0
+[default3]:n2gpu1211:32602:33003 [3] NCCL INFO Channel 31/32 :    0
+[default3]:n2gpu1211:32602:33003 [3] NCCL INFO Trees [0] -1/-1/-1->0->-1 [1] -1/-1/-1->0->-1 [2] -1/-1/-1->0->-1 [3] -1/-1/-1->0->-1 [4] -1/-1/-1->0->-1 [5] -1/-1/-1->0->-1 [6] -1/-1/-1->0->-1 [7] -1/-1/-1->0->-1 [8] -1/-1/-1->0->-1 [9] -1/-1/-1->0->-1 [10] -1/-1/-1->0->-1 [11] -1/-1/-1->0->-1 [12] -1/-1/-1->0->-1 [13] -1/-1/-1->0->-1 [14] -1/-1/-1->0->-1 [15] -1/-1/-1->0->-1 [16] -1/-1/-1->0->-1 [17] -1/-1/-1->0->-1 [18] -1/-1/-1->0->-1 [19] -1/-1/-1->0->-1 [20] -1/-1/-1->0->-1 [21] -1/-1/-1->0->-1 [22] -1/-1/-1->0->-1 [23] -1/-1/-1->0->-1 [24] -1/-1/-1->0->-1 [25] -1/-1/-1->0->-1 [26] -1/-1/-1->0->-1 [27] -1/-1/-1->0->-1 [28] -1/-1/-1->0->-1 [29] -1/-1/-1->0->-1 [30] -1/-1/-1->0->-1 [31] -1/-1/-1->0->-1
+[default3]:n2gpu1211:32602:33003 [3] NCCL INFO Connected all rings
+[default3]:n2gpu1211:32602:33003 [3] NCCL INFO Connected all trees
+[default3]:n2gpu1211:32602:33003 [3] NCCL INFO 32 coll channels, 32 p2p channels, 32 p2p channels per peer
+[default0]:n2gpu1215:386404:386643 [0] NCCL INFO Connected all rings
+[default0]:n2gpu1215:386404:386643 [0] NCCL INFO Connected all trees
+[default0]:n2gpu1215:386404:386643 [0] NCCL INFO 32 coll channels, 32 p2p channels, 32 p2p channels per peer
+[default2]:n2gpu1215:386406:386645 [2] NCCL INFO Channel 00/32 :    0
+[default2]:n2gpu1215:386406:386645 [2] NCCL INFO Channel 01/32 :    0
+[default2]:n2gpu1215:386406:386645 [2] NCCL INFO Channel 02/32 :    0
+[default2]:n2gpu1215:386406:386645 [2] NCCL INFO Channel 03/32 :    0
+[default2]:n2gpu1215:386406:386645 [2] NCCL INFO Channel 04/32 :    0
+[default2]:n2gpu1215:386406:386645 [2] NCCL INFO Channel 05/32 :    0
+[default2]:n2gpu1215:386406:386645 [2] NCCL INFO Channel 06/32 :    0
+[default2]:n2gpu1215:386406:386645 [2] NCCL INFO Channel 07/32 :    0
+[default2]:n2gpu1215:386406:386645 [2] NCCL INFO Channel 08/32 :    0
+[default2]:n2gpu1215:386406:386645 [2] NCCL INFO Channel 09/32 :    0
+[default2]:n2gpu1215:386406:386645 [2] NCCL INFO Channel 10/32 :    0
+[default2]:n2gpu1215:386406:386645 [2] NCCL INFO Channel 11/32 :    0
+[default2]:n2gpu1215:386406:386645 [2] NCCL INFO Channel 12/32 :    0
+[default2]:n2gpu1215:386406:386645 [2] NCCL INFO Channel 13/32 :    0
+[default2]:n2gpu1215:386406:386645 [2] NCCL INFO Channel 14/32 :    0
+[default2]:n2gpu1215:386406:386645 [2] NCCL INFO Channel 15/32 :    0
+[default2]:n2gpu1215:386406:386645 [2] NCCL INFO Channel 16/32 :    0
+[default2]:n2gpu1215:386406:386645 [2] NCCL INFO Channel 17/32 :    0
+[default2]:n2gpu1215:386406:386645 [2] NCCL INFO Channel 18/32 :    0
+[default2]:n2gpu1215:386406:386645 [2] NCCL INFO Channel 19/32 :    0
+[default2]:n2gpu1215:386406:386645 [2] NCCL INFO Channel 20/32 :    0
+[default2]:n2gpu1215:386406:386645 [2] NCCL INFO Channel 21/32 :    0
+[default2]:n2gpu1215:386406:386645 [2] NCCL INFO Channel 22/32 :    0
+[default2]:n2gpu1215:386406:386645 [2] NCCL INFO Channel 23/32 :    0
+[default2]:n2gpu1215:386406:386645 [2] NCCL INFO Channel 24/32 :    0
+[default2]:n2gpu1215:386406:386645 [2] NCCL INFO Channel 25/32 :    0
+[default2]:n2gpu1215:386406:386645 [2] NCCL INFO Channel 26/32 :    0
+[default2]:n2gpu1215:386406:386645 [2] NCCL INFO Channel 27/32 :    0
+[default2]:n2gpu1215:386406:386645 [2] NCCL INFO Channel 28/32 :    0
+[default2]:n2gpu1215:386406:386645 [2] NCCL INFO Channel 29/32 :    0
+[default2]:n2gpu1215:386406:386645 [2] NCCL INFO Channel 30/32 :    0
+[default2]:n2gpu1215:386406:386645 [2] NCCL INFO Channel 31/32 :    0
+[default2]:n2gpu1215:386406:386645 [2] NCCL INFO Trees [0] -1/-1/-1->0->-1 [1] -1/-1/-1->0->-1 [2] -1/-1/-1->0->-1 [3] -1/-1/-1->0->-1 [4] -1/-1/-1->0->-1 [5] -1/-1/-1->0->-1 [6] -1/-1/-1->0->-1 [7] -1/-1/-1->0->-1 [8] -1/-1/-1->0->-1 [9] -1/-1/-1->0->-1 [10] -1/-1/-1->0->-1 [11] -1/-1/-1->0->-1 [12] -1/-1/-1->0->-1 [13] -1/-1/-1->0->-1 [14] -1/-1/-1->0->-1 [15] -1/-1/-1->0->-1 [16] -1/-1/-1->0->-1 [17] -1/-1/-1->0->-1 [18] -1/-1/-1->0->-1 [19] -1/-1/-1->0->-1 [20] -1/-1/-1->0->-1 [21] -1/-1/-1->0->-1 [22] -1/-1/-1->0->-1 [23] -1/-1/-1->0->-1 [24] -1/-1/-1->0->-1 [25] -1/-1/-1->0->-1 [26] -1/-1/-1->0->-1 [27] -1/-1/-1->0->-1 [28] -1/-1/-1->0->-1 [29] -1/-1/-1->0->-1 [30] -1/-1/-1->0->-1 [31] -1/-1/-1->0->-1
+[default2]:n2gpu1215:386406:386645 [2] NCCL INFO Connected all rings
+[default2]:n2gpu1215:386406:386645 [2] NCCL INFO Connected all trees
+[default2]:n2gpu1215:386406:386645 [2] NCCL INFO 32 coll channels, 32 p2p channels, 32 p2p channels per peer
+[default1]:n2gpu1215:386405:386647 [1] NCCL INFO Channel 00/32 :    0
+[default1]:n2gpu1215:386405:386647 [1] NCCL INFO Channel 01/32 :    0
+[default1]:n2gpu1215:386405:386647 [1] NCCL INFO Channel 02/32 :    0
+[default1]:n2gpu1215:386405:386647 [1] NCCL INFO Channel 03/32 :    0
+[default1]:n2gpu1215:386405:386647 [1] NCCL INFO Channel 04/32 :    0
+[default1]:n2gpu1215:386405:386647 [1] NCCL INFO Channel 05/32 :    0
+[default1]:n2gpu1215:386405:386647 [1] NCCL INFO Channel 06/32 :    0
+[default1]:n2gpu1215:386405:386647 [1] NCCL INFO Channel 07/32 :    0
+[default1]:n2gpu1215:386405:386647 [1] NCCL INFO Channel 08/32 :    0
+[default1]:n2gpu1215:386405:386647 [1] NCCL INFO Channel 09/32 :    0
+[default1]:n2gpu1215:386405:386647 [1] NCCL INFO Channel 10/32 :    0
+[default1]:n2gpu1215:386405:386647 [1] NCCL INFO Channel 11/32 :    0
+[default1]:n2gpu1215:386405:386647 [1] NCCL INFO Channel 12/32 :    0
+[default1]:n2gpu1215:386405:386647 [1] NCCL INFO Channel 13/32 :    0
+[default1]:n2gpu1215:386405:386647 [1] NCCL INFO Channel 14/32 :    0
+[default1]:n2gpu1215:386405:386647 [1] NCCL INFO Channel 15/32 :    0
+[default1]:n2gpu1215:386405:386647 [1] NCCL INFO Channel 16/32 :    0
+[default1]:n2gpu1215:386405:386647 [1] NCCL INFO Channel 17/32 :    0
+[default1]:n2gpu1215:386405:386647 [1] NCCL INFO Channel 18/32 :    0
+[default1]:n2gpu1215:386405:386647 [1] NCCL INFO Channel 19/32 :    0
+[default1]:n2gpu1215:386405:386647 [1] NCCL INFO Channel 20/32 :    0
+[default1]:n2gpu1215:386405:386647 [1] NCCL INFO Channel 21/32 :    0
+[default1]:n2gpu1215:386405:386647 [1] NCCL INFO Channel 22/32 :    0
+[default1]:n2gpu1215:386405:386647 [1] NCCL INFO Channel 23/32 :    0
+[default1]:n2gpu1215:386405:386647 [1] NCCL INFO Channel 24/32 :    0
+[default1]:n2gpu1215:386405:386647 [1] NCCL INFO Channel 25/32 :    0
+[default1]:n2gpu1215:386405:386647 [1] NCCL INFO Channel 26/32 :    0
+[default1]:n2gpu1215:386405:386647 [1] NCCL INFO Channel 27/32 :    0
+[default1]:n2gpu1215:386405:386647 [1] NCCL INFO Channel 28/32 :    0
+[default1]:n2gpu1215:386405:386647 [1] NCCL INFO Channel 29/32 :    0
+[default1]:n2gpu1215:386405:386647 [1] NCCL INFO Channel 30/32 :    0
+[default1]:n2gpu1215:386405:386647 [1] NCCL INFO Channel 31/32 :    0
+[default1]:n2gpu1215:386405:386647 [1] NCCL INFO Trees [0] -1/-1/-1->0->-1 [1] -1/-1/-1->0->-1 [2] -1/-1/-1->0->-1 [3] -1/-1/-1->0->-1 [4] -1/-1/-1->0->-1 [5] -1/-1/-1->0->-1 [6] -1/-1/-1->0->-1 [7] -1/-1/-1->0->-1 [8] -1/-1/-1->0->-1 [9] -1/-1/-1->0->-1 [10] -1/-1/-1->0->-1 [11] -1/-1/-1->0->-1 [12] -1/-1/-1->0->-1 [13] -1/-1/-1->0->-1 [14] -1/-1/-1->0->-1 [15] -1/-1/-1->0->-1 [16] -1/-1/-1->0->-1 [17] -1/-1/-1->0->-1 [18] -1/-1/-1->0->-1 [19] -1/-1/-1->0->-1 [20] -1/-1/-1->0->-1 [21] -1/-1/-1->0->-1 [22] -1/-1/-1->0->-1 [23] -1/-1/-1->0->-1 [24] -1/-1/-1->0->-1 [25] -1/-1/-1->0->-1 [26] -1/-1/-1->0->-1 [27] -1/-1/-1->0->-1 [28] -1/-1/-1->0->-1 [29] -1/-1/-1->0->-1 [30] -1/-1/-1->0->-1 [31] -1/-1/-1->0->-1
+[default1]:n2gpu1215:386405:386647 [1] NCCL INFO Connected all rings
+[default1]:n2gpu1215:386405:386647 [1] NCCL INFO Connected all trees
+[default1]:n2gpu1215:386405:386647 [1] NCCL INFO 32 coll channels, 32 p2p channels, 32 p2p channels per peer
+[default3]:n2gpu1215:386407:386641 [3] NCCL INFO Connected all rings
+[default3]:n2gpu1215:386407:386641 [3] NCCL INFO Connected all trees
+[default3]:n2gpu1215:386407:386641 [3] NCCL INFO 32 coll channels, 32 p2p channels, 32 p2p channels per peer
+[default0]:n2gpu1211:32599:33005 [0] NCCL INFO Connected all rings
+[default0]:n2gpu1211:32599:33005 [0] NCCL INFO Connected all trees
+[default0]:n2gpu1211:32599:33005 [0] NCCL INFO 32 coll channels, 32 p2p channels, 32 p2p channels per peer
+[default0]:n2gpu1211:32599:33005 [0] NCCL INFO comm 0x149e580090d0 rank 0 nranks 1 cudaDev 0 busId 3000 - Init COMPLETE
+[default2]:n2gpu1211:32601:33007 [2] NCCL INFO Connected all rings
+[default2]:n2gpu1211:32601:33007 [2] NCCL INFO Connected all trees
+[default2]:n2gpu1211:32601:33007 [2] NCCL INFO 32 coll channels, 32 p2p channels, 32 p2p channels per peer
+[default1]:n2gpu1211:32600:33009 [1] NCCL INFO Connected all rings
+[default1]:n2gpu1211:32600:33009 [1] NCCL INFO Connected all trees
+[default1]:n2gpu1211:32600:33009 [1] NCCL INFO 32 coll channels, 32 p2p channels, 32 p2p channels per peer
+[default0]:n2gpu1215:386404:386643 [0] NCCL INFO comm 0x14f9f40090d0 rank 0 nranks 1 cudaDev 0 busId 3000 - Init COMPLETE
+[default2]:n2gpu1215:386406:386645 [2] NCCL INFO comm 0x1521340090d0 rank 0 nranks 1 cudaDev 2 busId 84000 - Init COMPLETE
+[default1]:n2gpu1215:386405:386647 [1] NCCL INFO comm 0x152c9c0090d0 rank 0 nranks 1 cudaDev 1 busId 44000 - Init COMPLETE
+[default3]:n2gpu1215:386407:386641 [3] NCCL INFO comm 0x14fb040090d0 rank 0 nranks 1 cudaDev 3 busId c4000 - Init COMPLETE
+[default2]:n2gpu1211:32601:33007 [2] NCCL INFO comm 0x14e1480090d0 rank 0 nranks 1 cudaDev 2 busId 84000 - Init COMPLETE
+[default3]:n2gpu1211:32602:33003 [3] NCCL INFO comm 0x14b41c0090d0 rank 0 nranks 1 cudaDev 3 busId c4000 - Init COMPLETE
+[default1]:n2gpu1211:32600:33009 [1] NCCL INFO comm 0x146f340090d0 rank 0 nranks 1 cudaDev 1 busId 44000 - Init COMPLETE
+[default0]:[after dataloaders are built] datetime: 2023-07-31 02:24:06 
+[default0]:done with setup ...
+[default3]:(min, max) time across ranks (ms):
+[default3]:    model-and-optimizer-setup ......................: (24431.95, 24509.57)
+[default3]:    train/valid/test-data-iterators-setup ..........: (2311.34, 2445.62)
+[default0]:training ...
+[default0]:[before the start of training step] datetime: 2023-07-31 02:24:07 
+[default0]:[2023-07-31 02:25:15,202] [INFO] [logging.py:96:log_dist] [Rank 0] step=5, skipped=0, lr=[2.796202666666667e-07, 2.796202666666667e-07], mom=[(0.9, 0.95), (0.9, 0.95)]
+[default0]:[2023-07-31 02:25:15,246] [INFO] [timer.py:215:stop] epoch=0/micro_step=5/global_step=5, RunningAvgSamplesPerSec=5.147425945598255, CurrSamplesPerSec=5.116843256089816, MemAllocated=3.48GB, MaxMemAllocated=12.4GB
+[default3]: iteration        5/ 6866455 | consumed samples:          320 | consumed tokens:       655360 | elapsed time per iteration (ms): 13653.7 | learning rate: 2.796E-07 | global batch size:    64 | lm loss: 1.090323E+01 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 4.687 | TFLOPs: 8.53 |
+[default0]:[Rank 0] (after 5 iterations) memory (MB) | allocated: 3562.64453125 | max allocated: 12699.8125 | reserved: 16690.0 | max reserved: 16690.0
+[default0]:[2023-07-31 02:26:19,339] [INFO] [logging.py:96:log_dist] [Rank 0] step=10, skipped=0, lr=[6.291456000000001e-07, 6.291456000000001e-07], mom=[(0.9, 0.95), (0.9, 0.95)]
+[default0]:[2023-07-31 02:26:19,376] [INFO] [timer.py:215:stop] epoch=0/micro_step=10/global_step=10, RunningAvgSamplesPerSec=5.121360102419397, CurrSamplesPerSec=5.054632360690541, MemAllocated=3.48GB, MaxMemAllocated=12.4GB
+[default3]: iteration       10/ 6866455 | consumed samples:          640 | consumed tokens:      1310720 | elapsed time per iteration (ms): 12814.5 | learning rate: 6.291E-07 | global batch size:    64 | lm loss: 1.068503E+01 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 4.994 | TFLOPs: 9.09 |
+[default0]:[2023-07-31 02:27:22,644] [INFO] [logging.py:96:log_dist] [Rank 0] step=15, skipped=0, lr=[9.786709333333333e-07, 9.786709333333333e-07], mom=[(0.9, 0.95), (0.9, 0.95)]
+[default0]:[2023-07-31 02:27:22,679] [INFO] [timer.py:215:stop] epoch=0/micro_step=15/global_step=15, RunningAvgSamplesPerSec=5.1377199652119305, CurrSamplesPerSec=5.101679850220476, MemAllocated=3.48GB, MaxMemAllocated=12.4GB
+[default3]: iteration       15/ 6866455 | consumed samples:          960 | consumed tokens:      1966080 | elapsed time per iteration (ms): 12674.9 | learning rate: 9.787E-07 | global batch size:    64 | lm loss: 1.027337E+01 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.049 | TFLOPs: 9.19 |
+[default0]:[2023-07-31 02:28:26,847] [INFO] [logging.py:96:log_dist] [Rank 0] step=20, skipped=0, lr=[1.3281962666666667e-06, 1.3281962666666667e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+[default0]:[2023-07-31 02:28:26,898] [INFO] [timer.py:215:stop] epoch=0/micro_step=20/global_step=20, RunningAvgSamplesPerSec=5.127786356719072, CurrSamplesPerSec=5.068738250469056, MemAllocated=3.48GB, MaxMemAllocated=12.4GB
+[default3]: iteration       20/ 6866455 | consumed samples:         1280 | consumed tokens:      2621440 | elapsed time per iteration (ms): 12809.0 | learning rate: 1.328E-06 | global batch size:    64 | lm loss: 9.962202E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 4.996 | TFLOPs: 9.09 |
+[default0]:[2023-07-31 02:29:30,874] [INFO] [logging.py:96:log_dist] [Rank 0] step=25, skipped=0, lr=[1.6777216e-06, 1.6777216e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+[default0]:[2023-07-31 02:29:30,924] [INFO] [timer.py:215:stop] epoch=0/micro_step=25/global_step=25, RunningAvgSamplesPerSec=5.123293935885437, CurrSamplesPerSec=5.198417085799851, MemAllocated=3.48GB, MaxMemAllocated=12.4GB
+[default3]: iteration       25/ 6866455 | consumed samples:         1600 | consumed tokens:      3276800 | elapsed time per iteration (ms): 12805.6 | learning rate: 1.678E-06 | global batch size:    64 | lm loss: 9.775636E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 4.998 | TFLOPs: 9.09 |
+[default0]:[2023-07-31 02:30:35,786] [INFO] [logging.py:96:log_dist] [Rank 0] step=30, skipped=0, lr=[2.0272469333333334e-06, 2.0272469333333334e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+[default0]:[2023-07-31 02:30:35,815] [INFO] [timer.py:215:stop] epoch=0/micro_step=30/global_step=30, RunningAvgSamplesPerSec=5.106213790707157, CurrSamplesPerSec=5.22550194011042, MemAllocated=3.48GB, MaxMemAllocated=12.4GB
+[default3]: iteration       30/ 6866455 | consumed samples:         1920 | consumed tokens:      3932160 | elapsed time per iteration (ms): 12969.4 | learning rate: 2.027E-06 | global batch size:    64 | lm loss: 9.681752E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 4.935 | TFLOPs: 8.98 |
+[default0]:[2023-07-31 02:31:38,444] [INFO] [logging.py:96:log_dist] [Rank 0] step=35, skipped=0, lr=[2.376772266666667e-06, 2.376772266666667e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+[default0]:[2023-07-31 02:31:38,494] [INFO] [timer.py:215:stop] epoch=0/micro_step=35/global_step=35, RunningAvgSamplesPerSec=5.1225627641314455, CurrSamplesPerSec=5.220098450420875, MemAllocated=3.48GB, MaxMemAllocated=12.4GB
+[default3]: iteration       35/ 6866455 | consumed samples:         2240 | consumed tokens:      4587520 | elapsed time per iteration (ms): 12528.4 | learning rate: 2.377E-06 | global batch size:    64 | lm loss: 9.628342E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.108 | TFLOPs: 9.29 |
+[default0]:[2023-07-31 02:32:42,762] [INFO] [logging.py:96:log_dist] [Rank 0] step=40, skipped=0, lr=[2.7262976000000002e-06, 2.7262976000000002e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+[default0]:[2023-07-31 02:32:42,806] [INFO] [timer.py:215:stop] epoch=0/micro_step=40/global_step=40, RunningAvgSamplesPerSec=5.121889152796637, CurrSamplesPerSec=5.132989511803972, MemAllocated=3.48GB, MaxMemAllocated=12.4GB
+[default3]: iteration       40/ 6866455 | consumed samples:         2560 | consumed tokens:      5242880 | elapsed time per iteration (ms): 12860.6 | learning rate: 2.726E-06 | global batch size:    64 | lm loss: 9.569083E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 4.976 | TFLOPs: 9.05 |
+[default0]:[2023-07-31 02:33:47,115] [INFO] [logging.py:96:log_dist] [Rank 0] step=45, skipped=0, lr=[3.0758229333333336e-06, 3.0758229333333336e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+[default0]:[2023-07-31 02:33:47,147] [INFO] [timer.py:215:stop] epoch=0/micro_step=45/global_step=45, RunningAvgSamplesPerSec=5.1187307494097505, CurrSamplesPerSec=5.132414108855941, MemAllocated=3.48GB, MaxMemAllocated=12.4GB
+[default3]: iteration       45/ 6866455 | consumed samples:         2880 | consumed tokens:      5898240 | elapsed time per iteration (ms): 12868.4 | learning rate: 3.076E-06 | global batch size:    64 | lm loss: 9.492416E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 4.973 | TFLOPs: 9.05 |
+[default0]:[2023-07-31 02:34:51,003] [INFO] [logging.py:96:log_dist] [Rank 0] step=50, skipped=0, lr=[3.4253482666666666e-06, 3.4253482666666666e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+[default0]:[2023-07-31 02:34:51,032] [INFO] [timer.py:215:stop] epoch=0/micro_step=50/global_step=50, RunningAvgSamplesPerSec=5.119270467326257, CurrSamplesPerSec=5.246783422409043, MemAllocated=3.48GB, MaxMemAllocated=12.4GB
+[default3]: iteration       50/ 6866455 | consumed samples:         3200 | consumed tokens:      6553600 | elapsed time per iteration (ms): 12757.1 | learning rate: 3.425E-06 | global batch size:    64 | lm loss: 9.399013E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.017 | TFLOPs: 9.13 |
+[default0]:[2023-07-31 02:35:54,940] [INFO] [logging.py:96:log_dist] [Rank 0] step=55, skipped=0, lr=[3.7748736e-06, 3.7748736e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+[default0]:[2023-07-31 02:35:54,978] [INFO] [timer.py:215:stop] epoch=0/micro_step=55/global_step=55, RunningAvgSamplesPerSec=5.1180440957850575, CurrSamplesPerSec=5.021707147429746, MemAllocated=3.48GB, MaxMemAllocated=12.4GB
+[default3]: iteration       55/ 6866455 | consumed samples:         3520 | consumed tokens:      7208960 | elapsed time per iteration (ms): 12801.3 | learning rate: 3.775E-06 | global batch size:    64 | lm loss: 9.321043E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 4.999 | TFLOPs: 9.10 |
+[default0]:[2023-07-31 02:36:57,289] [INFO] [logging.py:96:log_dist] [Rank 0] step=60, skipped=0, lr=[4.124398933333333e-06, 4.124398933333333e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+[default0]:[2023-07-31 02:36:57,317] [INFO] [timer.py:215:stop] epoch=0/micro_step=60/global_step=60, RunningAvgSamplesPerSec=5.129445666982276, CurrSamplesPerSec=5.202214734485853, MemAllocated=3.48GB, MaxMemAllocated=12.4GB
+[default3]: iteration       60/ 6866455 | consumed samples:         3840 | consumed tokens:      7864320 | elapsed time per iteration (ms): 12460.5 | learning rate: 4.124E-06 | global batch size:    64 | lm loss: 9.260246E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.136 | TFLOPs: 9.35 |
+[default0]:[2023-07-31 02:38:01,774] [INFO] [logging.py:96:log_dist] [Rank 0] step=65, skipped=0, lr=[4.473924266666667e-06, 4.473924266666667e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+[default0]:[2023-07-31 02:38:01,828] [INFO] [timer.py:215:stop] epoch=0/micro_step=65/global_step=65, RunningAvgSamplesPerSec=5.12552582190185, CurrSamplesPerSec=5.080809327345786, MemAllocated=3.48GB, MaxMemAllocated=12.4GB
+[default3]: iteration       65/ 6866455 | consumed samples:         4160 | consumed tokens:      8519680 | elapsed time per iteration (ms): 12887.7 | learning rate: 4.474E-06 | global batch size:    64 | lm loss: 9.139299E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 4.966 | TFLOPs: 9.04 |
+[default0]:[2023-07-31 02:39:05,256] [INFO] [logging.py:96:log_dist] [Rank 0] step=70, skipped=0, lr=[4.823449600000001e-06, 4.823449600000001e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+[default0]:[2023-07-31 02:39:05,310] [INFO] [timer.py:215:stop] epoch=0/micro_step=70/global_step=70, RunningAvgSamplesPerSec=5.127363361971635, CurrSamplesPerSec=5.228786887467118, MemAllocated=3.48GB, MaxMemAllocated=12.4GB
+[default3]: iteration       70/ 6866455 | consumed samples:         4480 | consumed tokens:      9175040 | elapsed time per iteration (ms): 12682.9 | learning rate: 4.823E-06 | global batch size:    64 | lm loss: 9.092078E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.046 | TFLOPs: 9.18 |
+[default0]:[2023-07-31 02:40:09,940] [INFO] [logging.py:96:log_dist] [Rank 0] step=75, skipped=0, lr=[5.172974933333334e-06, 5.172974933333334e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+[default0]:[2023-07-31 02:40:09,982] [INFO] [timer.py:215:stop] epoch=0/micro_step=75/global_step=75, RunningAvgSamplesPerSec=5.122661137339574, CurrSamplesPerSec=5.008060737439539, MemAllocated=3.48GB, MaxMemAllocated=12.4GB
+[default3]: iteration       75/ 6866455 | consumed samples:         4800 | consumed tokens:      9830400 | elapsed time per iteration (ms): 12929.9 | learning rate: 5.173E-06 | global batch size:    64 | lm loss: 9.019955E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 4.950 | TFLOPs: 9.01 |
+[default0]:[2023-07-31 02:41:13,213] [INFO] [logging.py:96:log_dist] [Rank 0] step=80, skipped=0, lr=[5.522500266666667e-06, 5.522500266666667e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+[default0]:[2023-07-31 02:41:13,251] [INFO] [timer.py:215:stop] epoch=0/micro_step=80/global_step=80, RunningAvgSamplesPerSec=5.124702766842514, CurrSamplesPerSec=5.07040540658978, MemAllocated=3.48GB, MaxMemAllocated=12.4GB
+[default3]: iteration       80/ 6866455 | consumed samples:         5120 | consumed tokens:     10485760 | elapsed time per iteration (ms): 12647.4 | learning rate: 5.523E-06 | global batch size:    64 | lm loss: 8.948659E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.060 | TFLOPs: 9.21 |
+[default0]:[2023-07-31 02:42:16,425] [INFO] [logging.py:96:log_dist] [Rank 0] step=85, skipped=0, lr=[5.872025600000001e-06, 5.872025600000001e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+[default0]:[2023-07-31 02:42:16,469] [INFO] [timer.py:215:stop] epoch=0/micro_step=85/global_step=85, RunningAvgSamplesPerSec=5.127117520161245, CurrSamplesPerSec=4.833114488542989, MemAllocated=3.48GB, MaxMemAllocated=12.4GB
+[default3]: iteration       85/ 6866455 | consumed samples:         5440 | consumed tokens:     11141120 | elapsed time per iteration (ms): 12635.0 | learning rate: 5.872E-06 | global batch size:    64 | lm loss: 8.886501E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.065 | TFLOPs: 9.22 |
+[default0]:[2023-07-31 02:43:19,893] [INFO] [logging.py:96:log_dist] [Rank 0] step=90, skipped=0, lr=[6.221550933333333e-06, 6.221550933333333e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+[default0]:[2023-07-31 02:43:19,936] [INFO] [timer.py:215:stop] epoch=0/micro_step=90/global_step=90, RunningAvgSamplesPerSec=5.128005664447414, CurrSamplesPerSec=4.9028355120703315, MemAllocated=3.48GB, MaxMemAllocated=12.4GB
+[default3]: iteration       90/ 6866455 | consumed samples:         5760 | consumed tokens:     11796480 | elapsed time per iteration (ms): 12691.3 | learning rate: 6.222E-06 | global batch size:    64 | lm loss: 8.803506E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.043 | TFLOPs: 9.18 |
+[default0]:[2023-07-31 02:44:23,430] [INFO] [logging.py:96:log_dist] [Rank 0] step=95, skipped=0, lr=[6.571076266666667e-06, 6.571076266666667e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+[default0]:[2023-07-31 02:44:23,471] [INFO] [timer.py:215:stop] epoch=0/micro_step=95/global_step=95, RunningAvgSamplesPerSec=5.128451997486799, CurrSamplesPerSec=5.113737844260882, MemAllocated=3.48GB, MaxMemAllocated=12.4GB
+[default3]: iteration       95/ 6866455 | consumed samples:         6080 | consumed tokens:     12451840 | elapsed time per iteration (ms): 12684.9 | learning rate: 6.571E-06 | global batch size:    64 | lm loss: 8.728579E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.045 | TFLOPs: 9.18 |
+[default0]:[2023-07-31 02:45:27,505] [INFO] [logging.py:96:log_dist] [Rank 0] step=100, skipped=0, lr=[6.9206016e-06, 6.9206016e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+[default0]:[2023-07-31 02:45:27,547] [INFO] [timer.py:215:stop] epoch=0/micro_step=100/global_step=100, RunningAvgSamplesPerSec=5.127327860607026, CurrSamplesPerSec=5.097496028219231, MemAllocated=3.48GB, MaxMemAllocated=12.4GB
+[default3]: iteration      100/ 6866455 | consumed samples:         6400 | consumed tokens:     13107200 | elapsed time per iteration (ms): 12821.2 | learning rate: 6.921E-06 | global batch size:    64 | lm loss: 8.717519E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 4.992 | TFLOPs: 9.08 |
+[default3]:-----------------------------------------------------------------------------------------------
+[default3]: validation loss at iteration 100 | lm loss value: 8.727929E+00 | lm loss PPL: 6.172931E+03 | 
+[default3]:-----------------------------------------------------------------------------------------------
+[default0]:[2023-07-31 02:47:35,375] [INFO] [logging.py:96:log_dist] [Rank 0] step=105, skipped=0, lr=[7.270126933333334e-06, 7.270126933333334e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+[default0]:[2023-07-31 02:47:35,431] [INFO] [timer.py:215:stop] epoch=0/micro_step=105/global_step=105, RunningAvgSamplesPerSec=5.129556214091311, CurrSamplesPerSec=5.009715231014507, MemAllocated=3.48GB, MaxMemAllocated=12.4GB
+[default3]: iteration      105/ 6866455 | consumed samples:         6720 | consumed tokens:     13762560 | elapsed time per iteration (ms): 25568.0 | learning rate: 7.270E-06 | global batch size:    64 | lm loss: 8.643615E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 2.503 | TFLOPs: 4.55 |
+[default0]:[2023-07-31 02:48:39,973] [INFO] [logging.py:96:log_dist] [Rank 0] step=110, skipped=0, lr=[7.619652266666667e-06, 7.619652266666667e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+[default0]:[2023-07-31 02:48:39,985] [INFO] [timer.py:215:stop] epoch=0/micro_step=110/global_step=110, RunningAvgSamplesPerSec=5.127788182464157, CurrSamplesPerSec=5.000969899795775, MemAllocated=3.48GB, MaxMemAllocated=12.4GB
+[default3]: iteration      110/ 6866455 | consumed samples:         7040 | consumed tokens:     14417920 | elapsed time per iteration (ms): 12902.5 | learning rate: 7.620E-06 | global batch size:    64 | lm loss: 8.612314E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 4.960 | TFLOPs: 9.03 |
+[default0]:[2023-07-31 02:49:44,763] [INFO] [logging.py:96:log_dist] [Rank 0] step=115, skipped=0, lr=[7.9691776e-06, 7.9691776e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+[default0]:[2023-07-31 02:49:44,799] [INFO] [timer.py:215:stop] epoch=0/micro_step=115/global_step=115, RunningAvgSamplesPerSec=5.125874498982469, CurrSamplesPerSec=5.088551006213354, MemAllocated=3.48GB, MaxMemAllocated=12.4GB
+[default3]: iteration      115/ 6866455 | consumed samples:         7360 | consumed tokens:     15073280 | elapsed time per iteration (ms): 12954.9 | learning rate: 7.969E-06 | global batch size:    64 | lm loss: 8.560226E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 4.940 | TFLOPs: 8.99 |
+[default0]:[2023-07-31 02:50:48,154] [INFO] [logging.py:96:log_dist] [Rank 0] step=120, skipped=0, lr=[8.318702933333334e-06, 8.318702933333334e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+[default0]:[2023-07-31 02:50:48,200] [INFO] [timer.py:215:stop] epoch=0/micro_step=120/global_step=120, RunningAvgSamplesPerSec=5.12722094411204, CurrSamplesPerSec=5.2661789332876205, MemAllocated=3.48GB, MaxMemAllocated=12.4GB
+[default3]: iteration      120/ 6866455 | consumed samples:         7680 | consumed tokens:     15728640 | elapsed time per iteration (ms): 12673.5 | learning rate: 8.319E-06 | global batch size:    64 | lm loss: 8.459764E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.050 | TFLOPs: 9.19 |
+[default0]:[2023-07-31 02:51:51,257] [INFO] [logging.py:96:log_dist] [Rank 0] step=125, skipped=0, lr=[8.668228266666668e-06, 8.668228266666668e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+[default0]:[2023-07-31 02:51:51,294] [INFO] [timer.py:215:stop] epoch=0/micro_step=125/global_step=125, RunningAvgSamplesPerSec=5.1290330126536094, CurrSamplesPerSec=4.983837455676348, MemAllocated=3.48GB, MaxMemAllocated=12.4GB
+[default3]: iteration      125/ 6866455 | consumed samples:         8000 | consumed tokens:     16384000 | elapsed time per iteration (ms): 12614.2 | learning rate: 8.668E-06 | global batch size:    64 | lm loss: 8.396373E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.074 | TFLOPs: 9.23 |
+[default0]:[2023-07-31 02:52:55,189] [INFO] [logging.py:96:log_dist] [Rank 0] step=130, skipped=0, lr=[9.0177536e-06, 9.0177536e-06], mom=[(0.9, 0.95), (0.9, 0.95)]
+[default0]:[2023-07-31 02:52:55,239] [INFO] [timer.py:215:stop] epoch=0/micro_step=130/global_step=130, RunningAvgSamplesPerSec=5.129736407571463, CurrSamplesPerSec=5.125784848966854, MemAllocated=3.48GB, MaxMemAllocated=12.4GB
+[default3]: iteration      130/ 6866455 | consumed samples:         8320 | consumed tokens:     17039360 | elapsed time per iteration (ms): 12776.3 | learning rate: 9.018E-06 | global batch size:    64 | lm loss: 8.384044E+00 | loss scale: 2048.0 | actual seqlen:  2048 | number of skipped iterations:   0 | number of nan iterations:   0 | samples per second: 5.009 | TFLOPs: 9.11 |
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+slurmstepd: error: *** JOB 4505017 ON n2gpu1211 CANCELLED AT 2023-07-31T02:53:07 DUE TO TIME LIMIT ***
+WARNING:torch.distributed.elastic.agent.server.api:Received 15 death signal, shutting down workers
+WARNING:torch.distributed.elastic.multiprocessing.api:Sending process 386404 closing signal SIGTERM
+WARNING:torch.distributed.elastic.multiprocessing.api:Sending process 386405 closing signal SIGTERM
+WARNING:torch.distributed.elastic.multiprocessing.api:Sending process 386406 closing signal SIGTERM
+WARNING:torch.distributed.elastic.multiprocessing.api:Sending process 386407 closing signal SIGTERM
+slurmstepd: error: *** STEP 4505017.0 ON n2gpu1211 CANCELLED AT 2023-07-31T02:53:07 DUE TO TIME LIMIT ***
+WARNING:torch.distributed.elastic.agent.server.api:Received 15 death signal, shutting down workers
+WARNING:torch.distributed.elastic.multiprocessing.api:Sending process 32599 closing signal SIGTERM
+WARNING:torch.distributed.elastic.multiprocessing.api:Sending process 32600 closing signal SIGTERM
+WARNING:torch.distributed.elastic.multiprocessing.api:Sending process 32601 closing signal SIGTERM
+WARNING:torch.distributed.elastic.multiprocessing.api:Sending process 32602 closing signal SIGTERM
+WARNING:torch.distributed.elastic.multiprocessing.api:Sending process 32599 closing signal SIGTERM
+WARNING:torch.distributed.elastic.multiprocessing.api:Sending process 32600 closing signal SIGTERM
+WARNING:torch.distributed.elastic.multiprocessing.api:Sending process 32601 closing signal SIGTERM
+WARNING:torch.distributed.elastic.multiprocessing.api:Sending process 32602 closing signal SIGTERM
