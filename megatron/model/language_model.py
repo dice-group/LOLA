@@ -395,6 +395,8 @@ class TransformerLanguageModel(MegatronModule):
         self.untie_embeddings_and_output_weights = args.untie_embeddings_and_output_weights
         self.num_experts = num_experts
 
+        print("LOLA: Number of experts passed to language model: %d" % num_experts)
+
         # Embeddings.
         if self.pre_process:
             self.embedding = Embedding(self.hidden_size,

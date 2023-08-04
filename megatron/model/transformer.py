@@ -828,6 +828,7 @@ class ParallelTransformerLayer(MegatronModule):
                 self.post_inter_attention_layernorm = MixedFusedRMSNorm(config.hidden_size, config.layernorm_epsilon)
 
         # MLP
+        print('Building MLP layer, num_experts: %d' % num_experts)
         self.num_experts = num_experts
         if args.num_experts_switch is not None:
             self.mlp = SwitchMLP(config) # Megatron-LM's MoE
@@ -849,7 +850,7 @@ class ParallelTransformerLayer(MegatronModule):
                                 min_capacity=args.moe_min_capacity,
                                 drop_tokens=args.moe_token_dropping, use_tutel=args.use_tutel,
                                 enable_expert_tensor_parallelism=enable_expert_tensor_parallelism)
-
+        print('Built MLP layer:', self.mlp)
         # Set bias+dropout+add fusion grad_enable execution handler.
         TORCH_MAJOR = int(torch.__version__.split('.')[0])
         TORCH_MINOR = int(torch.__version__.split('.')[1])
