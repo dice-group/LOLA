@@ -395,7 +395,7 @@ class TransformerLanguageModel(MegatronModule):
         self.untie_embeddings_and_output_weights = args.untie_embeddings_and_output_weights
         self.num_experts = num_experts
 
-        print("LOLA: Number of experts passed to language model: %d" % num_experts)
+        print("LOLA: Number of experts passed to language model:", num_experts)
 
         # Embeddings.
         if self.pre_process:
@@ -427,6 +427,7 @@ class TransformerLanguageModel(MegatronModule):
         # Encoder (usually set to True, False if part of an encoder-decoder
         # architecture and in encoder-only stage).
         if self.add_encoder:
+            print('LOLA: Building Encoder')
             self.encoder = ParallelTransformer(
                 config,
                 model_type=args.model_type if not args.retro_add_retriever \
@@ -434,6 +435,7 @@ class TransformerLanguageModel(MegatronModule):
                 self_attn_mask_type=self.encoder_attn_mask_type,
                 pre_process=self.pre_process,
                 post_process=self.post_process,
+                num_experts=self.num_experts
             )
             self._encoder_key = 'encoder'
         else:
@@ -442,6 +444,8 @@ class TransformerLanguageModel(MegatronModule):
         # Decoder (usually set to False, True if part of an encoder-decoder
         # architecture and in decoder-only stage).
         if self.add_decoder:
+            print('LOLA: Building Decoder')
+            print('LOLA: Number of experts being sent to decoder layers:', self.num_experts)
             self.decoder = ParallelTransformer(
                 config,
                 model_type=args.model_type,
