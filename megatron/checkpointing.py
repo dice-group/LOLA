@@ -57,6 +57,7 @@ def check_checkpoint_args(checkpoint_args):
         _compare('num_layers')
     _compare('hidden_size')
     _compare('num_attention_heads')
+    _compare('num_key_value_heads')
     _compare('add_position_embedding', default=True)
     if args.vocab_file:
         _compare('max_position_embeddings')
@@ -319,8 +320,8 @@ def _transpose_first_dim(t, num_splits, num_splits_first, model):
     # specific to self attention so should work for cross attention as well
     while hasattr(model, 'module'):
         model = model.module
-    #attention_module = model.language_model.encoder.layers[0].self_attention
-    attention_module = model.language_model.encoder.layers[0].attention
+    attention_module = model.language_model.encoder.layers[0].self_attention
+    #attention_module = model.language_model.encoder.layers[0].attention
     hidden_size_per_attention_head = attention_module.hidden_size_per_attention_head
     num_attention_heads_per_partition = attention_module.num_attention_heads_per_partition
     if num_splits_first:
@@ -496,6 +497,7 @@ def load_args_from_checkpoint(args, load_arg='load'):
     _set_arg('ffn_hidden_size')
     _set_arg('seq_length')
     _set_arg('num_attention_heads')
+    _set_arg('num_key_value_heads')
     _set_arg('kv_channels')
     _set_arg('max_position_embeddings')
     _set_arg('add_position_embedding', force=True)

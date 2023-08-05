@@ -264,17 +264,17 @@ def validate_args(args, defaults={}):
     for req_arg in required_args:
         _check_arg_is_not_none(args, req_arg)
 
-    # Checks.
+    # Checks.    
     if args.ffn_hidden_size is None:
-        args.ffn_hidden_size = 4 * args.hidden_size
-
-    if args.swiglu:
-        # reduce the dimnesion for MLP since projections happens on
-        # two linear layers. this keeps the number of paramters in
-        # the same ballpark as the counterpart with 4*h size
-        # we keep it a multiple of 64, which means the actual tensor size
-        # will be a multiple of 64 / tp_size
-        args.ffn_hidden_size = int((4 * args.hidden_size * 2 / 3) / 64) * 64
+        if args.swiglu:
+            # reduce the dimnesion for MLP since projections happens on
+            # two linear layers. this keeps the number of paramters in
+            # the same ballpark as the counterpart with 4*h size
+            # we keep it a multiple of 64, which means the actual tensor size
+            # will be a multiple of 64 / tp_size
+            args.ffn_hidden_size = int((4 * args.hidden_size * 2 / 3) / 64) * 64
+        else:
+            args.ffn_hidden_size = 4 * args.hidden_size
 
     if args.kv_channels is None:
         assert args.hidden_size % args.num_attention_heads == 0
@@ -412,6 +412,17 @@ def validate_args(args, defaults={}):
         for path in args.data_path:
             data_paths.append(f"{args.aml_data_download_path}/{path}")
         args.data_path = data_paths
+
+    # GQA
+    if args.num_key_value_heads is None:
+        args.num_key_value_heads = args.num_attention_heads
+    assert args.num_attention_heads % args.num_key_value_heads == 0, \
+        f"num_attention_heads must be divisible by num_key_value_heads (got `num_attention_heads`: {args.num_attention_heads} " \
+        f"and `num_key_value_heads`: {args.num_key_value_heads})."
+    if args.num_key_value_heads != args.num_attention_heads:
+        # if GQA
+        assert not args.mos, 'GQA currently does not support args.mos'
+        assert not args.kd, 'GQA currently does not support args.kd'
 
     # Print arguments.
     _print_args("arguments", args)
@@ -582,6 +593,8 @@ def _add_network_size_args(parser):
                        'This is set to 4*hidden-size if not provided')
     group.add_argument('--num-attention-heads', type=int, default=None,
                        help='Number of transformer attention heads.')
+    group.add_argument('--num-key-value-heads', type=int, default=None,
+                       help='Number of key_value heads that should be used to implement Grouped Query Attention.')
     group.add_argument('--kv-channels', type=int, default=None,
                        help='Projection weights dimension in multi-head '
                        'attention. This is set to '
@@ -1099,7 +1112,7 @@ def _add_distributed_args(parser):
                        default=False, help='If set, use custom-built ring exchange '
                        'for p2p communications. Note that this option will require '
                        'a custom built image that support ring-exchange p2p.')
-    group.add_argument('--local_rank', type=int, default=None,
+    group.add_argument('--local-rank', '--local_rank', type=int, default=None,
                        help='local rank passed from distributed launcher.')
     group.add_argument('--lazy-mpu-init', type=bool, required=False,
                        help='If set to True, initialize_megatron() '
