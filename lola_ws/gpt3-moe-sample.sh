@@ -317,13 +317,15 @@ megatron_options="${megatron_options} \
         --disable-moe-token-dropping"
 fi
 
+ZERO_STAGE=2
+
 #template_json="ds_config_gpt_TEMPLATE.json"
 template_json="ds_config_gpt_Zero2_TEMPLATE.json"
 config_json="ds_config_gpt_${NAME}.json"
 sed "s/CONFIG_BATCH_SIZE/${GLOBAL_BATCH_SIZE}/" ${template_json} \
     | sed "s/CONFIG_MBSIZE/${MICRO_BATCH_SIZE}/" \
     | sed "s/LOG_INTERVAL/${LOG_INTERVAL}/" \
-    | sed "s/ZERO_STAGE/0/" \
+    | sed "s/ZERO_STAGE/${ZERO_STAGE}/" \
     | sed "s/PRESCALE_GRAD/true/" \
     | sed "s/CONFIG_FP16_ENABLED/true/" \
     | sed "s/CONFIG_BF16_ENABLED/false/" \
@@ -336,6 +338,7 @@ sed "s/CONFIG_BATCH_SIZE/${GLOBAL_BATCH_SIZE}/" ${template_json} \
 deepspeed_options=" \
 		    --deepspeed \
 		    --deepspeed_config ${config_json} \
+        --zero-stage ${ZERO_STAGE} \
 		    --pipeline-model-parallel-size ${PP_SIZE}"
 
 # Currently MoE is not compatible with pipeline parallel
