@@ -22,11 +22,11 @@ torch-elastic-error.json
 .coverage_*
 *~
 logs
-<<<<<<< HEAD
 temp/
 *.ipynb_checkpoints/
-=======
 
 # Data folder
 bookcorpus_data/
->>>>>>> f4920459cfa75c88c0afd11f058806c17a4cdf44
+
+*__pycache__*
+ds_config.json

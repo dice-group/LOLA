@@ -1,11 +1,11 @@
 #!/bin/bash
 #SBATCH -J "GPT3 - MoE Sample"
-#SBATCH -N 4
+#SBATCH -N 1
 #SBATCH --ntasks-per-node=1
-#SBATCH --gres=gpu:a100:4
-###SBATCH --partition=dgx
-###SBATCH --qos=devel
-#SBATCH -t 10:00:00
+#SBATCH --gres=gpu:a100:8
+#SBATCH --partition=dgx
+#SBATCH --qos=devel
+#SBATCH -t 00:30:00
 
 #load modules
 module load lib/NCCL/2.12.12-GCCcore-11.3.0-CUDA-11.7.0
@@ -34,11 +34,11 @@ SEQ_LEN=2048
 ### your desired model size or build your own configs
 
 ## GPT-3 Small 125M
-# MODEL_SIZE=0.125
-# NUM_LAYERS=12
-# HIDDEN_SIZE=768
-# NUM_ATTN_HEADS=12
-# GLOBAL_BATCH_SIZE=256
+MODEL_SIZE=0.125
+NUM_LAYERS=12
+HIDDEN_SIZE=768
+NUM_ATTN_HEADS=12
+MICRO_BATCH_SIZE=1
 # LR=6.0e-4
 # MIN_LR=6.0e-5
 
@@ -87,12 +87,12 @@ SEQ_LEN=2048
 # MIN_LR=1.6e-5
 
 ## GPT-3 6.7B
-MODEL_SIZE=6.7
-NUM_LAYERS=32
-HIDDEN_SIZE=4096
-NUM_ATTN_HEADS=32
+#MODEL_SIZE=6.7
+#NUM_LAYERS=32
+#HIDDEN_SIZE=4096
+#NUM_ATTN_HEADS=32
 # Use Micro batch size instead of global batch size, the latter is set to $((NNODES*GPUS_PER_NODE*MICRO_BATCH_SIZE))
-MICRO_BATCH_SIZE=8
+#MICRO_BATCH_SIZE=8
 ### GLOBAL_BATCH_SIZE=1024
 # LR=1.2e-4
 # MIN_LR=1.2e-5
