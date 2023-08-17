@@ -434,6 +434,7 @@ class TransformerLanguageModel(MegatronModule):
         # architecture and in encoder-only stage).
         if self.add_encoder:
             print('LOLA: Building Encoder')
+            print('LOLA: Number of experts being sent to encoder layers:', self.num_experts)
             self.encoder = ParallelTransformer(
                 config,
                 model_type=args.model_type if not args.retro_add_retriever \
