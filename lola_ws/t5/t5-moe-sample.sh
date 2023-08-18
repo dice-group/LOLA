@@ -2,9 +2,9 @@
 #SBATCH -J "T5 - MoE Sample"
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
-#SBATCH --gres=gpu:a100:4
-###SBATCH --partition=dgx
-###SBATCH --qos=devel
+#SBATCH --gres=gpu:a100:1
+#SBATCH --partition=dgx
+#SBATCH --qos=devel
 #SBATCH -t 00:30:00
 
 #load modules
@@ -187,6 +187,7 @@ data_options=" \
          --tokenizer-type SentencePieceTokenizer \
          --tokenizer-model ${DATA_DIR}/spiece.model \
          --data-path ${DATA_BLEND} \
+         --vocab-extra-ids 100 \
          --data-impl mmap"
 # TODO: Compare arguments with original t5
 megatron_options=" \
@@ -207,6 +208,7 @@ megatron_options=" \
         --exit-duration-in-mins ${EXIT_DURATION} \
         --global-batch-size ${GLOBAL_BATCH_SIZE} \
         --num-layers ${NUM_LAYERS} \
+        --decoder-num-layers ${NUM_LAYERS} \
         --hidden-size ${HIDDEN_SIZE} \
         --num-attention-heads ${NUM_ATTN_HEADS} \
         --kv-channels ${KV_CHANNELS} \
