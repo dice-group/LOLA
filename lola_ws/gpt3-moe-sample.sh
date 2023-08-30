@@ -2,10 +2,10 @@
 #SBATCH -J "GPT3 - MoE Sample"
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
-#SBATCH --gres=gpu:a100:8
-#SBATCH --partition=dgx
-#SBATCH --qos=devel
-#SBATCH -t 00:30:00
+#SBATCH --gres=gpu:a100:1
+###SBATCH --partition=dgx
+###SBATCH --qos=devel
+#SBATCH -t 02:00:00
 
 #load modules
 module load lib/NCCL/2.12.12-GCCcore-11.3.0-CUDA-11.7.0
@@ -167,7 +167,7 @@ NUM_GPUS=$((NNODES*GPUS_PER_NODE))
 ### MoE configs
 ## Number of experts. EP_SIZE 1 means dense model without MoE
 # EP_SIZE=1
-EP_SIZE=128
+EP_SIZE=4
 
 if [[ $EP_SIZE -gt $NUM_GPUS ]]; then
     EP_PARALLEL_SIZE=$NUM_GPUS
@@ -321,7 +321,7 @@ ZERO_STAGE=2
 
 #template_json="ds_config_gpt_TEMPLATE.json"
 template_json="ds_config_gpt_Zero2_TEMPLATE.json"
-config_json="ds_config_gpt_${NAME}.json"
+config_json="${OUTPUT_BASEPATH}/ds_config_gpt_${NAME}.json"
 sed "s/CONFIG_BATCH_SIZE/${GLOBAL_BATCH_SIZE}/" ${template_json} \
     | sed "s/CONFIG_MBSIZE/${MICRO_BATCH_SIZE}/" \
     | sed "s/LOG_INTERVAL/${LOG_INTERVAL}/" \
@@ -356,7 +356,7 @@ fi
 # do not remove or the training will hang and nodes will be lost w/o this workaround
 export CUDA_LAUNCH_BLOCKING=1
 # hide duplicated errors using this hack - will be properly fixed in pt-1.12
-export TORCHELASTIC_ERROR_FILE='torch-elastic-error.json'
+export TORCHELASTIC_ERROR_FILE="${OUTPUT_BASEPATH}/torch-elastic-error.json"
 export NCCL_ASYNC_ERROR_HANDLING=1
 
 # launcher to python -u -m torch.distributed.run

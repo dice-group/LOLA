@@ -3,9 +3,9 @@
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
 #SBATCH --gres=gpu:a100:1
-#SBATCH --partition=dgx
-#SBATCH --qos=devel
-#SBATCH -t 00:30:00
+###SBATCH --partition=dgx
+###SBATCH --qos=devel
+#SBATCH -t 02:00:00
 
 #load modules
 module load lib/NCCL/2.12.12-GCCcore-11.3.0-CUDA-11.7.0
@@ -293,7 +293,7 @@ fi
 # do not remove or the training will hang and nodes will be lost w/o this workaround
 export CUDA_LAUNCH_BLOCKING=1
 # hide duplicated errors using this hack - will be properly fixed in pt-1.12
-export TORCHELASTIC_ERROR_FILE='torch-elastic-error.json'
+export TORCHELASTIC_ERROR_FILE="${OUTPUT_BASEPATH}/torch-elastic-error.json"
 export NCCL_ASYNC_ERROR_HANDLING=1
 
 # launcher to python -u -m torch.distributed.run
@@ -306,7 +306,7 @@ export LAUNCHER="python -u -m torch.distributed.run \
     --max_restarts 0 \
     --tee 3 \
     "
-export CMD="${LIB_DIR}/pretrain_t5.py ${megatron_options} ${data_options} ${deepspeed_options}"
+export CMD="${LIB_DIR}/pretrain_t5_moe.py ${megatron_options} ${data_options} ${deepspeed_options}"
 # Command for distributed training setup
 # run_cmd="deepspeed ${LIB_DIR}/pretrain_gpt.py ${megatron_options} ${data_options} ${deepspeed_options} 2>&1 | tee -a ${OUTPUT_BASEPATH}/log/${NAME}_${host}_${current_time}.log"
 echo LAUNCHER: $LAUNCHER

@@ -30,3 +30,4 @@ bookcorpus_data/
 
 *__pycache__*
 ds_config.json
+.vscode/
