@@ -3,9 +3,9 @@
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
 #SBATCH --gres=gpu:a100:1
-###SBATCH --partition=dgx
-###SBATCH --qos=devel
-#SBATCH -t 02:00:00
+#SBATCH --partition=dgx
+#SBATCH --qos=devel
+#SBATCH -t 04:00:00
 
 #load modules
 module load lib/NCCL/2.12.12-GCCcore-11.3.0-CUDA-11.7.0
@@ -15,7 +15,7 @@ module load vis/torchvision/0.13.1-foss-2022a-CUDA-11.7.0
 source /scratch/hpc-prf-lola/lib_repo/custom-venvs/lola1/bin/activate
 
 LIB_DIR=/scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft
-DATA_DIR=/scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/data
+DATA_DIR=/scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/lola_ws/gpt/data
 OUTPUT_DIR=`pwd`
 # Extract SLURM environment variables
 # so processes know who to talk to
@@ -34,11 +34,11 @@ SEQ_LEN=2048
 ### your desired model size or build your own configs
 
 ## GPT-3 Small 125M
-MODEL_SIZE=0.125
-NUM_LAYERS=12
-HIDDEN_SIZE=768
-NUM_ATTN_HEADS=12
-MICRO_BATCH_SIZE=1
+#MODEL_SIZE=0.125
+#NUM_LAYERS=12
+#HIDDEN_SIZE=768
+#NUM_ATTN_HEADS=12
+#MICRO_BATCH_SIZE=1
 # LR=6.0e-4
 # MIN_LR=6.0e-5
 
@@ -54,12 +54,12 @@ MICRO_BATCH_SIZE=1
 # MIN_LR=3.0e-5
 
 ## GPT-3 Large 760M
-# MODEL_SIZE=0.76
-# NUM_LAYERS=24
-# HIDDEN_SIZE=1536
-# NUM_ATTN_HEADS=16
+MODEL_SIZE=0.76
+NUM_LAYERS=24
+HIDDEN_SIZE=1536
+NUM_ATTN_HEADS=16
 # Use Micro batch size instead of global batch size, the latter is set to $((NNODES*GPUS_PER_NODE*MICRO_BATCH_SIZE))
-# MICRO_BATCH_SIZE=1
+MICRO_BATCH_SIZE=1
 ### GLOBAL_BATCH_SIZE=256
 # LR=2.5e-4
 # MIN_LR=2.5e-5
@@ -137,7 +137,7 @@ TRAIN_ITERS=$(( ${TRAIN_TOKENS} * 3 / ${GLOBAL_BATCH_SIZE} / ${SEQ_LEN} ))
 
 ## Another termination condition in minutes. Set it large enough to avoid
 ## undesired early termination.
-EXIT_DURATION=30000000
+EXIT_DURATION=300
 ###############################################################################
 ### LR configs
 ## LR warmup and decay duration, this token-based config is preferable since
@@ -249,7 +249,7 @@ CHECKPOINT_PATH="${OUTPUT_BASEPATH}/checkpoint/${NAME}"
 VOCAB_PATH=$DATA_DIR/gpt2-vocab.json
 MERGE_PATH=$DATA_DIR/gpt2-merges.txt
 # Public the Pile dataset, can be downloaded at https://mystic.the-eye.eu/public/AI/pile_neox/
-DATA_BLEND=$DATA_DIR/meg-gpt2-oscar-en-10k_text_document
+DATA_BLEND=$DATA_DIR/meg-gpt-mc4-100k_text_document
 ###############################################################################
 data_options=" \
          --vocab-file ${VOCAB_PATH} \

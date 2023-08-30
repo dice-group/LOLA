@@ -37,7 +37,7 @@
   "wall_clock_breakdown" : true,
   "flops_profiler": {
     "enabled": true,
-    "profile_step": 15,
+    "profile_step": 200,
     "module_depth": -1,
     "top_modules": 1,
     "detailed": true,
