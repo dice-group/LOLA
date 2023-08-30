@@ -320,7 +320,7 @@ fi
 ZERO_STAGE=2
 
 #template_json="ds_config_gpt_TEMPLATE.json"
-template_json="ds_config_gpt_Zero2_TEMPLATE.json"
+template_json="${LIB_DIR}/lola_ws/cfg/ds_config_gpt_Zero2_TEMPLATE.json"
 config_json="${OUTPUT_BASEPATH}/ds_config_gpt_${NAME}.json"
 sed "s/CONFIG_BATCH_SIZE/${GLOBAL_BATCH_SIZE}/" ${template_json} \
     | sed "s/CONFIG_MBSIZE/${MICRO_BATCH_SIZE}/" \
