@@ -7,7 +7,7 @@ import subprocess
 import json
 
 # Output file
-OUTPUT_FILE = 'scaling_exp_det.json'
+OUTPUT_FILE = 'scaling_logs/scaling_exp_det.json'
 # Script to execute
 SCALE_SCRIPT = 'gpt3-moe-scaling-train.sh'
 
@@ -16,27 +16,38 @@ START_PORT_VAL = 6005
 Model configs to test, key represents the model size in billion(s) and the corresponding list has the values for 
 the model shape  in the following order: [NUM_LAYERS, HIDDEN_SIZE, NUM_ATTN_HEADS]
 """
+# MODEL_CONFIGS = {
+#     '0.35': [12, 768, 12],
+#     '0.76': [24, 1536, 16],
+#     '1.3': [24, 2048, 16],
+#     '2.7': [32, 2560, 32],
+#     '6.7': [32, 4096, 32],
+#     '13': [40, 5120, 40]
+# }
+
 MODEL_CONFIGS = {
-    '0.35': [12, 768, 12],
-    '0.76': [24, 1536, 16],
-    '1.3': [24, 2048, 16],
-    '2.7': [32, 2560, 32],
-    '6.7': [32, 4096, 32],
-    '13': [40, 5120, 40]
+    '0.76': [24, 1536, 16]
 }
 
-BATCH_SIZE_VALUES = [1, 2, 4, 8, 16, 32]
+BATCH_SIZE_VALUES = [8]
+# BATCH_SIZE_VALUES = [1, 2, 4, 8, 16, 32]
 # BATCH_SIZE_VALUES = [1, 2, 4]
 # BATCH_SIZE_VALUES = [8, 16, 32]
 """
 Hardware configs the list represents the following values in order: [NUM_NODES, NUM_GPU_PER_NODE, TIME]
 """
+# HARDWARE_CONFIGS = [
+#     [1, 1, '00:10:00'],
+#     [1, 4, '00:15:00'],
+#     [2, 4, '00:30:00'],
+#     [4, 4, '00:30:00']
+# ]
 HARDWARE_CONFIGS = [
-    [1, 1, '00:10:00'],
-    [1, 4, '00:15:00'],
-    [2, 4, '00:30:00'],
-    [4, 4, '00:30:00']
+    [1, 1, '00:05:00'],
+#    [1, 4, '00:10:00'],
+    [1, 8, '00:15:00'],
 ]
+
 
 EXP_NAME_TEMPLATE = 'GPT_%sB_MoE128_%dBATCH_%dGPU_%dNode'
 
@@ -71,7 +82,8 @@ def submit_slurm_job(sbatch_args, script_args):
 
 def compose_sbatch_args(hw_cfg, exp_name):
     return ['--job-name="%s"' % exp_name, '--nodes=%d' % hw_cfg[0], '--ntasks-per-node=1',
-            '--gres=gpu:a100:%d' % hw_cfg[1], '--time=%s' % hw_cfg[2]]
+            '--gres=gpu:a100:%d' % hw_cfg[1], '--time=%s' % hw_cfg[2], '--output=scaling_logs/scaling_exp_'+exp_name+'_slurm-%j.out',
+            '--partition=dgx','--qos=devel']
 
 
 port_inc_val = 0

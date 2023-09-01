@@ -1,14 +1,13 @@
 #!/bin/bash
-# Command line arguments
-EXP_NAME=$1
-MODEL_SIZE=$2
+#SBATCH -J "GPT3 - Normal MoE - MC4 100k"
+#SBATCH -N 1
+#SBATCH --ntasks-per-node=1
+#SBATCH --gres=gpu:a100:1
+###SBATCH --partition=dgx
+###SBATCH --qos=devel
+#SBATCH -t 50:00:00
+#SBATCH -o "train_logs/normal_4moe_gpt_760m_slurm-%j.out"
 
-NUM_LAYERS=$3
-HIDDEN_SIZE=$4
-NUM_ATTN_HEADS=$5
-
-MICRO_BATCH_SIZE=$6
-MASTER_PORT=$7
 #load modules
 module load lib/NCCL/2.12.12-GCCcore-11.3.0-CUDA-11.7.0
 module load ai/PyTorch/1.12.0-foss-2022a-CUDA-11.7.0
@@ -17,12 +16,12 @@ module load vis/torchvision/0.13.1-foss-2022a-CUDA-11.7.0
 source /scratch/hpc-prf-lola/lib_repo/custom-venvs/lola1/bin/activate
 
 LIB_DIR=/scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft
-DATA_DIR=/scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/data
+DATA_DIR=/scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/lola_ws/gpt/data
 OUTPUT_DIR=`pwd`
 # Extract SLURM environment variables
 # so processes know who to talk to
 MASTER_ADDR=$(scontrol show hostnames $SLURM_JOB_NODELIST | head -n 1)
-# MASTER_PORT=6005
+MASTER_PORT=6005
 
 GPUS_PER_NODE=$SLURM_GPUS_ON_NODE
 NNODES=$SLURM_NNODES
@@ -35,7 +34,91 @@ SEQ_LEN=2048
 ### https://arxiv.org/abs/2005.14165, choose based on
 ### your desired model size or build your own configs
 
-# Model size variables are imported as command line arguments
+## GPT-3 Small 125M
+#MODEL_SIZE=0.125
+#NUM_LAYERS=12
+#HIDDEN_SIZE=768
+#NUM_ATTN_HEADS=12
+#MICRO_BATCH_SIZE=1
+# LR=6.0e-4
+# MIN_LR=6.0e-5
+
+## GPT-3 Medium 350M
+#MODEL_SIZE=0.35
+#NUM_LAYERS=24
+#HIDDEN_SIZE=1024
+#NUM_ATTN_HEADS=16
+# Use Micro batch size instead of global batch size, the latter is set to $((NNODES*GPUS_PER_NODE*MICRO_BATCH_SIZE))
+#MICRO_BATCH_SIZE=1
+### GLOBAL_BATCH_SIZE=256
+# LR=3.0e-4
+# MIN_LR=3.0e-5
+
+## GPT-3 Large 760M
+MODEL_SIZE=0.76
+NUM_LAYERS=24
+HIDDEN_SIZE=1536
+NUM_ATTN_HEADS=16
+# Use Micro batch size instead of global batch size, the latter is set to $((NNODES*GPUS_PER_NODE*MICRO_BATCH_SIZE))
+MICRO_BATCH_SIZE=8
+### GLOBAL_BATCH_SIZE=256
+# LR=2.5e-4
+# MIN_LR=2.5e-5
+
+## GPT-3 XL 1.3B
+#MODEL_SIZE=1.3
+#NUM_LAYERS=24
+#HIDDEN_SIZE=2048
+#NUM_ATTN_HEADS=16
+# Use Micro batch size instead of global batch size, the latter is set to $((NNODES*GPUS_PER_NODE*MICRO_BATCH_SIZE))
+#MICRO_BATCH_SIZE=1
+### GLOBAL_BATCH_SIZE=512
+# LR=2.0e-4
+# MIN_LR=2.0e-5
+
+## GPT-3 2.7B
+#MODEL_SIZE=2.7
+#NUM_LAYERS=32
+#HIDDEN_SIZE=2560
+#NUM_ATTN_HEADS=32
+# Use Micro batch size instead of global batch size, the latter is set to $((NNODES*GPUS_PER_NODE*MICRO_BATCH_SIZE))
+# MICRO_BATCH_SIZE=1
+### GLOBAL_BATCH_SIZE=512
+# LR=1.6e-4
+# MIN_LR=1.6e-5
+
+## GPT-3 6.7B
+#MODEL_SIZE=6.7
+#NUM_LAYERS=32
+#HIDDEN_SIZE=4096
+#NUM_ATTN_HEADS=32
+# Use Micro batch size instead of global batch size, the latter is set to $((NNODES*GPUS_PER_NODE*MICRO_BATCH_SIZE))
+#MICRO_BATCH_SIZE=8
+### GLOBAL_BATCH_SIZE=1024
+# LR=1.2e-4
+# MIN_LR=1.2e-5
+
+## GPT-3 13B
+#MODEL_SIZE=13
+#NUM_LAYERS=40
+#HIDDEN_SIZE=5120
+#NUM_ATTN_HEADS=40
+# Use Micro batch size instead of global batch size, the latter is set to $((NNODES*GPUS_PER_NODE*MICRO_BATCH_SIZE))
+#MICRO_BATCH_SIZE=1
+### GLOBAL_BATCH_SIZE=1024
+# LR=1.0e-4
+# MIN_LR=1.0e-5
+
+## GPT-3 175B
+# MODEL_SIZE=175
+# NUM_LAYERS=96
+# HIDDEN_SIZE=12288
+# NUM_ATTN_HEADS=96
+# Use Micro batch size instead of global batch size, the latter is set to $((NNODES*GPUS_PER_NODE*MICRO_BATCH_SIZE))
+# MICRO_BATCH_SIZE=1
+### GLOBAL_BATCH_SIZE=1536
+# LR=0.6e-4
+# MIN_LR=0.6e-5
 
 # Setting Global batch size in the end, since it relies on micro batch size
 GLOBAL_BATCH_SIZE=$((NNODES*GPUS_PER_NODE*MICRO_BATCH_SIZE))
@@ -43,9 +126,10 @@ GLOBAL_BATCH_SIZE=$((NNODES*GPUS_PER_NODE*MICRO_BATCH_SIZE))
 ### Training duration configs
 ## The main termination condition, original GPT-3 paper trains for 300B tokens
 ## For MoE model, we found sometimes training a bit more to 330B tokens helps
-TRAIN_TOKENS=300000000000
+# TRAIN_TOKENS=300000000000
 # TRAIN_TOKENS=330000000000
-
+# Setting to 200M for MC4 Sample
+TRAIN_TOKENS=200000000
 ## TRAIN_ITERS is another termination condition and also affect the number of
 ## data samples to be indexed. Since we want to reach the TRAIN_TOKENS
 ## above, and techniques like curriculum learning has less token in some steps,
@@ -55,16 +139,21 @@ TRAIN_ITERS=$(( ${TRAIN_TOKENS} * 3 / ${GLOBAL_BATCH_SIZE} / ${SEQ_LEN} ))
 
 ## Another termination condition in minutes. Set it large enough to avoid
 ## undesired early termination.
-EXIT_DURATION=30000000
+EXIT_DURATION=6000
 ###############################################################################
 ### LR configs
 ## LR warmup and decay duration, this token-based config is preferable since
 ## no need to readjust when the batch size/seqlen is changed.
 ## Original GPT-3 paper uses 375M warmup tokens and 260B decay tokens.
 ## For MoE model, we found that setting the decay token to 300B helps.
-WARMUP_TOKENS=375000000
+#WARMUP_TOKENS=375000000
 # LR_DECAY_TOKENS=260000000000
-LR_DECAY_TOKENS=300000000000
+#LR_DECAY_TOKENS=300000000000
+# LOLA Specific config
+# 10% warmup tokens
+WARMUP_TOKENS=$(( TRAIN_TOKENS * 10/100 ))
+# 80% decay
+LR_DECAY_TOKENS=$(( TRAIN_TOKENS * 80/100 ))
 ###############################################################################
 ### Parallelism configs
 ## Micro batch size per GPU
@@ -130,8 +219,7 @@ CL_STEP=$(( ${CL_TOKENS} / (${GLOBAL_BATCH_SIZE} * ${CL_AVG_SEQLEN}) ))
 LOG_INTERVAL=5
 EVAL_ITERS=50
 EVAL_INTERVAL=100
-# We do not care about saving the checkpoints in this experiment
-SAVE_INTERVAL=1000000
+SAVE_INTERVAL=6000
 
 ## Standard deviation for weight initialization
 ## We used 0.014 for 350M/1.3B dense/MoE models, and used 0.01 for 6.7B
@@ -153,8 +241,8 @@ fi
 if [ "${CL_ENABLED}" = "true" ]; then
     NAME="${NAME}-cl-${CL_START_SEQLEN}-${CL_STEP}"
 fi
-# output path, EXP_NAME comes from parent script
-OUTPUT_BASEPATH=$OUTPUT_DIR/output/$EXP_NAME
+# output path
+OUTPUT_BASEPATH=$OUTPUT_DIR/normal_moe_output
 mkdir -p "${OUTPUT_BASEPATH}/tensorboard/"
 mkdir -p "${OUTPUT_BASEPATH}/checkpoint/"
 mkdir -p "${OUTPUT_BASEPATH}/log/"
@@ -168,7 +256,7 @@ CHECKPOINT_PATH="${OUTPUT_BASEPATH}/checkpoint/${NAME}"
 VOCAB_PATH=$DATA_DIR/gpt2-vocab.json
 MERGE_PATH=$DATA_DIR/gpt2-merges.txt
 # Public the Pile dataset, can be downloaded at https://mystic.the-eye.eu/public/AI/pile_neox/
-DATA_BLEND=$DATA_DIR/meg-gpt2-oscar-en-10k_text_document
+DATA_BLEND=$DATA_DIR/meg-gpt-mc4-100k_text_document
 ###############################################################################
 data_options=" \
          --vocab-file ${VOCAB_PATH} \
@@ -236,13 +324,15 @@ megatron_options="${megatron_options} \
         --disable-moe-token-dropping"
 fi
 
+ZERO_STAGE=2
+
 #template_json="ds_config_gpt_TEMPLATE.json"
-template_json="ds_config_z2_gpt_scaling_exp.json"
+template_json="${LIB_DIR}/lola_ws/cfg/ds_config_gpt_Zero2_TEMPLATE.json"
 config_json="${OUTPUT_BASEPATH}/ds_config_gpt_${NAME}.json"
 sed "s/CONFIG_BATCH_SIZE/${GLOBAL_BATCH_SIZE}/" ${template_json} \
     | sed "s/CONFIG_MBSIZE/${MICRO_BATCH_SIZE}/" \
     | sed "s/LOG_INTERVAL/${LOG_INTERVAL}/" \
-    | sed "s/ZERO_STAGE/0/" \
+    | sed "s/ZERO_STAGE/${ZERO_STAGE}/" \
     | sed "s/PRESCALE_GRAD/true/" \
     | sed "s/CONFIG_FP16_ENABLED/true/" \
     | sed "s/CONFIG_BF16_ENABLED/false/" \
@@ -255,6 +345,7 @@ sed "s/CONFIG_BATCH_SIZE/${GLOBAL_BATCH_SIZE}/" ${template_json} \
 deepspeed_options=" \
 		    --deepspeed \
 		    --deepspeed_config ${config_json} \
+        --zero-stage ${ZERO_STAGE} \
 		    --pipeline-model-parallel-size ${PP_SIZE}"
 
 # Currently MoE is not compatible with pipeline parallel
@@ -272,7 +363,7 @@ fi
 # do not remove or the training will hang and nodes will be lost w/o this workaround
 export CUDA_LAUNCH_BLOCKING=1
 # hide duplicated errors using this hack - will be properly fixed in pt-1.12
-export TORCHELASTIC_ERROR_FILE='${OUTPUT_BASEPATH}/torch-elastic-error.json'
+export TORCHELASTIC_ERROR_FILE="${OUTPUT_BASEPATH}/torch-elastic-error.json"
 export NCCL_ASYNC_ERROR_HANDLING=1
 
 # launcher to python -u -m torch.distributed.run
@@ -286,8 +377,6 @@ export LAUNCHER="python -u -m torch.distributed.run \
     --tee 3 \
     "
 export CMD="${LIB_DIR}/pretrain_gpt.py ${megatron_options} ${data_options} ${deepspeed_options}"
-# Printing estimated model size
-python ../gpt_param_estimate_util.py --vocab_size 50257 --hidden_size $HIDDEN_SIZE --seq_length $SEQ_LEN --num_heads $NUM_ATTN_HEADS --num_layers $NUM_LAYERS --is_moe --num_experts $EP_SIZE 2>&1
 # Command for distributed training setup
 # run_cmd="deepspeed ${LIB_DIR}/pretrain_gpt.py ${megatron_options} ${data_options} ${deepspeed_options} 2>&1 | tee -a ${OUTPUT_BASEPATH}/log/${NAME}_${host}_${current_time}.log"
 echo LAUNCHER: $LAUNCHER
