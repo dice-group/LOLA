@@ -49,7 +49,7 @@ HARDWARE_CONFIGS = [
 ]
 
 
-EXP_NAME_TEMPLATE = 'GPT_%sB_MoE128_%dBATCH_%dGPU_%dNode'
+EXP_NAME_TEMPLATE = 'GPT_%sB_MoE4_%dBATCH_%dGPU_%dNode'
 
 
 def submit_slurm_job(sbatch_args, script_args):

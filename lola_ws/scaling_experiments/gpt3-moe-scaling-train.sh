@@ -287,7 +287,7 @@ export LAUNCHER="python -u -m torch.distributed.run \
     "
 export CMD="${LIB_DIR}/pretrain_gpt.py ${megatron_options} ${data_options} ${deepspeed_options}"
 # Printing estimated model size
-python ../gpt_param_estimate_util.py --vocab_size 50257 --hidden_size $HIDDEN_SIZE --seq_length $SEQ_LEN --num_heads $NUM_ATTN_HEADS --num_layers $NUM_LAYERS --is_moe --num_experts $EP_SIZE 2>&1
+python ${LIB_DIR}/lola_ws/util/gpt_param_estimate_util.py --vocab_size 50257 --hidden_size $HIDDEN_SIZE --seq_length $SEQ_LEN --num_heads $NUM_ATTN_HEADS --num_layers $NUM_LAYERS --is_moe --num_experts $EP_SIZE 2>&1
 # Command for distributed training setup
 # run_cmd="deepspeed ${LIB_DIR}/pretrain_gpt.py ${megatron_options} ${data_options} ${deepspeed_options} 2>&1 | tee -a ${OUTPUT_BASEPATH}/log/${NAME}_${host}_${current_time}.log"
 echo LAUNCHER: $LAUNCHER
