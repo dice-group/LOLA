@@ -12,6 +12,14 @@ class DistDataError(Exception):
     pass
 
 class DistData(object):
+    """Distributed context for reading and writing shared files.
+
+    This abstracts a small number of collective operations to assist with
+    distributed data processing.  Either mpi4py or torch.distributed (gloo or mpi)
+    may be used as the communication backend.  Target files must be located on a
+    global, parallel file system.
+    """
+
     def __init__(self, backend='gloo', use_mpi4py=False):
         # use mpi4py instead of torch.distributed if requested
         self.mpi4py = None
@@ -30,10 +38,6 @@ class DistData(object):
             self.numranks = self.comm.Get_size()
         else:
             assert backend in ['gloo', 'mpi'], f"torch.distributed backend '{backend}' is not supported, valid options are 'gloo' or 'mpi'"
-            if 'OMPI_COMM_WORLD_RANK' in os.environ:
-                os.environ["RANK"] = os.environ['OMPI_COMM_WORLD_RANK']
-            if 'OMPI_COMM_WORLD_SIZE' in os.environ:
-                os.environ["WORLD_SIZE"] = os.environ['OMPI_COMM_WORLD_SIZE']
             dist.init_process_group(backend, init_method="env://")
             self.rank = dist.get_rank()
             self.numranks = dist.get_world_size()
@@ -43,7 +47,7 @@ class DistData(object):
 
         To prevent deadlocks in cases where an assertion might only fail on one rank,
         this executes an allreduce to ensure that if any rank finds that an assertion
-        has been violated, all ranks fail an assertion check.
+        has been violated, then all ranks fail an assertion check.
         The condition must be true on all ranks for this not to assert.
         """
         alltrue = self.alltrue(cond)
@@ -54,7 +58,7 @@ class DistData(object):
 
         Similarly to allassert, this raises an exception on all ranks if err
         is set to an exception on any rank.  Rank(s) where err is not None
-        re-raise err as exception, and ranks where err is None raise DistDataError.
+        re-raise err as exception, while other ranks raise DistDataError.
         Thus all ranks raise an exception if any rank has an active exception,
         which helps avoid deadlocks in cases where an exception may be raised
         on a subset of ranks.

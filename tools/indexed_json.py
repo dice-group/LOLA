@@ -6,14 +6,47 @@ import time
 import numpy as np
 
 class IndexedJSON(object):
+        """Provides an interface for random access into a JSON Lines file.
+
+        Given a JSONL file, this creates and uses an index that records
+        the starting byte offset and length of each line.  The index is created if
+        it does not exist or if it is found to be out of date with its source JSONL file.
+        The index is written to a file having the same name but with an ".idx" extension.
+
+        To create the index, a DistData objet is used to enable distributed processes
+        to read the source file in parallel and collectively scan for newline characters.
+        The source file must exist on a global file system accessible to all processes.
+
+        Example usage:
+            # create index for source file if needed
+            # then load index for source file
+            dset = IndexedJSON("data.jsonl", distctx)
+
+            # returns number of records in the source file
+            numrecs = len(dset)
+
+            # reads record i from the source file,
+            # parses JSON with json.loads and returns record as python object
+            rec = dset[i]
+        """
+
     def __init__(self, filename, distctx, bufsize=16*1024*1024, progress=10.0):
-        self.filename = filename # JSON file name
+        """Prepare a JSONL file for random access.
+
+        Creates an index for the given source filename if needed.
+        Loads the index providing for quick access to any record in the JSONL file.
+
+        One should provide a DistData object in distctx, which is used for collective
+        communication.
+        """
+
+        self.filename = filename # source JSON file name
         self.distctx = distctx   # distributed environment for collective ops
         self.bufsize = bufsize   # buffer size used while building index
         self.numsamples = 0      # number of records in JSON file
         self.fh_idx = None       # file handle to JSON index file
         self.fh_json = None      # file handle to JSON file
-        self.time_index = 0      # record cost to construct index
+        self.time_index = 0      # records time taken to construct index
         self.progress = progress # number of secs between progress msgs (0 to disable)
 
         # given a JSON file name, compute the name of its index file
@@ -280,15 +313,15 @@ class IndexedJSON(object):
         self.distctx.barrier()
 
     def create_index(self):
-        """Given a file named foo, write index to foo.idx"""
+        """Scans for newlines in an associated file and writes the corresponding index file"""
 
-        # To compute this index, ranks collective scan the input
+        # To compute this index, ranks collectively scan the input
         # file and record the byte offset of newline characters.
         # Those byte offsets are accumulated in a temporary index file
         # until the entire input file has been scanned.  The processes
         # then read back those byte locations from the temporary file
         # to compute the length of each record.  Finally for each
-        # record an (offset,length) pair of int64 types is written into
+        # record, an (offset,length) pair of int64 types is written into
         # the index file to specify the starting offset and length of
         # each record in the input file.
 
@@ -346,6 +379,7 @@ class IndexedJSON(object):
             print(f"Indexed {numrecs} records in '{filename}' in {int(self.time_index)} seconds", flush=True)
 
     def __str__(self):
+        """Return filename and number of samples in the JSON file as a string."""
         return (f"IndexedJSON (\n"
                 f"  file: {self.filename}\n"
                 f"  rows: {self.numsamples}\n"
@@ -371,6 +405,7 @@ class IndexedJSON(object):
             return None
 
     def __get__(self, idx):
+        """Given a sample id, return the sample as a python object parsed from JSON string."""
         return self.getitem(idx)
 
     def index(self, idx):

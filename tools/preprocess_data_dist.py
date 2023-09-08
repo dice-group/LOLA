@@ -65,12 +65,11 @@ except ImportError:
 from datasets import config, logging, load_dataset
 from datasets.utils.file_utils import OfflineModeIsEnabled
 
+from distdata import DistData
 from indexed_json import IndexedJSON
 
 from megatron.tokenizer import build_tokenizer
 from megatron.data.indexed_dataset import data_file_path, index_file_path, make_builder, gather_files_dist
-#from megatron.data.distdata import DistData
-from megatron.data.distdata_mpi import DistData
 
 def msg(msg, flush=False):
     timestamp = time.strftime("%Y-%m-%dT%H:%M:%S")
