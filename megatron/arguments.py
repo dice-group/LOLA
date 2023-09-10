@@ -918,6 +918,9 @@ def _add_training_args(parser):
                        help='Disable fusing gradient accumulation to weight '
                        'gradient computation of linear layers',
                        dest='gradient_accumulation_fusion')
+    # LOLA specific training arg
+    group.add_argument('--lola-enable-static-moe-gate', action='store_true',
+                       help='Enable static (singleton) TopKGate instance for all MoE layers.')
     return parser
 
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -t 00:10:00
+#SBATCH -t 01:00:00
 #SBATCH -N 1
 #SBATCH -n 1
 #SBATCH -J "Preparing sample MC4 data"
@@ -25,8 +25,8 @@ wget -N https://s3.amazonaws.com/models.huggingface.co/bert/gpt2-vocab.json -O d
 wget -N https://s3.amazonaws.com/models.huggingface.co/bert/gpt2-merges.txt -O data/gpt2-merges.txt
 
 python ${LIB_DIR}/tools/preprocess_data.py \
-    --input data/mc4-sample-100k.jsonl \
-    --output-prefix data/meg-gpt-mc4-100k \
+    --input data/mc4-sample-1m.jsonl \
+    --output-prefix data/meg-gpt-mc4-1m \
     --dataset-impl mmap \
     --tokenizer-type GPT2BPETokenizer \
     --merge-file data/gpt2-merges.txt \

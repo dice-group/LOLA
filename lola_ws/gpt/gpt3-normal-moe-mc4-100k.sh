@@ -1,11 +1,12 @@
 #!/bin/bash
 #SBATCH -J "GPT3 - Normal MoE - MC4 100k"
+###SBATCH -J "GPT3 - Test MoE"
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
 #SBATCH --gres=gpu:a100:1
 ###SBATCH --partition=dgx
 ###SBATCH --qos=devel
-#SBATCH -t 50:00:00
+#SBATCH -t 100:00:00
 #SBATCH -o "train_logs/normal_4moe_gpt_760m_slurm-%j.out"
 
 #load modules
@@ -18,10 +19,18 @@ source /scratch/hpc-prf-lola/lib_repo/custom-venvs/lola1/bin/activate
 LIB_DIR=/scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft
 DATA_DIR=/scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/lola_ws/gpt/data
 OUTPUT_DIR=`pwd`
+# output path
+OUTPUT_BASEPATH=$OUTPUT_DIR/normal_moe_output
+# OUTPUT_BASEPATH=$OUTPUT_DIR/output
 # Extract SLURM environment variables
 # so processes know who to talk to
 MASTER_ADDR=$(scontrol show hostnames $SLURM_JOB_NODELIST | head -n 1)
 MASTER_PORT=6005
+
+## The NAME_ID variable is used for generating a unique name for the model. It acts like a model name prefix.
+## When kept the same as a previously trained model (together with other hyperparams), the training will resume from the last checkpoint automatically.
+## Please note that other hyperparameters are also used in generation of a unique name, check in the script to see how "NAME" is formed.
+NAME_ID="gpt-normal-moe"
 
 GPUS_PER_NODE=$SLURM_GPUS_ON_NODE
 NNODES=$SLURM_NNODES
@@ -128,8 +137,8 @@ GLOBAL_BATCH_SIZE=$((NNODES*GPUS_PER_NODE*MICRO_BATCH_SIZE))
 ## For MoE model, we found sometimes training a bit more to 330B tokens helps
 # TRAIN_TOKENS=300000000000
 # TRAIN_TOKENS=330000000000
-# Setting to 200M for MC4 Sample
-TRAIN_TOKENS=200000000
+# Setting to 2B for MC4 Sample
+TRAIN_TOKENS=2000000000
 ## TRAIN_ITERS is another termination condition and also affect the number of
 ## data samples to be indexed. Since we want to reach the TRAIN_TOKENS
 ## above, and techniques like curriculum learning has less token in some steps,
@@ -176,11 +185,14 @@ NUM_GPUS=$((NNODES*GPUS_PER_NODE))
 # EP_SIZE=1
 EP_SIZE=4
 
-if [[ $EP_SIZE -gt $NUM_GPUS ]]; then
-    EP_PARALLEL_SIZE=$NUM_GPUS
-else
-    EP_PARALLEL_SIZE=$EP_SIZE
-fi
+# if [[ $EP_SIZE -gt $NUM_GPUS ]]; then
+#     EP_PARALLEL_SIZE=$NUM_GPUS
+# else
+#     EP_PARALLEL_SIZE=$EP_SIZE
+# fi
+
+# For LOLA, we are keeping EP_PARALLEL_SIZE as 1, to have the full model on each GPU.
+EP_PARALLEL_SIZE=1
 
 ## Original GPT-3 model always set min LR at 10% of max LR. For MoE model, we
 ## found that lower LR and min LR (than the base dense model) helps.
@@ -219,7 +231,7 @@ CL_STEP=$(( ${CL_TOKENS} / (${GLOBAL_BATCH_SIZE} * ${CL_AVG_SEQLEN}) ))
 LOG_INTERVAL=5
 EVAL_ITERS=50
 EVAL_INTERVAL=100
-SAVE_INTERVAL=6000
+SAVE_INTERVAL=10000
 
 ## Standard deviation for weight initialization
 ## We used 0.014 for 350M/1.3B dense/MoE models, and used 0.01 for 6.7B
@@ -234,19 +246,22 @@ ACTIVATION_CHECKPOINT="true"
 ### Output and data configs
 current_time=$(date "+%Y.%m.%d-%H.%M.%S")
 host="${HOSTNAME}"
-NAME="gpt-${MODEL_SIZE}B-lr-${LR}-minlr-${MIN_LR}-bs-${GLOBAL_BATCH_SIZE}-gpus-${NUM_GPUS}-mp-${MP_SIZE}-pp-${PP_SIZE}"
+
+NAME="${NAME_ID}-${MODEL_SIZE}B-lr-${LR}-minlr-${MIN_LR}-bs-${GLOBAL_BATCH_SIZE}-gpus-${NUM_GPUS}-mp-${MP_SIZE}-pp-${PP_SIZE}"
+
 if [[ $EP_SIZE -gt 1 ]]; then
     NAME="${NAME}-ep-${EP_SIZE}-mlc-${MLC}-cap-${MOE_TRAIN_CAP_FACTOR}-drop-${MOE_DROP_TOKEN}"
 fi
 if [ "${CL_ENABLED}" = "true" ]; then
     NAME="${NAME}-cl-${CL_START_SEQLEN}-${CL_STEP}"
 fi
-# output path
-OUTPUT_BASEPATH=$OUTPUT_DIR/normal_moe_output
+
 mkdir -p "${OUTPUT_BASEPATH}/tensorboard/"
 mkdir -p "${OUTPUT_BASEPATH}/checkpoint/"
 mkdir -p "${OUTPUT_BASEPATH}/log/"
-TENSORBOARD_DIR="${OUTPUT_BASEPATH}/tensorboard/${NAME}_${host}_${current_time}"
+# TENSORBOARD_DIR="${OUTPUT_BASEPATH}/tensorboard/${NAME}_${host}_${current_time}"
+# Attaching tensorboard to only the name of the model
+TENSORBOARD_DIR="${OUTPUT_BASEPATH}/tensorboard/${NAME}"
 mkdir -p ${TENSORBOARD_DIR}
 ## Note that for MoE model with billion-scale base model, the checkpoint can be
 ## as large as TB-scale which normal NFS cannot handle efficiently.
@@ -256,7 +271,7 @@ CHECKPOINT_PATH="${OUTPUT_BASEPATH}/checkpoint/${NAME}"
 VOCAB_PATH=$DATA_DIR/gpt2-vocab.json
 MERGE_PATH=$DATA_DIR/gpt2-merges.txt
 # Public the Pile dataset, can be downloaded at https://mystic.the-eye.eu/public/AI/pile_neox/
-DATA_BLEND=$DATA_DIR/meg-gpt-mc4-100k_text_document
+DATA_BLEND=$DATA_DIR/meg-gpt-mc4-1m_text_document
 ###############################################################################
 data_options=" \
          --vocab-file ${VOCAB_PATH} \

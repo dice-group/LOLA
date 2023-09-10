@@ -20,6 +20,7 @@ from megatron.model.rotary_pos_embedding import apply_rotary_pos_emb
 from megatron.model.utils import attention_mask_func, openai_gelu, erf_gelu
 import deepspeed
 from deepspeed.moe.layer import MoE
+#from lola_ws.gpt.overriden_classes.moe_layer import MoE
 from deepspeed.accelerator import get_accelerator
 
 try:
@@ -902,6 +903,7 @@ class ParallelTransformerLayer(MegatronModule):
                 self.mlp = ParallelMLP(config)
             else: # DeepSpeed's MoE
                 enable_expert_tensor_parallelism = args.enable_expert_tensor_parallelism
+                # enable_static_gate = args.lola_enable_static_moe_gate
                 self.mlp = MoE(args.hidden_size,
                                 ParallelMLP(config,
                                     moe=True,

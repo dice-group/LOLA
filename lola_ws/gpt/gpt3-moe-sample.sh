@@ -5,7 +5,7 @@
 #SBATCH --gres=gpu:a100:1
 #SBATCH --partition=dgx
 #SBATCH --qos=devel
-#SBATCH -t 04:00:00
+#SBATCH -t 00:30:00
 
 #load modules
 module load lib/NCCL/2.12.12-GCCcore-11.3.0-CUDA-11.7.0
@@ -249,7 +249,7 @@ CHECKPOINT_PATH="${OUTPUT_BASEPATH}/checkpoint/${NAME}"
 VOCAB_PATH=$DATA_DIR/gpt2-vocab.json
 MERGE_PATH=$DATA_DIR/gpt2-merges.txt
 # Public the Pile dataset, can be downloaded at https://mystic.the-eye.eu/public/AI/pile_neox/
-DATA_BLEND=$DATA_DIR/meg-gpt-mc4-100k_text_document
+DATA_BLEND=$DATA_DIR/meg-gpt-mc4-1m_text_document
 ###############################################################################
 data_options=" \
          --vocab-file ${VOCAB_PATH} \
