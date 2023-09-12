@@ -15,7 +15,6 @@ import typing
 
 static_topkgate = None
 
-
 class MoE(torch.nn.Module):
     """Initialize an MoE layer.
 
@@ -50,7 +49,8 @@ class MoE(torch.nn.Module):
                  drop_tokens: bool = True,
                  use_rts=True,
                  use_tutel: bool = False,
-                 enable_expert_tensor_parallelism: bool = False):
+                 enable_expert_tensor_parallelism: bool = False,
+                 enable_static_gate: bool = False):
 
         super(MoE, self).__init__()
 
@@ -71,25 +71,25 @@ class MoE(torch.nn.Module):
 
         experts = Experts(expert, self.num_local_experts, self.expert_group_name)
 
-        print("LOLA specific version of MoE Layer is in use.")
+        print("LOLA specific version of MoE Layer is in use. enable_static_gate=",str(enable_static_gate))
         # LOLA Specific code --start--
-        # loc_topkgate = None
-        # if enable_static_gate:
-        #     global static_topkgate
-        #     if static_topkgate is None:
-        #         static_topkgate = TopKGate(hidden_size, num_experts, k, capacity_factor, eval_capacity_factor,
-        #                                        min_capacity, noisy_gate_policy, drop_tokens, use_rts)
+        loc_topkgate = None
+        if enable_static_gate:
+            global static_topkgate
+            if static_topkgate is None:
+                print("LOLA: Assigning static TopKGate instance to the MoE layers.")
+                static_topkgate = TopKGate(hidden_size, num_experts, k, capacity_factor, eval_capacity_factor,
+                                               min_capacity, noisy_gate_policy, drop_tokens, use_rts)
                 
-        #         print('Created static instance of TopKGate:', static_topkgate)
-        #     loc_topkgate = static_topkgate
-        # else:
-        #     loc_topkgate = TopKGate(hidden_size, num_experts, k, capacity_factor, eval_capacity_factor,
-        #                                        min_capacity, noisy_gate_policy, drop_tokens, use_rts)
+                print('Created static instance of TopKGate:', static_topkgate)
+            loc_topkgate = static_topkgate
+        else:
+            loc_topkgate = TopKGate(hidden_size, num_experts, k, capacity_factor, eval_capacity_factor,
+                                               min_capacity, noisy_gate_policy, drop_tokens, use_rts)
         # --end--
 
-        loc_topkgate = TopKGate(hidden_size, num_experts, k, capacity_factor, eval_capacity_factor,
-                                               min_capacity, noisy_gate_policy, drop_tokens, use_rts)
-
+        # loc_topkgate = TopKGate(hidden_size, num_experts, k, capacity_factor, eval_capacity_factor,
+        #                                        min_capacity, noisy_gate_policy, drop_tokens, use_rts)
 
         self.deepspeed_moe = MOELayer(loc_topkgate,
                                       experts,

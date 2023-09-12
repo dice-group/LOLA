@@ -1,11 +1,13 @@
 #!/bin/bash
-#SBATCH -J "GPT3 - MoE Sample"
+#SBATCH -J "GPT3 - Static TopKGate MoE - MC4 100k"
+###SBATCH -J "GPT3 - Test MoE"
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
 #SBATCH --gres=gpu:a100:1
-#SBATCH --partition=dgx
-#SBATCH --qos=devel
-#SBATCH -t 00:30:00
+###SBATCH --partition=dgx
+###SBATCH --qos=devel
+#SBATCH -t 100:00:00
+#SBATCH -o "train_logs/staticgate_4moe_gpt_760m_slurm-%j.out"
 
 #load modules
 module load lib/NCCL/2.12.12-GCCcore-11.3.0-CUDA-11.7.0
@@ -17,10 +19,18 @@ source /scratch/hpc-prf-lola/lib_repo/custom-venvs/lola1/bin/activate
 LIB_DIR=/scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft
 DATA_DIR=/scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/lola_ws/gpt/data
 OUTPUT_DIR=`pwd`
+# output path
+OUTPUT_BASEPATH=$OUTPUT_DIR/staticgate_moe_output
+# OUTPUT_BASEPATH=$OUTPUT_DIR/output
 # Extract SLURM environment variables
 # so processes know who to talk to
 MASTER_ADDR=$(scontrol show hostnames $SLURM_JOB_NODELIST | head -n 1)
 MASTER_PORT=6005
+
+## The NAME_ID variable is used for generating a unique name for the model. It acts like a model name prefix.
+## When kept the same as a previously trained model (together with other hyperparams), the training will resume from the last checkpoint automatically.
+## Please note that other hyperparameters are also used in generation of a unique name, check in the script to see how "NAME" is formed.
+NAME_ID="gpt-staticgate-moe"
 
 GPUS_PER_NODE=$SLURM_GPUS_ON_NODE
 NNODES=$SLURM_NNODES
@@ -59,7 +69,7 @@ NUM_LAYERS=24
 HIDDEN_SIZE=1536
 NUM_ATTN_HEADS=16
 # Use Micro batch size instead of global batch size, the latter is set to $((NNODES*GPUS_PER_NODE*MICRO_BATCH_SIZE))
-MICRO_BATCH_SIZE=1
+MICRO_BATCH_SIZE=8
 ### GLOBAL_BATCH_SIZE=256
 # LR=2.5e-4
 # MIN_LR=2.5e-5
@@ -125,9 +135,10 @@ GLOBAL_BATCH_SIZE=$((NNODES*GPUS_PER_NODE*MICRO_BATCH_SIZE))
 ### Training duration configs
 ## The main termination condition, original GPT-3 paper trains for 300B tokens
 ## For MoE model, we found sometimes training a bit more to 330B tokens helps
-TRAIN_TOKENS=300000000000
+# TRAIN_TOKENS=300000000000
 # TRAIN_TOKENS=330000000000
-
+# Setting to 2B for MC4 Sample
+TRAIN_TOKENS=2000000000
 ## TRAIN_ITERS is another termination condition and also affect the number of
 ## data samples to be indexed. Since we want to reach the TRAIN_TOKENS
 ## above, and techniques like curriculum learning has less token in some steps,
@@ -137,16 +148,21 @@ TRAIN_ITERS=$(( ${TRAIN_TOKENS} * 3 / ${GLOBAL_BATCH_SIZE} / ${SEQ_LEN} ))
 
 ## Another termination condition in minutes. Set it large enough to avoid
 ## undesired early termination.
-EXIT_DURATION=300
+EXIT_DURATION=6000
 ###############################################################################
 ### LR configs
 ## LR warmup and decay duration, this token-based config is preferable since
 ## no need to readjust when the batch size/seqlen is changed.
 ## Original GPT-3 paper uses 375M warmup tokens and 260B decay tokens.
 ## For MoE model, we found that setting the decay token to 300B helps.
-WARMUP_TOKENS=375000000
+#WARMUP_TOKENS=375000000
 # LR_DECAY_TOKENS=260000000000
-LR_DECAY_TOKENS=300000000000
+#LR_DECAY_TOKENS=300000000000
+# LOLA Specific config
+# 10% warmup tokens
+WARMUP_TOKENS=$(( TRAIN_TOKENS * 10/100 ))
+# 80% decay
+LR_DECAY_TOKENS=$(( TRAIN_TOKENS * 80/100 ))
 ###############################################################################
 ### Parallelism configs
 ## Micro batch size per GPU
@@ -169,11 +185,14 @@ NUM_GPUS=$((NNODES*GPUS_PER_NODE))
 # EP_SIZE=1
 EP_SIZE=4
 
-if [[ $EP_SIZE -gt $NUM_GPUS ]]; then
-    EP_PARALLEL_SIZE=$NUM_GPUS
-else
-    EP_PARALLEL_SIZE=$EP_SIZE
-fi
+# if [[ $EP_SIZE -gt $NUM_GPUS ]]; then
+#     EP_PARALLEL_SIZE=$NUM_GPUS
+# else
+#     EP_PARALLEL_SIZE=$EP_SIZE
+# fi
+
+# For LOLA, we are keeping EP_PARALLEL_SIZE as 1, to have the full model on each GPU.
+EP_PARALLEL_SIZE=1
 
 ## Original GPT-3 model always set min LR at 10% of max LR. For MoE model, we
 ## found that lower LR and min LR (than the base dense model) helps.
@@ -212,7 +231,7 @@ CL_STEP=$(( ${CL_TOKENS} / (${GLOBAL_BATCH_SIZE} * ${CL_AVG_SEQLEN}) ))
 LOG_INTERVAL=5
 EVAL_ITERS=50
 EVAL_INTERVAL=100
-SAVE_INTERVAL=100
+SAVE_INTERVAL=10000
 
 ## Standard deviation for weight initialization
 ## We used 0.014 for 350M/1.3B dense/MoE models, and used 0.01 for 6.7B
@@ -227,19 +246,22 @@ ACTIVATION_CHECKPOINT="true"
 ### Output and data configs
 current_time=$(date "+%Y.%m.%d-%H.%M.%S")
 host="${HOSTNAME}"
-NAME="gpt-${MODEL_SIZE}B-lr-${LR}-minlr-${MIN_LR}-bs-${GLOBAL_BATCH_SIZE}-gpus-${NUM_GPUS}-mp-${MP_SIZE}-pp-${PP_SIZE}"
+
+NAME="${NAME_ID}-${MODEL_SIZE}B-lr-${LR}-minlr-${MIN_LR}-bs-${GLOBAL_BATCH_SIZE}-gpus-${NUM_GPUS}-mp-${MP_SIZE}-pp-${PP_SIZE}"
+
 if [[ $EP_SIZE -gt 1 ]]; then
     NAME="${NAME}-ep-${EP_SIZE}-mlc-${MLC}-cap-${MOE_TRAIN_CAP_FACTOR}-drop-${MOE_DROP_TOKEN}"
 fi
 if [ "${CL_ENABLED}" = "true" ]; then
     NAME="${NAME}-cl-${CL_START_SEQLEN}-${CL_STEP}"
 fi
-# output path
-OUTPUT_BASEPATH=$OUTPUT_DIR/output
+
 mkdir -p "${OUTPUT_BASEPATH}/tensorboard/"
 mkdir -p "${OUTPUT_BASEPATH}/checkpoint/"
 mkdir -p "${OUTPUT_BASEPATH}/log/"
-TENSORBOARD_DIR="${OUTPUT_BASEPATH}/tensorboard/${NAME}_${host}_${current_time}"
+# TENSORBOARD_DIR="${OUTPUT_BASEPATH}/tensorboard/${NAME}_${host}_${current_time}"
+# Attaching tensorboard to only the name of the model
+TENSORBOARD_DIR="${OUTPUT_BASEPATH}/tensorboard/${NAME}"
 mkdir -p ${TENSORBOARD_DIR}
 ## Note that for MoE model with billion-scale base model, the checkpoint can be
 ## as large as TB-scale which normal NFS cannot handle efficiently.
@@ -300,7 +322,6 @@ megatron_options=" \
         --log-timers-to-tensorboard \
         --log-batch-size-to-tensorboard \
         --log-validation-ppl-to-tensorboard \
-        --no-masked-softmax-fusion \
         --tensorboard-dir ${TENSORBOARD_DIR} \
         --lola-enable-static-moe-gate"
 
