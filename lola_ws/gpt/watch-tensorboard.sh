@@ -12,4 +12,6 @@ module load vis/torchvision/0.13.1-foss-2022a-CUDA-11.7.0
 # activating venv
 source /scratch/hpc-prf-lola/lib_repo/custom-venvs/lola1/bin/activate
 
-tensorboard dev upload --logdir $1
+EXP_NAME=$2
+
+tensorboard dev upload --logdir $1 --name "${EXP_NAME}"

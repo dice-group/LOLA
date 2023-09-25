@@ -1,13 +1,14 @@
 #!/bin/bash
 #SBATCH -J "GPT3 - Static TopKGate MoE - MC4 100k"
 ###SBATCH -J "GPT3 - Test MoE"
-#SBATCH -N 1
+#SBATCH -N 2
 #SBATCH --ntasks-per-node=1
-#SBATCH --gres=gpu:a100:1
+#SBATCH --gres=gpu:a100:4
 ###SBATCH --partition=dgx
 ###SBATCH --qos=devel
 #SBATCH -t 100:00:00
-#SBATCH -o "train_logs/staticgate_4moe_gpt_760m_slurm-%j.out"
+###SBATCH -o "train_logs/staticgate_6moe_gpt_760m_slurm-%j.out"
+#SBATCH -o "train_logs/staticgate_4moe_gpt_1pt3b_slurm-%j.out"
 
 #load modules
 module load lib/NCCL/2.12.12-GCCcore-11.3.0-CUDA-11.7.0
@@ -64,23 +65,23 @@ SEQ_LEN=2048
 # MIN_LR=3.0e-5
 
 ## GPT-3 Large 760M
-MODEL_SIZE=0.76
-NUM_LAYERS=24
-HIDDEN_SIZE=1536
-NUM_ATTN_HEADS=16
+#MODEL_SIZE=0.76
+#NUM_LAYERS=24
+#HIDDEN_SIZE=1536
+#NUM_ATTN_HEADS=16
 # Use Micro batch size instead of global batch size, the latter is set to $((NNODES*GPUS_PER_NODE*MICRO_BATCH_SIZE))
-MICRO_BATCH_SIZE=8
+# MICRO_BATCH_SIZE=1
 ### GLOBAL_BATCH_SIZE=256
 # LR=2.5e-4
 # MIN_LR=2.5e-5
 
 ## GPT-3 XL 1.3B
-#MODEL_SIZE=1.3
-#NUM_LAYERS=24
-#HIDDEN_SIZE=2048
-#NUM_ATTN_HEADS=16
+MODEL_SIZE=1.3
+NUM_LAYERS=24
+HIDDEN_SIZE=2048
+NUM_ATTN_HEADS=16
 # Use Micro batch size instead of global batch size, the latter is set to $((NNODES*GPUS_PER_NODE*MICRO_BATCH_SIZE))
-#MICRO_BATCH_SIZE=1
+MICRO_BATCH_SIZE=12
 ### GLOBAL_BATCH_SIZE=512
 # LR=2.0e-4
 # MIN_LR=2.0e-5
@@ -185,14 +186,14 @@ NUM_GPUS=$((NNODES*GPUS_PER_NODE))
 # EP_SIZE=1
 EP_SIZE=4
 
-# if [[ $EP_SIZE -gt $NUM_GPUS ]]; then
-#     EP_PARALLEL_SIZE=$NUM_GPUS
-# else
-#     EP_PARALLEL_SIZE=$EP_SIZE
-# fi
+if [[ $EP_SIZE -gt $NUM_GPUS ]]; then
+    EP_PARALLEL_SIZE=$NUM_GPUS
+else
+    EP_PARALLEL_SIZE=$EP_SIZE
+fi
 
 # For LOLA, we are keeping EP_PARALLEL_SIZE as 1, to have the full model on each GPU.
-EP_PARALLEL_SIZE=1
+# EP_PARALLEL_SIZE=1
 
 ## Original GPT-3 model always set min LR at 10% of max LR. For MoE model, we
 ## found that lower LR and min LR (than the base dense model) helps.
