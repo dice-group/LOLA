@@ -1,7 +1,4 @@
 #!/bin/bash
-#SBATCH -t 100:00:00
-###SBATCH -o "train_logs/staticgate_6moe_gpt_760m_slurm-%j.out"
-#SBATCH -o "train_logs/staticgate_4moe_gpt_1pt3b_slurm-%j.out"
 
 # Collect command line arguments
 # Default values for variables
@@ -14,6 +11,7 @@ export DGX_NODE=false
 export SLURM=false
 export MASTER_ADDR="127.0.0.1"
 export MASTER_PORT=6005
+export RUNTIME="100:00:00"
 
 # Default (dense) Model size (number of parameters in billions)
 export MODEL_SIZE=1.3
@@ -76,6 +74,10 @@ while [[ "$#" -gt 0 ]]; do
             export EP_SIZE="${1#*=}"
             shift
             ;;
+        --runtime=*)  # Option with argument
+            export RUNTIME="${1#*=}"
+            shift
+            ;;
         --)  # End of options, start of positional parameters
             shift
             break
@@ -108,10 +110,13 @@ if [[ "$SLURM" == "true" ]]; then
     if [[ "$DGX_NODE" == "true" ]]; then
         EXTRA_PARAMS=" --partition=dgx --qos=devel "
     fi
-    sbatch --job-name=$RUN_NAME --nodes=$NNODES --ntasks-per-node=1 \
-     --gres=gpu:a100:$GPUS_PER_NODE $EXTRA_PARAMS \
+    sbatch --job-name=$RUN_NAME \
+     --nodes=$NNODES \
+     --ntasks-per-node=1 \
+     --gres=gpu:a100:$GPUS_PER_NODE \
+     --time=$RUNTIME \
      --output="train_logs/%x-slurm_%j.out" \
-     gpt3-moe-pretrain.sh
+      $EXTRA_PARAMS gpt3-moe-pretrain.sh
 else
     echo "Starting process for node rank: ${NODE_RANK}"
     export RUN_NAME="dice_exp-${NAME_POSTFIX}"
