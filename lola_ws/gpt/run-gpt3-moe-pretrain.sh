@@ -14,6 +14,7 @@ export MASTER_PORT=6005
 export RUNTIME="100:00:00"
 
 # Default (dense) Model size (number of parameters in billions)
+## Only values that will work: 0.125, 0.35, 0.76, 1.3, 2.7, 6.7, 13 or 175
 export MODEL_SIZE=1.3
 # Default batch size per GPU
 export MICRO_BATCH_SIZE=24
@@ -89,6 +90,9 @@ while [[ "$#" -gt 0 ]]; do
     esac
 done
 
+export OUTPUT_DIR=`pwd`
+# output path
+export OUTPUT_BASEPATH=$OUTPUT_DIR/$NAME_ID
 
 export NUM_GPUS=$((NNODES*GPUS_PER_NODE))
 # Setting Global batch size in the end, since it relies on micro batch size
@@ -104,6 +108,7 @@ mkdir -p "train_logs/"
 # If running through SLURM or not
 if [[ "$SLURM" == "true" ]]; then
     echo "Submitting job to SLURM."
+
     export RUN_NAME="noctua2-${NAME_POSTFIX}"
     export WANDB_NAME=$RUN_NAME
     EXTRA_PARAMS=""

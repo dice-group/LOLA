@@ -1,19 +1,25 @@
 #!/bin/bash
-export CUDA_VISIBLE_DEVICES="0,1"
 # activating venv
-source /upb/users/n/nikit/profiles/unix/cs/repos/LOLA-Megatron-DeepSpeed/venv-lola/bin/activate
 
-LIB_DIR=/upb/users/n/nikit/profiles/unix/cs/repos/LOLA-Megatron-DeepSpeed
-DATA_DIR=/upb/users/n/nikit/profiles/unix/cs/repos/LOLA-Megatron-DeepSpeed/lola_ws/gpt/data
-OUTPUT_DIR=`pwd`
-# output path
-OUTPUT_BASEPATH=$OUTPUT_DIR/staticgate_moe_output
-# OUTPUT_BASEPATH=$OUTPUT_DIR/output
-# Extract SLURM environment variables
-# so processes know who to talk to
 if [[ "$SLURM" == "true" ]]; then
+    #load modules
+    module load lib/NCCL/2.12.12-GCCcore-11.3.0-CUDA-11.7.0
+    module load ai/PyTorch/1.12.0-foss-2022a-CUDA-11.7.0
+    module load vis/torchvision/0.13.1-foss-2022a-CUDA-11.7.0
+    # activating venv
+    source /scratch/hpc-prf-lola/lib_repo/custom-venvs/lola1/bin/activate
+
+    LIB_DIR=/scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft
+    DATA_DIR=/scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/lola_ws/gpt/data
+    # so processes know who to talk to
     MASTER_ADDR=$(scontrol show hostnames $SLURM_JOB_NODELIST | head -n 1)
+else
+    source ~/repos/LOLA-Megatron-DeepSpeed/venv-lola/bin/activate
+
+    LIB_DIR=~/repos/LOLA-Megatron-DeepSpeed
+    DATA_DIR=~/repos/LOLA-Megatron-DeepSpeed/lola_ws/gpt/data
 fi
+
 
 ###############################################################################
 ### Main configs
@@ -110,6 +116,9 @@ elif [[ "$MODEL_SIZE" == "175" ]]; then
     ### GLOBAL_BATCH_SIZE=1536
     LR=0.6e-4
     MIN_LR=0.6e-5
+else
+    echo "No proper model size provided."
+    exit -1
 fi
 
 ###############################################################################
@@ -256,6 +265,11 @@ data_options=" \
          --data-path ${DATA_BLEND} \
          --data-impl mmap"
 
+extra_options=""
+if [[ "$STATIC_GATE" == "true" ]]; then
+    extra_options=" --lola-enable-static-moe-gate"
+fi
+
 megatron_options=" \
         --override-opt_param-scheduler \
         --adam-beta1 0.9 \
@@ -300,7 +314,7 @@ megatron_options=" \
         --log-batch-size-to-tensorboard \
         --log-validation-ppl-to-tensorboard \
         --tensorboard-dir ${TENSORBOARD_DIR} \
-        --lola-enable-static-moe-gate"
+        ${extra_options}"
 
 if [ "${ACTIVATION_CHECKPOINT}" = "true" ]; then
 megatron_options="${megatron_options} \
@@ -376,7 +390,7 @@ echo LAUNCHER: $LAUNCHER
 echo CMD: $CMD
 export NCCL_DEBUG=TRACE
 if [[ "$SLURM" == "true" ]]; then
-    srun --wait=60 --kill-on-bad-exit=1 bash -c "NCCL_DEBUG=INFO $LAUNCHER --node_rank \$SLURM_PROCID $CMD" 2>&1 | tee -a ${OUTPUT_BASEPATH}/log/${NAME}_${host}_${current_time}.log
+    srun --wait=60 --kill-on-bad-exit=1 bash -c "$LAUNCHER --node_rank \$SLURM_PROCID $CMD" 2>&1 | tee -a ${OUTPUT_BASEPATH}/log/${NAME}_${host}_${current_time}.log
 else
     $LAUNCHER --node_rank $NODE_RANK $CMD 2>&1 | tee -a ${OUTPUT_BASEPATH}/log/${NAME}_${host}_${current_time}.log
 fi
