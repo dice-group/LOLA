@@ -1,6 +1,5 @@
 #!/bin/bash
 export CUDA_VISIBLE_DEVICES="0,1"
-
 # activating venv
 source /upb/users/n/nikit/profiles/unix/cs/repos/LOLA-Megatron-DeepSpeed/venv-lola/bin/activate
 
@@ -8,7 +7,7 @@ LIB_DIR=/upb/users/n/nikit/profiles/unix/cs/repos/LOLA-Megatron-DeepSpeed
 DATA_DIR=/upb/users/n/nikit/profiles/unix/cs/repos/LOLA-Megatron-DeepSpeed/lola_ws/gpt/data
 OUTPUT_DIR=`pwd`
 # output path
-OUTPUT_BASEPATH=$OUTPUT_DIR/normal_moe_output
+OUTPUT_BASEPATH=$OUTPUT_DIR/staticgate_moe_output
 # OUTPUT_BASEPATH=$OUTPUT_DIR/output
 # Extract SLURM environment variables
 # so processes know who to talk to
@@ -18,7 +17,7 @@ MASTER_PORT=6005
 ## The NAME_ID variable is used for generating a unique name for the model. It acts like a model name prefix.
 ## When kept the same as a previously trained model (together with other hyperparams), the training will resume from the last checkpoint automatically.
 ## Please note that other hyperparameters are also used in generation of a unique name, check in the script to see how "NAME" is formed.
-NAME_ID="gpt-normal-moe"
+NAME_ID="gpt-staticgate-moe"
 
 GPUS_PER_NODE=2
 NNODES=1
@@ -57,7 +56,7 @@ SEQ_LEN=2048
 #HIDDEN_SIZE=1536
 #NUM_ATTN_HEADS=16
 # Use Micro batch size instead of global batch size, the latter is set to $((NNODES*GPUS_PER_NODE*MICRO_BATCH_SIZE))
-#MICRO_BATCH_SIZE=1
+# MICRO_BATCH_SIZE=1
 ### GLOBAL_BATCH_SIZE=256
 # LR=2.5e-4
 # MIN_LR=2.5e-5
@@ -79,7 +78,7 @@ MICRO_BATCH_SIZE=24
 #HIDDEN_SIZE=2560
 #NUM_ATTN_HEADS=32
 # Use Micro batch size instead of global batch size, the latter is set to $((NNODES*GPUS_PER_NODE*MICRO_BATCH_SIZE))
-#MICRO_BATCH_SIZE=12
+# MICRO_BATCH_SIZE=1
 ### GLOBAL_BATCH_SIZE=512
 # LR=1.6e-4
 # MIN_LR=1.6e-5
@@ -90,7 +89,7 @@ MICRO_BATCH_SIZE=24
 #HIDDEN_SIZE=4096
 #NUM_ATTN_HEADS=32
 # Use Micro batch size instead of global batch size, the latter is set to $((NNODES*GPUS_PER_NODE*MICRO_BATCH_SIZE))
-#MICRO_BATCH_SIZE=1
+#MICRO_BATCH_SIZE=8
 ### GLOBAL_BATCH_SIZE=1024
 # LR=1.2e-4
 # MIN_LR=1.2e-5
@@ -126,9 +125,9 @@ GLOBAL_BATCH_SIZE=$((NNODES*GPUS_PER_NODE*MICRO_BATCH_SIZE))
 # TRAIN_TOKENS=300000000000
 # TRAIN_TOKENS=330000000000
 # Setting to 2B for MC4 Sample
-# TRAIN_TOKENS=2000000000
+#TRAIN_TOKENS=2000000000
 # 400M
-TRAIN_TOKENS=400000000
+TRAIN_TOKENS=1000000000
 ## TRAIN_ITERS is another termination condition and also affect the number of
 ## data samples to be indexed. Since we want to reach the TRAIN_TOKENS
 ## above, and techniques like curriculum learning has less token in some steps,
@@ -138,7 +137,7 @@ TRAIN_ITERS=$(( ${TRAIN_TOKENS} * 3 / ${GLOBAL_BATCH_SIZE} / ${SEQ_LEN} ))
 
 ## Another termination condition in minutes. Set it large enough to avoid
 ## undesired early termination.
-EXIT_DURATION=60000
+EXIT_DURATION=600000
 ###############################################################################
 ### LR configs
 ## LR warmup and decay duration, this token-based config is preferable since
@@ -175,11 +174,11 @@ NUM_GPUS=$((NNODES*GPUS_PER_NODE))
 # EP_SIZE=1
 EP_SIZE=4
 
-# if [[ $EP_SIZE -gt $NUM_GPUS ]]; then
-#     EP_PARALLEL_SIZE=$NUM_GPUS
-# else
-#     EP_PARALLEL_SIZE=$EP_SIZE
-# fi
+#if [[ $EP_SIZE -gt $NUM_GPUS ]]; then
+#    EP_PARALLEL_SIZE=$NUM_GPUS
+#else
+#    EP_PARALLEL_SIZE=$EP_SIZE
+#fi
 
 # For LOLA, we are keeping EP_PARALLEL_SIZE as 1, to have the full model on each GPU.
 EP_PARALLEL_SIZE=1
@@ -312,7 +311,8 @@ megatron_options=" \
         --log-timers-to-tensorboard \
         --log-batch-size-to-tensorboard \
         --log-validation-ppl-to-tensorboard \
-        --tensorboard-dir ${TENSORBOARD_DIR}"
+        --tensorboard-dir ${TENSORBOARD_DIR} \
+        --lola-enable-static-moe-gate"
 
 if [ "${ACTIVATION_CHECKPOINT}" = "true" ]; then
 megatron_options="${megatron_options} \
@@ -387,6 +387,7 @@ export CMD="${LIB_DIR}/pretrain_gpt.py ${megatron_options} ${data_options} ${dee
 echo LAUNCHER: $LAUNCHER
 echo CMD: $CMD
 export NCCL_DEBUG=TRACE
-# srun --wait=60 --kill-on-bad-exit=1 bash -c "NCCL_DEBUG=INFO $LAUNCHER --node_rank \$SLURM_PROCID $CMD" 2>&1 | tee -a ${OUTPUT_BASEPATH}/log/${NAME}_${host}_${current_time}.log
+#srun --wait=60 --kill-on-bad-exit=1 bash -c "NCCL_DEBUG=INFO $LAUNCHER --node_rank \$SLURM_PROCID $CMD" 2>&1 | tee -a ${OUTPUT_BASEPATH}/log/${NAME}_${host}_${current_time}.log
 $LAUNCHER --node_rank 0 $CMD 2>&1 | tee -a ${OUTPUT_BASEPATH}/log/${NAME}_${host}_${current_time}.log
+
 set -x
