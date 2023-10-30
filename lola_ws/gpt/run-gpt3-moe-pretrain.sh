@@ -1,5 +1,8 @@
 #!/bin/bash
-
+###### Sample usage ######
+# noctua2: bash run-gpt3-moe-pretrain.sh --slurm --nnodes=1 --runtime="50:00:00" --static_gate --model_size="1.3" --mb_size=8
+# experiment servers: bash run-gpt3-moe-pretrain.sh --nnodes=1 --gpus_per_node=2 --node_rank=0 --static_gate --model_size="1.3" --mb_size=24
+######
 # Collect command line arguments
 # Default values for variables
 export STATIC_GATE=false
@@ -71,6 +74,14 @@ while [[ "$#" -gt 0 ]]; do
             export TRAIN_TOKENS="${1#*=}"
             shift
             ;;
+        --model_size=*)  # Option with argument
+            export MODEL_SIZE="${1#*=}"
+            shift
+            ;;
+        --mb_size=*)  # Option with argument
+            export MICRO_BATCH_SIZE="${1#*=}"
+            shift
+            ;;
         --ep_size=*)  # Option with argument
             export EP_SIZE="${1#*=}"
             shift
@@ -92,7 +103,7 @@ done
 
 export OUTPUT_DIR=`pwd`
 # output path
-export OUTPUT_BASEPATH=$OUTPUT_DIR/$NAME_ID
+export OUTPUT_BASEPATH=$OUTPUT_DIR/$NAME_ID"-output"
 
 export NUM_GPUS=$((NNODES*GPUS_PER_NODE))
 # Setting Global batch size in the end, since it relies on micro batch size
