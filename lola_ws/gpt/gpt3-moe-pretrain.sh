@@ -373,13 +373,13 @@ export CUDA_LAUNCH_BLOCKING=1
 export TORCHELASTIC_ERROR_FILE="${OUTPUT_BASEPATH}/torch-elastic-error.json"
 export NCCL_ASYNC_ERROR_HANDLING=1
 
+
 # launcher to python -u -m torch.distributed.run
 export LAUNCHER="python -u -m torch.distributed.run \
     --nproc_per_node $GPUS_PER_NODE \
     --nnodes $NNODES \
-    --rdzv_id=$RANDOM \
+    --rdzv_id=$RDZV_ID \
     --rdzv_endpoint $MASTER_ADDR:$MASTER_PORT \
-    --rdzv_backend c10d \
     --max_restarts 0 \
     --tee 3 \
     "

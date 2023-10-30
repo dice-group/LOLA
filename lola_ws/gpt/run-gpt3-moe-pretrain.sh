@@ -1,7 +1,10 @@
 #!/bin/bash
 ###### Sample usage ######
 # noctua2: bash run-gpt3-moe-pretrain.sh --slurm --nnodes=1 --runtime="50:00:00" --static_gate --model_size="1.3" --mb_size=8
-# experiment servers: bash run-gpt3-moe-pretrain.sh --nnodes=1 --gpus_per_node=2 --node_rank=0 --static_gate --model_size="1.3" --mb_size=24
+# experiment servers (single server): bash run-gpt3-moe-pretrain.sh --nnodes=1 --gpus_per_node=2 --node_rank=0 --static_gate --model_size="1.3" --mb_size=24
+# experiment servers (multi-server):
+#   Server1 (master node): bash run-gpt3-moe-pretrain.sh --nnodes=2 --gpus_per_node=2 --node_rank=0 --static_gate --model_size="1.3" --mb_size=24
+#   Server2 (worker node): bash run-gpt3-moe-pretrain.sh --nnodes=2 --gpus_per_node=2 --node_rank=1 --master_addr=<server1-hostname> --master_port=6005 --rdzv_id=<generated-id-from-server1> --static_gate --model_size="1.3" --mb_size=24
 ######
 # Collect command line arguments
 # Default values for variables
@@ -15,6 +18,7 @@ export SLURM=false
 export MASTER_ADDR="127.0.0.1"
 export MASTER_PORT=6005
 export RUNTIME="100:00:00"
+export RDZV_ID=$RANDOM
 
 # Default (dense) Model size (number of parameters in billions)
 ## Only values that will work: 0.125, 0.35, 0.76, 1.3, 2.7, 6.7, 13 or 175
@@ -68,6 +72,10 @@ while [[ "$#" -gt 0 ]]; do
             ;;
         --master_port=*)  # Option with argument
             export MASTER_PORT="${1#*=}"
+            shift
+            ;;
+        --rdzv_id=*)  # Option with argument
+            export RDZV_ID="${1#*=}"
             shift
             ;;
         --train_tokens=*)  # Option with argument
@@ -134,6 +142,7 @@ if [[ "$SLURM" == "true" ]]; then
      --output="train_logs/%x-slurm_%j.out" \
       $EXTRA_PARAMS gpt3-moe-pretrain.sh
 else
+    echo -e "PyTorch rendezvous id: ${RDZV_ID}\nIf this is the master node, then provide the id above to the worker nodes: --rdzv_id=${RDZV_ID}"
     echo "Starting process for node rank: ${NODE_RANK}"
     export RUN_NAME="dice_exp-${NAME_POSTFIX}"
     export WANDB_NAME=$RUN_NAME
