@@ -8,10 +8,9 @@ import torch
 from deepspeed.utils import log_dist
 
 from deepspeed.utils import groups
-from deepspeed.moe.sharded_moe import MOELayer, TopKGate
-from deepspeed.moe.experts import Experts
+from .sharded_moe import MOELayer, TopKGate
+from .experts import Experts
 import typing
-
 
 static_topkgate = None
 
