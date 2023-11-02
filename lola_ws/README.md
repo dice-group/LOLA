@@ -34,6 +34,13 @@ git checkout 4e1ae43
 pip install -v --disable-pip-version-check --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" ./
 ```
 
+#### To use the the python environment as a notebook kernel (optional)
+
+```bash
+pip install ipykernel
+python -m ipykernel install --user --name=venv-lola
+```
+
 #### Static TopKGate in MoE layer
 
 To introduce the static gating the MoE layer, we have tweaked the logic in the Deepspeed library. At the moment, to use this logic we are using a workaround that involves replacing the original `layer.py` with [gpt/overriden_classes/layer.py)](./gpt/overriden_classes/layer.py). The original file should be located in your virtual environment in a path like this: `venv-lola/lib/<your-python-version>/site-packages/deepspeed/moe/layer.py`. To replace, simply do the following:

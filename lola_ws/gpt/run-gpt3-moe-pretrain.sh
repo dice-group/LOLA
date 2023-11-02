@@ -26,8 +26,8 @@ export MODEL_SIZE=1.3
 # Default batch size per GPU
 export MICRO_BATCH_SIZE=24
 # Number of tokens to train for
-export TRAIN_TOKENS=3000000000 # 3B
-
+# export TRAIN_TOKENS=3000000000 # 3B
+export TRAIN_TOKENS=12000000000 # 12B
 ## Number of experts. EP_SIZE 1 means dense model without MoE
 export EP_SIZE=4
 
