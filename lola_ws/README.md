@@ -13,6 +13,13 @@ python -m venv --system-site-packages ./venv-lola
 source venv-lola/bin/activate
 ```
 
+```bash
+module load lang/Python/3.10.4-GCCcore-11.3.0
+python -m venv --system-site-packages ./lola
+source lola/bin/activate
+pip3 install torch torchvision torchaudio # torch==2.1.0+cu121 torchvision==0.16.0+cu121
+```
+
 #### Dependencies installation
 
 ```bash
@@ -31,6 +38,7 @@ https://github.com/NVIDIA/apex#linux
 git clone https://github.com/NVIDIA/apex
 cd apex
 git checkout 4e1ae43
+# Note: Comment line 171 in setup.py to avoid legacy installation error.
 pip install -v --disable-pip-version-check --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" ./
 ```
 
@@ -47,7 +55,7 @@ To introduce the static gating the MoE layer, we have tweaked the logic in the D
 
 ```bash
 # Backup the original file
-mv venv-lola/lib/<your-python-version>/site-packages/deepspeed/moe/layer.py_original venv-lola/lib/<your-python-version>/site-packages/deepspeed/moe/layer.py_original
+mv venv-lola/lib/<your-python-version>/site-packages/deepspeed/moe/layer.py venv-lola/lib/<your-python-version>/site-packages/deepspeed/moe/layer.py_original
 # Copy the modified file
 cp lola_ws/gpt/overriden_classes/layer.py venv-lola/lib/<your-python-version>/site-packages/deepspeed/moe/
 ```
