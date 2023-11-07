@@ -9,8 +9,8 @@ pip3 install torch torchvision torchaudio # torch==2.1.0+cu121 torchvision==0.16
 #### Virtual-environment setup on Noctua2
 ```bash
 module load ai/PyTorch/1.12.0-foss-2022a-CUDA-11.7.0
-python -m venv --system-site-packages ./lola1
-source /scratch/hpc-prf-lola/lib_repo/custom-venvs/lola1/bin/activate
+python -m venv --system-site-packages ./venv-lola
+source venv-lola/bin/activate
 ```
 
 #### Dependencies installation
