@@ -7,11 +7,11 @@ pip3 install torch torchvision torchaudio # torch==2.1.0+cu121 torchvision==0.16
 
 
 #### Virtual-environment setup on Noctua2
-```bash
+<!-- ```bash
 module load ai/PyTorch/1.12.0-foss-2022a-CUDA-11.7.0
 python -m venv --system-site-packages ./venv-lola
 source venv-lola/bin/activate
-```
+``` -->
 
 ```bash
 module load lang/Python/3.10.4-GCCcore-11.3.0
