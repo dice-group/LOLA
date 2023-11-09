@@ -128,6 +128,11 @@ mkdir -p "train_logs/"
 if [[ "$SLURM" == "true" ]]; then
     echo "Submitting job to SLURM."
 
+    # Set paths
+    export LIB_DIR=/scratch/hpc-prf-lola/nikit/repos/LOLA-Megatron-DeepSpeed
+    export DATA_DIR=/scratch/hpc-prf-lola/nikit/repos/LOLA-Megatron-DeepSpeed/lola_ws/gpt/data
+    export VENV_PATH=~/virt-envs/venv-lola
+
     export RUN_NAME="noctua2-${NAME_POSTFIX}"
     export WANDB_NAME=$RUN_NAME
     EXTRA_PARAMS=""
@@ -145,6 +150,12 @@ if [[ "$SLURM" == "true" ]]; then
 else
     echo -e "PyTorch rendezvous id: ${RDZV_ID}\nIf this is the master node, then provide the id above to the worker nodes: --rdzv_id=${RDZV_ID}"
     echo "Starting process for node rank: ${NODE_RANK}"
+
+    # Set paths
+    export LIB_DIR=~/repos/LOLA-Megatron-DeepSpeed
+    export DATA_DIR=~/repos/LOLA-Megatron-DeepSpeed/lola_ws/gpt/mc4_4pt5m_data
+    export VENV_PATH=~/repos/LOLA-Megatron-DeepSpeed/venv-lola
+
     export RUN_NAME="dice_exp-${NAME_POSTFIX}"
     export WANDB_NAME=$RUN_NAME
     bash gpt3-moe-pretrain.sh

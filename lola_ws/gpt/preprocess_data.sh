@@ -4,17 +4,24 @@
 #SBATCH -n 1
 #SBATCH -J "Preparing sample MC4 data"
 #SBATCH --gres=gpu:a100:1
-#SBATCH --cpus-per-task=64
-#SBATCH --partition=dgx
-#SBATCH --qos=devel
+#SBATCH --cpus-per-task=128
+###SBATCH --partition=dgx
+###SBATCH --qos=devel
 
-module load lib/NCCL/2.12.12-GCCcore-11.3.0-CUDA-11.7.0
-module load ai/PyTorch/1.12.0-foss-2022a-CUDA-11.7.0
-module load vis/torchvision/0.13.1-foss-2022a-CUDA-11.7.0
+export VENV_PATH=~/virt-envs/venv-lola
+
+module load toolchain/foss/2022b
+module load lib/libaio/0.3.113-GCCcore-12.2.0
+module load lang/Python/3.10.8-GCCcore-12.2.0-bare
+module load system/CUDA/12.0.0
+module load lib/NCCL/2.16.2-GCCcore-12.2.0-CUDA-12.0.0
+module load compiler/GCCcore/12.3.0
+
+export LD_LIBRARY_PATH=$VENV_PATH/lib/python3.10/site-packages/nvidia/nvjitlink/lib:$LD_LIBRARY_PATH
 # activating venv
-source /scratch/hpc-prf-lola/lib_repo/custom-venvs/lola1/bin/activate
+source $VENV_PATH/bin/activate
 
-LIB_DIR=/scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft
+LIB_DIR=/scratch/hpc-prf-lola/nikit/repos/LOLA-Megatron-DeepSpeed
 
 set -e
 # Expects a data/ directory with already existing jsonl file in it

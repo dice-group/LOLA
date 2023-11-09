@@ -13,7 +13,7 @@ module load lib/libaio/0.3.113-GCCcore-12.2.0
 module load lang/Python/3.10.8-GCCcore-12.2.0-bare
 module load system/CUDA/12.0.0
 module load lib/NCCL/2.16.2-GCCcore-12.2.0-CUDA-12.0.0
-module load compiler/GCC/10.3.0
+module load compiler/GCCcore/12.3.0
 
 # Check if the first argument is set, if not assign the current directory path
 LOLA_WS=$(pwd)
@@ -32,6 +32,7 @@ pip3 install --upgrade pip
 
 pip3 install torch torchvision torchaudio transformers "numpy<1.24" packaging datasets nltk tensorboard deepspeed==0.11.1 wheel pybind11 wandb
 
+
 mkdir -p temp_repos
 cd temp_repos
 
@@ -44,3 +45,5 @@ export LD_LIBRARY_PATH=$VENVPATH/venv-lola/lib/python3.10/site-packages/nvidia/n
 pip install -v --disable-pip-version-check --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" ./
 
 cp $LOLA_WS/overriden_classes/layer.py $VENVPATH/venv-lola/lib/python3.10/site-packages/deepspeed/moe/
+
+rm -rf ../../temp_repos
