@@ -1,25 +1,35 @@
 #!/bin/bash
+# Deleting previously built files
+rm $LIB_DIR/megatron/data/helpers.cpython-310-x86_64-linux-gnu.so
+rm -r $LIB_DIR/megatron/fused_kernels/build/
+
 # activating venv
 
 if [[ "$SLURM" == "true" ]]; then
     #load modules
-    module load lib/NCCL/2.12.12-GCCcore-11.3.0-CUDA-11.7.0
-    module load ai/PyTorch/1.12.0-foss-2022a-CUDA-11.7.0
-    module load vis/torchvision/0.13.1-foss-2022a-CUDA-11.7.0
-    # activating venv
-    source /scratch/hpc-prf-lola/lib_repo/custom-venvs/lola1/bin/activate
+    module load toolchain/foss/2022b
+    module load lib/libaio/0.3.113-GCCcore-12.2.0
+    module load lang/Python/3.10.8-GCCcore-12.2.0-bare
+    module load system/CUDA/12.0.0
+    module load lib/NCCL/2.16.2-GCCcore-12.2.0-CUDA-12.0.0
+    # module load compiler/GCCcore/12.3.0
+    module load compiler/GCC/10.3.0
 
-    LIB_DIR=/scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft
-    DATA_DIR=/scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/lola_ws/gpt/data
+    export LD_LIBRARY_PATH=$VENV_PATH/lib/python3.10/site-packages/nvidia/nvjitlink/lib:$LD_LIBRARY_PATH
+
+    # Currently, the memory copy logic does not work when multiple nodes are involved, since, it creates index-caches at rank 0 at a later stage.
+    # echo "Copy data to CPU memory"
+    # srun --ntasks=$SLURM_NNODES --ntasks-per-node=1 bash -c "mkdir -p /dev/shm/lola_data && cp -r $DATA_DIR /dev/shm/lola_data/"
+    # wait
+    # export DATA_DIR=/dev/shm/lola_data/data
+    # echo "Copy done"
+
     # so processes know who to talk to
     MASTER_ADDR=$(scontrol show hostnames $SLURM_JOB_NODELIST | head -n 1)
-else
-    source ~/repos/LOLA-Megatron-DeepSpeed/venv-lola/bin/activate
-
-    LIB_DIR=~/repos/LOLA-Megatron-DeepSpeed
-    # DATA_DIR=~/repos/LOLA-Megatron-DeepSpeed/lola_ws/gpt/data
-    DATA_DIR=~/repos/LOLA-Megatron-DeepSpeed/lola_ws/gpt/mc4_4pt5m_data
 fi
+# activating virtual environment
+echo "Activating virtual environment: ${VENV_PATH}/bin/activate"
+source $VENV_PATH/bin/activate
 
 
 ###############################################################################
@@ -258,8 +268,8 @@ CHECKPOINT_PATH="${OUTPUT_BASEPATH}/checkpoint/${NAME}"
 VOCAB_PATH=$DATA_DIR/gpt2-vocab.json
 MERGE_PATH=$DATA_DIR/gpt2-merges.txt
 # Public the Pile dataset, can be downloaded at https://mystic.the-eye.eu/public/AI/pile_neox/
-#DATA_BLEND=$DATA_DIR/meg-gpt-mc4-1m_text_document
-DATA_BLEND=$DATA_DIR/mc4-gpt-4pt5m_text_document
+DATA_BLEND=$DATA_DIR/meg-gpt-mc4-1m_text_document
+#DATA_BLEND=$DATA_DIR/mc4-gpt-4pt5m_text_document
 ###############################################################################
 data_options=" \
          --vocab-file ${VOCAB_PATH} \
@@ -307,7 +317,7 @@ megatron_options=" \
         --weight-decay 0.1 \
         --clip-grad 1.0 \
         --hysteresis 2 \
-        --num-workers 0 \
+        --num-workers 128 \
         --fp16 \
         --load ${CHECKPOINT_PATH} \
         --save ${CHECKPOINT_PATH} \
