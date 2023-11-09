@@ -3,11 +3,15 @@
 
 if [[ "$SLURM" == "true" ]]; then
     #load modules
-    module load lib/NCCL/2.12.12-GCCcore-11.3.0-CUDA-11.7.0
-    module load ai/PyTorch/1.12.0-foss-2022a-CUDA-11.7.0
-    module load vis/torchvision/0.13.1-foss-2022a-CUDA-11.7.0
+    #module load lib/NCCL/2.12.12-GCCcore-11.3.0-CUDA-11.7.0
+    #module load ai/PyTorch/1.12.0-foss-2022a-CUDA-11.7.0
+    #module load vis/torchvision/0.13.1-foss-2022a-CUDA-11.7.0
     # activating venv
-    source /scratch/hpc-prf-lola/lib_repo/custom-venvs/lola1/bin/activate
+    #source /scratch/hpc-prf-lola/lib_repo/custom-venvs/lola1/bin/activate
+    
+    module load system/CUDA/12.2.0
+    module load lang/Python/3.10.4-GCCcore-11.3.0
+    source ~/virt-envs/lola/bin/activate
 
     LIB_DIR=/scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft
     DATA_DIR=/scratch/hpc-prf-lola/nikit/repos/Megatron-DeepSpeed-Microsoft/lola_ws/gpt/data
@@ -258,8 +262,8 @@ CHECKPOINT_PATH="${OUTPUT_BASEPATH}/checkpoint/${NAME}"
 VOCAB_PATH=$DATA_DIR/gpt2-vocab.json
 MERGE_PATH=$DATA_DIR/gpt2-merges.txt
 # Public the Pile dataset, can be downloaded at https://mystic.the-eye.eu/public/AI/pile_neox/
-#DATA_BLEND=$DATA_DIR/meg-gpt-mc4-1m_text_document
-DATA_BLEND=$DATA_DIR/mc4-gpt-4pt5m_text_document
+DATA_BLEND=$DATA_DIR/meg-gpt-mc4-1m_text_document
+#DATA_BLEND=$DATA_DIR/mc4-gpt-4pt5m_text_document
 ###############################################################################
 data_options=" \
          --vocab-file ${VOCAB_PATH} \
@@ -307,7 +311,7 @@ megatron_options=" \
         --weight-decay 0.1 \
         --clip-grad 1.0 \
         --hysteresis 2 \
-        --num-workers 0 \
+        --num-workers 128 \
         --fp16 \
         --load ${CHECKPOINT_PATH} \
         --save ${CHECKPOINT_PATH} \

@@ -137,6 +137,7 @@ if [[ "$SLURM" == "true" ]]; then
     sbatch --job-name=$RUN_NAME \
      --nodes=$NNODES \
      --ntasks-per-node=1 \
+     --cpus-per-task=128 \
      --gres=gpu:a100:$GPUS_PER_NODE \
      --time=$RUNTIME \
      --output="train_logs/%x-slurm_%j.out" \
