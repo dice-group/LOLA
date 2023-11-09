@@ -6,6 +6,7 @@
 #SBATCH -t 01:00:00
 
 # Sample usage: sbatch setup_slurm.sh ~/virt-envs
+set -eu
 
 module load toolchain/foss/2022b
 module load lib/libaio/0.3.113-GCCcore-12.2.0
@@ -19,6 +20,8 @@ LOLA_WS=$(pwd)
 echo "Current lola workspace: ${LOLA_WS}"
 VENVPATH="${1:-$(pwd)}"
 echo "Path to install virtual environment at: ${VENVPATH}"
+
+mkdir -p $VENVPATH
 
 cd $VENVPATH
 
