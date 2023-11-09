@@ -1,9 +1,7 @@
 #!/bin/bash
 # Deleting previously built files
 rm $LIB_DIR/megatron/data/helpers.cpython-310-x86_64-linux-gnu.so
-rm $LIB_DIR/megatron/fused_kernels/build/scaled_masked_softmax_cuda.so
-rm $LIB_DIR/megatron/fused_kernels/build/scaled_softmax_cuda.so
-rm $LIB_DIR/megatron/fused_kernels/build/scaled_upper_triang_masked_softmax_cuda.so
+rm -r $LIB_DIR/megatron/fused_kernels/build/
 
 # activating venv
 
@@ -14,7 +12,8 @@ if [[ "$SLURM" == "true" ]]; then
     module load lang/Python/3.10.8-GCCcore-12.2.0-bare
     module load system/CUDA/12.0.0
     module load lib/NCCL/2.16.2-GCCcore-12.2.0-CUDA-12.0.0
-    module load compiler/GCCcore/12.3.0
+    # module load compiler/GCCcore/12.3.0
+    module load compiler/GCC/10.3.0
 
     export LD_LIBRARY_PATH=$VENV_PATH/lib/python3.10/site-packages/nvidia/nvjitlink/lib:$LD_LIBRARY_PATH
 
