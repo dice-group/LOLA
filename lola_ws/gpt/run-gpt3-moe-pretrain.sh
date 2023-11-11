@@ -130,7 +130,7 @@ if [[ "$SLURM" == "true" ]]; then
 
     # Set paths
     export LIB_DIR=/scratch/hpc-prf-lola/nikit/repos/LOLA-Megatron-DeepSpeed
-    export DATA_DIR=/scratch/hpc-prf-lola/nikit/repos/LOLA-Megatron-DeepSpeed/lola_ws/gpt/data
+    export DATA_DIR=/scratch/hpc-prf-lola/nikit/repos/LOLA-Megatron-DeepSpeed/lola_ws/gpt/old_data
     export VENV_PATH=~/virt-envs/venv-lola
 
     export RUN_NAME="noctua2-${NAME_POSTFIX}"
@@ -139,7 +139,7 @@ if [[ "$SLURM" == "true" ]]; then
     if [[ "$DGX_NODE" == "true" ]]; then
         EXTRA_PARAMS=" --partition=dgx --qos=devel "
     fi
-    sbatch --job-name=$RUN_NAME \
+    sbatch --reservation=lola_tests --job-name=$RUN_NAME \
      --nodes=$NNODES \
      --ntasks-per-node=1 \
      --cpus-per-task=128 \

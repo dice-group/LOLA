@@ -1,7 +1,7 @@
 #!/bin/bash
 # Deleting previously built files
 rm $LIB_DIR/megatron/data/helpers.cpython-310-x86_64-linux-gnu.so
-rm -r $LIB_DIR/megatron/fused_kernels/build/
+# rm -r $LIB_DIR/megatron/fused_kernels/build/
 
 # activating venv
 
@@ -268,7 +268,9 @@ CHECKPOINT_PATH="${OUTPUT_BASEPATH}/checkpoint/${NAME}"
 VOCAB_PATH=$DATA_DIR/gpt2-vocab.json
 MERGE_PATH=$DATA_DIR/gpt2-merges.txt
 # Public the Pile dataset, can be downloaded at https://mystic.the-eye.eu/public/AI/pile_neox/
-DATA_BLEND=$DATA_DIR/meg-gpt-mc4-1m_text_document
+DATA_BLEND=$DATA_DIR/meg-gpt-mc4-100k_text_document
+
+#DATA_BLEND=$DATA_DIR/meg-gpt-mc4-1m_text_document
 #DATA_BLEND=$DATA_DIR/mc4-gpt-4pt5m_text_document
 ###############################################################################
 data_options=" \
@@ -395,15 +397,51 @@ export LAUNCHER="python -u -m torch.distributed.run \
     --max_restarts 0 \
     --tee 3 \
     "
-export CMD="${LIB_DIR}/pretrain_gpt.py ${megatron_options} ${data_options} ${deepspeed_options}"
+
+export DATA_IDX_CMD="${LIB_DIR}/prepare_gpt_data_index_cache.py ${megatron_options} ${data_options} ${deepspeed_options}"
 # Command for distributed training setup
 # run_cmd="deepspeed ${LIB_DIR}/pretrain_gpt.py ${megatron_options} ${data_options} ${deepspeed_options} 2>&1 | tee -a ${OUTPUT_BASEPATH}/log/${NAME}_${host}_${current_time}.log"
-echo LAUNCHER: $LAUNCHER
-echo CMD: $CMD
+
 export NCCL_DEBUG=TRACE
 if [[ "$SLURM" == "true" ]]; then
+    echo "Building dataset indexes in advance"
+    # TODO: Improve this unoptimized way to to build dataset indexes in advance. 
+    srun --wait=60 --kill-on-bad-exit=1 bash -c "$LAUNCHER --node_rank \$SLURM_PROCID $DATA_IDX_CMD" 2>&1
+    echo "Finished building dataset indexes"
+    wait
+    # Load datasets to memory
+    echo "Copying data to CPU memory"
+    srun --ntasks=$SLURM_NNODES --ntasks-per-node=1 bash -c "mkdir -p /dev/shm/lola_data && cp -r $DATA_DIR/* /dev/shm/lola_data/"
+    wait
+    export DATA_DIR=/dev/shm/lola_data
+    echo "Copy finished"
+
+    #### redo data options -  use index-cache only
+    # data_options=$data_options" \
+    #      --data-cache-path /dev/shm/lola_data/index-cache"
+    #### redo data options -  use all data files from memory
+    VOCAB_PATH=$DATA_DIR/gpt2-vocab.json
+    MERGE_PATH=$DATA_DIR/gpt2-merges.txt
+    DATA_BLEND=$DATA_DIR/meg-gpt-mc4-100k_text_document
+    
+    data_options=" \
+         --vocab-file ${VOCAB_PATH} \
+         --merge-file ${MERGE_PATH} \
+         --data-path ${DATA_BLEND} \
+         --data-impl mmap"
+    
+    export CMD="${LIB_DIR}/pretrain_gpt.py ${megatron_options} ${data_options} ${deepspeed_options}"
+
+    echo LAUNCHER: $LAUNCHER
+    echo CMD: $CMD
+
     srun --wait=60 --kill-on-bad-exit=1 bash -c "$LAUNCHER --node_rank \$SLURM_PROCID $CMD" 2>&1 | tee -a ${OUTPUT_BASEPATH}/log/${NAME}_${host}_${current_time}.log
 else
+    export CMD="${LIB_DIR}/pretrain_gpt.py ${megatron_options} ${data_options} ${deepspeed_options}"
+    
+    echo LAUNCHER: $LAUNCHER
+    echo CMD: $CMD
+
     $LAUNCHER --node_rank $NODE_RANK $CMD 2>&1 | tee -a ${OUTPUT_BASEPATH}/log/${NAME}_${host}_${current_time}.log
 fi
 set -x

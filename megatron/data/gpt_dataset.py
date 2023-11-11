@@ -333,7 +333,8 @@ def _build_index_mappings(name, data_prefix, documents, sizes,
 
     # Filename of the index mappings.
     desc = "GPT Dataset\n\n"
-    desc += f"Data prefix {data_prefix}\n"
+    # LOLA: this part is causing issue when we pre generate files and copy them to memory
+    # desc += f"Data prefix {data_prefix}\n"
     desc += f"Dataset name {name}\n"
     desc += f"Number of samples {num_samples}\n"
     desc += f"Number of epochs {num_epochs}\n"
@@ -345,6 +346,9 @@ def _build_index_mappings(name, data_prefix, documents, sizes,
     doc_idx_filename = desc_hash + '_doc_idx.npy'
     sample_idx_filename = desc_hash + '_sample_idx.npy'
     shuffle_idx_filename = desc_hash + '_shuffle_idx.npy'
+    
+    # LOLA: remove this if the previous todo is fixed
+    desc += f"Data prefix {data_prefix}\n"
 
     if name == 'train':
         # force to use certain index files
@@ -361,9 +365,13 @@ def _build_index_mappings(name, data_prefix, documents, sizes,
     # duplication, then look in data-cache-path if specified,
     # If nothing is found, use the last path looked in
     build_indices = True
-    prefixes = [os.path.join(os.path.dirname(data_prefix), 'index-cache')]
+    # LOLA: making sure that the data_cache_path is looked into first
+    # prefixes = [os.path.join(os.path.dirname(data_prefix), 'index-cache')]
+    prefixes = []
     if data_cache_path is not None:
         prefixes.append(data_cache_path)
+    # LOLA: appending the main path after the data_cache_path
+    prefixes.append(os.path.join(os.path.dirname(data_prefix), 'index-cache'))
     for prefix in prefixes:
         idx_path = {
             'desc': os.path.join(prefix, desc_filename),
