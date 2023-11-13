@@ -48,3 +48,39 @@ mv venv-lola/lib/<your-python-version>/site-packages/deepspeed/moe/layer.py venv
 # Copy the modified file
 cp lola_ws/gpt/overriden_classes/layer.py venv-lola/lib/<your-python-version>/site-packages/deepspeed/moe/
 ```
+
+
+
+### Downloading CulturaX
+
+**Note:** The scripts provided below are written for noctua2 cluster and have hardcoded paths in them. Please go through them before reusing. 
+
+```bash
+# This command might fail from time to time, rerunning it resumes the download
+huggingface-cli download uonlp/CulturaX --repo-type dataset
+```
+
+Once the download is finished, create a symlink with "CulturaX" as directory name. pointing to your huggingface cache, e.g:
+```bash
+ln -s /scratch/hpc-prf-lola/nikit/.cache/huggingface/datasets--uonlp--CulturaX/snapshots/321a983f3fd2a929cc1f8ef6207834bab0bb9e25 /scratch/hpc-prf-lola/data/raw_datasets/CulturaX
+```
+
+Then run the following command to generate arrow files for all the languages:
+```bash
+# Note: This command will spawn 167 jobs on your cluster
+bash run_process_culturax.sh
+```
+
+### Pre-Processing CulturaX
+
+We collected the CulturaX stats in this file: [culturax-v1-0-0_data_stats.json](./gpt/culturax/culturax-v1-0-0_data_stats.json).
+
+We define the percentage of samples we would like to extract samples for prepocessing per language (default applies to non-mentioned languages): [culturax-custom-data-split.json](./gpt/culturax/culturax-custom-data-split.json).
+
+Afterwards, run the following script to submit preprocessing jobs for all languages (1 slurm job per language):
+
+```bash
+python3 preprocess_large_data.py
+```
+
+The processed datasets will be available at the mentioned `DATA_PATH` in `preprocess_large_data.sh`.

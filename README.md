@@ -157,6 +157,108 @@ Here the output files are named `my-gpt2_text_document.bin` and `my-gpt2_text_do
 
 Further command line arguments are described in the source file [`preprocess_data.py`](./tools/preprocess_data.py).
 
+### Data Preprocessing (Distributed)
+To process large datasets, one can launch multiple processes across a set of compute nodes.
+For communication, one may use MPI (requires mpi4py) or torch.distributed (requires "gloo" or "mpi" backends).
+As an example, the following would launch 512 processes on a SLURM system and use mpi4py:
+<pre>
+srun -n 512 python tools/preprocess_data_dist.py \
+       --input my-corpus.jsonl \
+       --output-prefix my-gpt2 \
+       --vocab-file gpt2-vocab.json \
+       --dataset-impl mmap \
+       --tokenizer-type GPT2BPETokenizer \
+       --merge-file gpt2-merges.txt \
+       --append-eod
+</pre>
+
+In this distributed algorithm, each process tokenizes a distinct subset of samples.
+Each process writes its portion of the data to a temporary, per-rank data file.
+After all samples have been tokenized,
+the temporary per-rank files are merged into the final output files and the per-rank files are deleted.
+The final output files are identical to the files created when using the non-distributed `preprocess_data.py` script.
+
+The `--input` value must either specify a path to a file in JSON Lines format having an ".jsonl" extension,
+or it must be the name of a HuggingFace dataset.
+The input dataset must be readable by all processes,
+and it should be on storage that supports high read bandwidth.
+It could be stored in a global file system or copied to node-local storage on each node.
+
+By default, the final file is created collectively using a parallel merge.
+Each process writes its portion of the processed data to a different region of a shared file.
+The processes communicate to determine their corresponding byte offsets within the shared file.
+For correctness, the output file must be written to a POSIX-compliant global parallel file system
+that supports parallel writes to a shared file, like Lustre or IBM Spectrum Scale.
+
+If one has fast temporary storage,
+one can use it to store the temporary per-rank files using the `--scratch <path>` option.
+It is valid to write the per-rank files to distributed storage, like a node-local SSD or `/dev/shm`,
+e.g., `--scratch /dev/shm`.
+When using node-local storage, the final merge step requires that one use the parallel merge noted above.
+
+If one does not have a POSIX-compliant parallel file system, one can specify the `--merge serial` option.
+In this mode, rank 0 reads all per-rank files and merges them into the final file.
+All per-rank files must be located in the same directory on a global file system that is visible to rank 0.
+
+To use torch.distributed for communication instead of mpi4py,
+one should specify the backend with `--torch-backend gloo` or `--torch-backend mpi`.
+
+The current algorithm uses a static work distribution when assigning samples to processes.
+Some processes may finish early and then wait idle while other processes finish their remaining samples.
+If this load imbalance is too severe, the data preprocessing job may be interrupted before it completes
+due to communication timeouts when using torch.distributed.
+For this reason, it is recommended that one use mpi4py when MPI is available.
+For future work, an improvement would be to update the algorithm to use dynamic work scheduling.
+
+When using a HuggingFace dataset,
+it is recommended to first download and cache the dataset
+before launching the parallel job to preprocess data.
+The dataset must be cached in a file system accessible to all processes.
+This path can be specified by setting the HF\_DATASETS\_CACHE variable, e.g.:
+
+<pre>
+export HF_DATASETS_CACHE=/path/to/parallel/file/system
+</pre>
+
+If the dataset has not already been cached,
+the script can optionally download the dataset.
+One must explicitly set HF\_DATASETS\_OFFLINE=0 to enable this behavior, e.g.:
+
+<pre>
+export HF_DATASETS_OFFLINE=0
+srun -n 512 python tools/preprocess_data_dist.py \
+       --input openwebtext \
+       --split train \
+       ...
+</pre>
+
+In this mode, rank 0 first downloads the dataset,
+and all other processes wait to load the cached dataset after it has been downloaded.
+While convenient, this mode can be wasteful
+since it effectively idles compute resources while waiting for the dataset to download.
+A better option is to first execute a single python process to download and cache the dataset, e.g.:
+
+<pre>
+>>: cat download.py
+from datasets import load_dataset
+dset = load_dataset('openwebtext', split='train')
+</pre>
+
+<pre>
+export HF_DATASETS_CACHE=/path/to/parallel/file/system
+python download.py
+</pre>
+
+After that step, one can then launch the parallel job to process the dataset:
+
+<pre>
+export HF_DATASETS_CACHE=/path/to/parallel/file/system
+srun -n 512 python tools/preprocess_data_dist.py \
+       --input openwebtext \
+       --split train \
+       ...
+</pre>
+
 ## BERT Pretraining
 
 

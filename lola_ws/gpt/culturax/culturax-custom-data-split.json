@@ -1,0 +1,8 @@
+{
+    "percent-split":{
+        "default": 4,
+        "en": 2,
+        "de": 16
+    },
+    "min-doc-count": 1000
+}
