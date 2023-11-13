@@ -1,0 +1,837 @@
+[
+    {
+        "code": "en",
+        "language": "English",
+        "documents": "3241065682"
+    },
+    {
+        "code": "ru",
+        "language": "Russian",
+        "documents": "799310908"
+    },
+    {
+        "code": "es",
+        "language": "Spanish",
+        "documents": "450937645"
+    },
+    {
+        "code": "de",
+        "language": "German",
+        "documents": "420017484"
+    },
+    {
+        "code": "fr",
+        "language": "French",
+        "documents": "363754348"
+    },
+    {
+        "code": "zh",
+        "language": "Chinese",
+        "documents": "218624604"
+    },
+    {
+        "code": "it",
+        "language": "Italian",
+        "documents": "211309922"
+    },
+    {
+        "code": "pt",
+        "language": "Portuguese",
+        "documents": "190289658"
+    },
+    {
+        "code": "pl",
+        "language": "Polish",
+        "documents": "142167217"
+    },
+    {
+        "code": "nl",
+        "language": "Dutch",
+        "documents": "117392666"
+    },
+    {
+        "code": "ja",
+        "language": "Japanese",
+        "documents": "111188475"
+    },
+    {
+        "code": "vi",
+        "language": "Vietnamese",
+        "documents": "102411180"
+    },
+    {
+        "code": "tr",
+        "language": "Turkish",
+        "documents": "94207460"
+    },
+    {
+        "code": "ar",
+        "language": "Arabic",
+        "documents": "74027952"
+    },
+    {
+        "code": "cs",
+        "language": "Czech",
+        "documents": "65350564"
+    },
+    {
+        "code": "fa",
+        "language": "Persian",
+        "documents": "59531144"
+    },
+    {
+        "code": "el",
+        "language": "Greek",
+        "documents": "51430226"
+    },
+    {
+        "code": "sv",
+        "language": "Swedish",
+        "documents": "49709189"
+    },
+    {
+        "code": "uk",
+        "language": "Ukrainian",
+        "documents": "44740545"
+    },
+    {
+        "code": "hu",
+        "language": "Hungarian",
+        "documents": "44132152"
+    },
+    {
+        "code": "ro",
+        "language": "Romanian",
+        "documents": "40325424"
+    },
+    {
+        "code": "fi",
+        "language": "Finnish",
+        "documents": "30467667"
+    },
+    {
+        "code": "da",
+        "language": "Danish",
+        "documents": "25429808"
+    },
+    {
+        "code": "bg",
+        "language": "Bulgarian",
+        "documents": "24131819"
+    },
+    {
+        "code": "id",
+        "language": "Indonesian",
+        "documents": "23251368"
+    },
+    {
+        "code": "th",
+        "language": "Thai",
+        "documents": "20960550"
+    },
+    {
+        "code": "ko",
+        "language": "Korean",
+        "documents": "20557310"
+    },
+    {
+        "code": "hi",
+        "language": "Hindi",
+        "documents": "19665355"
+    },
+    {
+        "code": "no",
+        "language": "Norwegian",
+        "documents": "18907310"
+    },
+    {
+        "code": "sk",
+        "language": "Slovak",
+        "documents": "18582517"
+    },
+    {
+        "code": "ca",
+        "language": "Catalan",
+        "documents": "15531777"
+    },
+    {
+        "code": "lt",
+        "language": "Lithuanian",
+        "documents": "13339785"
+    },
+    {
+        "code": "bn",
+        "language": "Bangla",
+        "documents": "12436596"
+    },
+    {
+        "code": "et",
+        "language": "Estonian",
+        "documents": "8004753"
+    },
+    {
+        "code": "sl",
+        "language": "Slovenian",
+        "documents": "7335378"
+    },
+    {
+        "code": "lv",
+        "language": "Latvian",
+        "documents": "7136587"
+    },
+    {
+        "code": "sq",
+        "language": "Albanian",
+        "documents": "5205579"
+    },
+    {
+        "code": "az",
+        "language": "Azerbaijani",
+        "documents": "5084505"
+    },
+    {
+        "code": "ta",
+        "language": "Tamil",
+        "documents": "4728460"
+    },
+    {
+        "code": "he",
+        "language": "Hebrew",
+        "documents": "4653979"
+    },
+    {
+        "code": "sr",
+        "language": "Serbian",
+        "documents": "4053166"
+    },
+    {
+        "code": "ne",
+        "language": "Nepali",
+        "documents": "3124040"
+    },
+    {
+        "code": "ka",
+        "language": "Georgian",
+        "documents": "3120321"
+    },
+    {
+        "code": "hy",
+        "language": "Armenian",
+        "documents": "2964488"
+    },
+    {
+        "code": "mk",
+        "language": "Macedonian",
+        "documents": "2762807"
+    },
+    {
+        "code": "ur",
+        "language": "Urdu",
+        "documents": "2757279"
+    },
+    {
+        "code": "kk",
+        "language": "Kazakh",
+        "documents": "2733982"
+    },
+    {
+        "code": "ml",
+        "language": "Malayalam",
+        "documents": "2693052"
+    },
+    {
+        "code": "is",
+        "language": "Icelandic",
+        "documents": "2373560"
+    },
+    {
+        "code": "mr",
+        "language": "Marathi",
+        "documents": "2266588"
+    },
+    {
+        "code": "mn",
+        "language": "Mongolian",
+        "documents": "1928828"
+    },
+    {
+        "code": "te",
+        "language": "Telugu",
+        "documents": "1822865"
+    },
+    {
+        "code": "gl",
+        "language": "Galician",
+        "documents": "1785963"
+    },
+    {
+        "code": "be",
+        "language": "Belarusian",
+        "documents": "1643486"
+    },
+    {
+        "code": "eu",
+        "language": "Basque",
+        "documents": "1598822"
+    },
+    {
+        "code": "kn",
+        "language": "Kannada",
+        "documents": "1352142"
+    },
+    {
+        "code": "gu",
+        "language": "Gujarati",
+        "documents": "1162878"
+    },
+    {
+        "code": "km",
+        "language": "Khmer",
+        "documents": "1013181"
+    },
+    {
+        "code": "my",
+        "language": "Burmese",
+        "documents": "865575"
+    },
+    {
+        "code": "af",
+        "language": "Afrikaans",
+        "documents": "826519"
+    },
+    {
+        "code": "si",
+        "language": "Sinhala",
+        "documents": "753655"
+    },
+    {
+        "code": "pa",
+        "language": "Punjabi",
+        "documents": "646987"
+    },
+    {
+        "code": "ky",
+        "language": "Kyrgyz",
+        "documents": "570922"
+    },
+    {
+        "code": "cy",
+        "language": "Welsh",
+        "documents": "549955"
+    },
+    {
+        "code": "tg",
+        "language": "Tajik",
+        "documents": "483835"
+    },
+    {
+        "code": "hr",
+        "language": "Croatian",
+        "documents": "460690"
+    },
+    {
+        "code": "eo",
+        "language": "Esperanto",
+        "documents": "460088"
+    },
+    {
+        "code": "ps",
+        "language": "Pashto",
+        "documents": "376914"
+    },
+    {
+        "code": "tl",
+        "language": "Filipino",
+        "documents": "348453"
+    },
+    {
+        "code": "ga",
+        "language": "Irish",
+        "documents": "304251"
+    },
+    {
+        "code": "ku",
+        "language": "Kurdish",
+        "documents": "295314"
+    },
+    {
+        "code": "ceb",
+        "language": "Cebuano",
+        "documents": "263890"
+    },
+    {
+        "code": "am",
+        "language": "Amharic",
+        "documents": "243349"
+    },
+    {
+        "code": "ms",
+        "language": "Malay",
+        "documents": "238151"
+    },
+    {
+        "code": "fy",
+        "language": "Western Frisian",
+        "documents": "223268"
+    },
+    {
+        "code": "tt",
+        "language": "Tatar",
+        "documents": "218102"
+    },
+    {
+        "code": "lo",
+        "language": "Lao",
+        "documents": "217842"
+    },
+    {
+        "code": "ckb",
+        "language": "Central Kurdish",
+        "documents": "172035"
+    },
+    {
+        "code": "lb",
+        "language": "Luxembourgish",
+        "documents": "165891"
+    },
+    {
+        "code": "or",
+        "language": "Odia",
+        "documents": "153461"
+    },
+    {
+        "code": "mt",
+        "language": "Maltese",
+        "documents": "151320"
+    },
+    {
+        "code": "yi",
+        "language": "Yiddish",
+        "documents": "141156"
+    },
+    {
+        "code": "nn",
+        "language": "Norwegian Nynorsk",
+        "documents": "126083"
+    },
+    {
+        "code": "mg",
+        "language": "Malagasy",
+        "documents": "115910"
+    },
+    {
+        "code": "sd",
+        "language": "Sindhi",
+        "documents": "109162"
+    },
+    {
+        "code": "uz",
+        "language": "Uzbek",
+        "documents": "87219"
+    },
+    {
+        "code": "ba",
+        "language": "Bashkir",
+        "documents": "71957"
+    },
+    {
+        "code": "arz",
+        "language": "Egyptian Arabic",
+        "documents": "71625"
+    },
+    {
+        "code": "dv",
+        "language": "Divehi",
+        "documents": "66702"
+    },
+    {
+        "code": "sw",
+        "language": "Swahili",
+        "documents": "66506"
+    },
+    {
+        "code": "bo",
+        "language": "Tibetan",
+        "documents": "54185"
+    },
+    {
+        "code": "as",
+        "language": "Assamese",
+        "documents": "52627"
+    },
+    {
+        "code": "la",
+        "language": "Latin",
+        "documents": "48968"
+    },
+    {
+        "code": "ug",
+        "language": "Uyghur",
+        "documents": "47035"
+    },
+    {
+        "code": "sh",
+        "language": "Serbian (Latin)",
+        "documents": "45619"
+    },
+    {
+        "code": "br",
+        "language": "Breton",
+        "documents": "43765"
+    },
+    {
+        "code": "azb",
+        "language": "South Azerbaijani",
+        "documents": "29833"
+    },
+    {
+        "code": "war",
+        "language": "Waray",
+        "documents": "23687"
+    },
+    {
+        "code": "cv",
+        "language": "Chuvash",
+        "documents": "22570"
+    },
+    {
+        "code": "sah",
+        "language": "Sakha",
+        "documents": "22141"
+    },
+    {
+        "code": "ce",
+        "language": "Chechen",
+        "documents": "17322"
+    },
+    {
+        "code": "sa",
+        "language": "Sanskrit",
+        "documents": "16290"
+    },
+    {
+        "code": "pnb",
+        "language": "Western Panjabi",
+        "documents": "15625"
+    },
+    {
+        "code": "nds",
+        "language": "Low German",
+        "documents": "15139"
+    },
+    {
+        "code": "tk",
+        "language": "Turkmen",
+        "documents": "14393"
+    },
+    {
+        "code": "oc",
+        "language": "Occitan",
+        "documents": "10556"
+    },
+    {
+        "code": "xmf",
+        "language": "Mingrelian",
+        "documents": "9706"
+    },
+    {
+        "code": "ast",
+        "language": "Asturian",
+        "documents": "9002"
+    },
+    {
+        "code": "os",
+        "language": "Ossetic",
+        "documents": "8596"
+    },
+    {
+        "code": "gd",
+        "language": "Scottish Gaelic",
+        "documents": "8408"
+    },
+    {
+        "code": "mhr",
+        "language": "Eastern Mari",
+        "documents": "7883"
+    },
+    {
+        "code": "pms",
+        "language": "Piedmontese",
+        "documents": "7566"
+    },
+    {
+        "code": "als[*]",
+        "language": "Swiss German",
+        "documents": "6936"
+    },
+    {
+        "code": "vo",
+        "language": "Volapük",
+        "documents": "6621"
+    },
+    {
+        "code": "bpy",
+        "language": "Bishnupriya",
+        "documents": "5087"
+    },
+    {
+        "code": "new",
+        "language": "Newari",
+        "documents": "4344"
+    },
+    {
+        "code": "hsb",
+        "language": "Upper Sorbian",
+        "documents": "4244"
+    },
+    {
+        "code": "lmo",
+        "language": "Lombard",
+        "documents": "3530"
+    },
+    {
+        "code": "an",
+        "language": "Aragonese",
+        "documents": "2746"
+    },
+    {
+        "code": "ilo",
+        "language": "Iloko",
+        "documents": "2328"
+    },
+    {
+        "code": "jv",
+        "language": "Javanese",
+        "documents": "2058"
+    },
+    {
+        "code": "mzn",
+        "language": "Mazanderani",
+        "documents": "1914"
+    },
+    {
+        "code": "lez",
+        "language": "Lezghian",
+        "documents": "1806"
+    },
+    {
+        "code": "krc",
+        "language": "Karachay-Balkar",
+        "documents": "1745"
+    },
+    {
+        "code": "su",
+        "language": "Sundanese",
+        "documents": "1554"
+    },
+    {
+        "code": "min",
+        "language": "Minangkabau",
+        "documents": "1429"
+    },
+    {
+        "code": "kv",
+        "language": "Komi",
+        "documents": "1396"
+    },
+    {
+        "code": "wa",
+        "language": "Walloon",
+        "documents": "1383"
+    },
+    {
+        "code": "jbo",
+        "language": "Lojban",
+        "documents": "1349"
+    },
+    {
+        "code": "bs",
+        "language": "Bosnian",
+        "documents": "1237"
+    },
+    {
+        "code": "qu",
+        "language": "Quechua",
+        "documents": "1202"
+    },
+    {
+        "code": "io",
+        "language": "Ido",
+        "documents": "1144"
+    },
+    {
+        "code": "mrj",
+        "language": "Western Mari",
+        "documents": "1056"
+    },
+    {
+        "code": "gom",
+        "language": "Goan Konkani",
+        "documents": "721"
+    },
+    {
+        "code": "ia",
+        "language": "Interlingua",
+        "documents": "613"
+    },
+    {
+        "code": "av",
+        "language": "Avaric",
+        "documents": "438"
+    },
+    {
+        "code": "bh",
+        "language": "Bihari languages",
+        "documents": "265"
+    },
+    {
+        "code": "wuu",
+        "language": "Wu Chinese",
+        "documents": "222"
+    },
+    {
+        "code": "li",
+        "language": "Limburgish",
+        "documents": "206"
+    },
+    {
+        "code": "yo",
+        "language": "Yoruba",
+        "documents": "192"
+    },
+    {
+        "code": "nah",
+        "language": "Nahuatl languages",
+        "documents": "131"
+    },
+    {
+        "code": "vec",
+        "language": "Venetian",
+        "documents": "113"
+    },
+    {
+        "code": "gn",
+        "language": "Guarani",
+        "documents": "103"
+    },
+    {
+        "code": "bxr",
+        "language": "Russia Buriat",
+        "documents": "100"
+    },
+    {
+        "code": "kw",
+        "language": "Cornish",
+        "documents": "94"
+    },
+    {
+        "code": "mai",
+        "language": "Maithili",
+        "documents": "93"
+    },
+    {
+        "code": "eml[*]",
+        "language": "Emiliano-Romagnol",
+        "documents": "91"
+    },
+    {
+        "code": "dsb",
+        "language": "Lower Sorbian",
+        "documents": "59"
+    },
+    {
+        "code": "xal",
+        "language": "Kalmyk",
+        "documents": "51"
+    },
+    {
+        "code": "lrc",
+        "language": "Northern Luri",
+        "documents": "43"
+    },
+    {
+        "code": "so",
+        "language": "Somali",
+        "documents": "39"
+    },
+    {
+        "code": "nap",
+        "language": "Neapolitan",
+        "documents": "31"
+    },
+    {
+        "code": "rm",
+        "language": "Romansh",
+        "documents": "30"
+    },
+    {
+        "code": "tyv",
+        "language": "Tuvinian",
+        "documents": "23"
+    },
+    {
+        "code": "scn",
+        "language": "Sicilian",
+        "documents": "21"
+    },
+    {
+        "code": "ht",
+        "language": "Haitian Creole",
+        "documents": "12"
+    },
+    {
+        "code": "frr",
+        "language": "Northern Frisian",
+        "documents": "11"
+    },
+    {
+        "code": "mwl",
+        "language": "Mirandese",
+        "documents": "9"
+    },
+    {
+        "code": "myv",
+        "language": "Erzya",
+        "documents": "4"
+    },
+    {
+        "code": "ie",
+        "language": "Interlingue",
+        "documents": "4"
+    },
+    {
+        "code": "pam",
+        "language": "Pampanga",
+        "documents": "4"
+    },
+    {
+        "code": "bar",
+        "language": "Bavarian",
+        "documents": "3"
+    },
+    {
+        "code": "yue",
+        "language": "Yue Chinese",
+        "documents": "3"
+    },
+    {
+        "code": "cbk",
+        "language": "Chavacano",
+        "documents": "2"
+    },
+    {
+        "code": "bcl",
+        "language": "Central Bikol",
+        "documents": "1"
+    },
+    {
+        "code": "vls",
+        "language": "West Flemish",
+        "documents": "1"
+    },
+    {
+        "code": "rue",
+        "language": "Rusyn",
+        "documents": "1"
+    }
+]
