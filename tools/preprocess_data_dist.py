@@ -137,6 +137,8 @@ def get_args():
                        help='Dataset name')
     group.add_argument('--split', type=str, default='train',
                        help='Dataset split to select.')
+    group.add_argument('--lang', type=str, default=None,
+                       help='Dataset language to select.')
     group.add_argument('--columns', nargs='+', default=['text'],
                        help='Space separate listed of column names to extract from dataset')
     group.add_argument('--count', type=int, default=None,
@@ -252,7 +254,11 @@ def load_dset(args):
     if args.rank == 0:
         msg(f"Opening dataset {dsetname}")
         try:
-            dset = load_dataset(dsetname, split=args.split, keep_in_memory=None)
+            if args.lang:
+                dset = load_dataset(dsetname, args.lang, split=args.split, keep_in_memory=None)
+            else:
+                dset = load_dataset(dsetname, split=args.split, keep_in_memory=None)
+            #dset = load_dataset(dsetname, split=args.split, keep_in_memory=None)
         except OfflineModeIsEnabled as e:
             msgerr(f"Cannot download '{dsetname}' since running in offline mode.")
             msgerr(f"If the dataset is large, it may be more efficient to download with a single process:")
@@ -271,7 +277,10 @@ def load_dset(args):
     # This should load from cache now.
     if args.rank != 0:
         try:
-            dset = load_dataset(dsetname, split=args.split, keep_in_memory=None)
+            if args.lang:
+                dset = load_dataset(dsetname, args.lang, split=args.split, keep_in_memory=None)
+            else:
+                dset = load_dataset(dsetname, split=args.split, keep_in_memory=None)
         except Exception as e:
             # this print might be noisy, but better than nothing
             msgerr(f"Unexpected error: {sys.exc_info()[0]}", flush=True)

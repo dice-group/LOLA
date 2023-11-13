@@ -48,3 +48,23 @@ mv venv-lola/lib/<your-python-version>/site-packages/deepspeed/moe/layer.py venv
 # Copy the modified file
 cp lola_ws/gpt/overriden_classes/layer.py venv-lola/lib/<your-python-version>/site-packages/deepspeed/moe/
 ```
+
+
+
+### Downloading CulturaX
+
+```bash
+# This command might fail from time to time, rerunning it resumes the download
+huggingface-cli download uonlp/CulturaX --repo-type dataset
+```
+
+Once the download is finished, create a symlink with "CulturaX" as directory name. pointing to your huggingface cache, e.g:
+```bash
+ln -s /scratch/hpc-prf-lola/nikit/.cache/huggingface/datasets--uonlp--CulturaX/snapshots/321a983f3fd2a929cc1f8ef6207834bab0bb9e25 /scratch/hpc-prf-lola/data/raw_datasets/CulturaX
+```
+
+Then run the following command to generate arrow files for all the languages:
+```bash
+# Note: This command will spawn 167 jobs on your cluster
+bash run_process_culturax.sh
+```
