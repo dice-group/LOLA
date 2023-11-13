@@ -9,7 +9,7 @@
 # Collect command line arguments
 # Default values for variables
 export STATIC_GATE=false
-export NNODES=1
+export NNODES=24
 export GPUS_PER_NODE=4
 # Node rank is only needed when not running on SLURM. On SLURM, this value is extracted automatically from SLURM_PROCID.
 export NODE_RANK=0
@@ -17,19 +17,19 @@ export DGX_NODE=false
 export SLURM=false
 export MASTER_ADDR=$HOSTNAME
 export MASTER_PORT=6005
-export RUNTIME="100:00:00"
+export RUNTIME="12:00:00"
 export RDZV_ID=$RANDOM
 
 # Default (dense) Model size (number of parameters in billions)
 ## Only values that will work: 0.125, 0.35, 0.76, 1.3, 2.7, 6.7, 13 or 175
 export MODEL_SIZE=1.3
 # Default batch size per GPU
-export MICRO_BATCH_SIZE=24
+export MICRO_BATCH_SIZE=16
 # Number of tokens to train for
 # export TRAIN_TOKENS=3000000000 # 3B
-export TRAIN_TOKENS=12000000000 # 12B
+export TRAIN_TOKENS=120000000000 # 120B
 ## Number of experts. EP_SIZE 1 means dense model without MoE
-export EP_SIZE=4
+export EP_SIZE=16
 
 ## The NAME_ID variable is used for generating a unique name for the model. It acts like a model name prefix.
 ## When kept the same as a previously trained model (together with other hyperparams), the training will resume from the last checkpoint automatically.
@@ -50,7 +50,7 @@ while [[ "$#" -gt 0 ]]; do
             export DGX_NODE=true
             shift
             ;;
-        --slurm|--slurm=true)  # Boolean dgx_node
+        --slurm|--slurm=true)  # Boolean slurm  
             export SLURM=true
             shift
             ;;
@@ -109,7 +109,9 @@ while [[ "$#" -gt 0 ]]; do
     esac
 done
 
-export OUTPUT_DIR=`pwd`
+#export OUTPUT_DIR=`pwd`
+CUR_USER=`whoami`
+export OUTPUT_DIR=/scratch/hpc-prf-lola/models/$CUR_USER
 # output path
 export OUTPUT_BASEPATH=$OUTPUT_DIR/$NAME_ID"-output"
 
@@ -129,8 +131,8 @@ if [[ "$SLURM" == "true" ]]; then
     echo "Submitting job to SLURM."
 
     # Set paths
-    export LIB_DIR=/scratch/hpc-prf-lola/nikit/repos/LOLA-Megatron-DeepSpeed
-    export DATA_DIR=/scratch/hpc-prf-lola/nikit/repos/LOLA-Megatron-DeepSpeed/lola_ws/gpt/old_data
+    export LIB_DIR=~/repos/LOLA-Megatron-DeepSpeed
+    export DATA_DIR=/scratch/hpc-prf-lola/data/mc4_4pt5m_data
     export VENV_PATH=~/virt-envs/venv-lola
 
     export RUN_NAME="noctua2-${NAME_POSTFIX}"
@@ -139,7 +141,7 @@ if [[ "$SLURM" == "true" ]]; then
     if [[ "$DGX_NODE" == "true" ]]; then
         EXTRA_PARAMS=" --partition=dgx --qos=devel "
     fi
-    sbatch --reservation=lola_tests --job-name=$RUN_NAME \
+    sbatch --reservation=lola_production_run --job-name=$RUN_NAME \
      --nodes=$NNODES \
      --ntasks-per-node=1 \
      --cpus-per-task=128 \
