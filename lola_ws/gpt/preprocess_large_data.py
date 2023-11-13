@@ -10,7 +10,8 @@ os.makedirs(LOG_PATH, exist_ok=True)
 STAT_JSON_PATH="./culturax/culturax-v1-0-0_data_stats.json"
 CUSTOM_SPLIT_JSON_PATH="./culturax/culturax-custom-data-split.json"
 
-EXCLUDE_LANG_LIST = ["de", "en", "ru"]
+EXCLUDE_LANG_LIST = []
+# EXCLUDE_LANG_LIST = ["de", "en", "ru"]
 # Read stats json
 with open(STAT_JSON_PATH, 'r') as stat_fs:
     stat_json_arr = json.load(stat_fs)

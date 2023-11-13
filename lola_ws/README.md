@@ -53,6 +53,8 @@ cp lola_ws/gpt/overriden_classes/layer.py venv-lola/lib/<your-python-version>/si
 
 ### Downloading CulturaX
 
+**Note:** The scripts provided below are written for noctua2 cluster and have hardcoded paths in them. Please go through them before reusing. 
+
 ```bash
 # This command might fail from time to time, rerunning it resumes the download
 huggingface-cli download uonlp/CulturaX --repo-type dataset
@@ -68,3 +70,17 @@ Then run the following command to generate arrow files for all the languages:
 # Note: This command will spawn 167 jobs on your cluster
 bash run_process_culturax.sh
 ```
+
+### Pre-Processing CulturaX
+
+We collected the CulturaX stats in this file: [culturax-v1-0-0_data_stats.json](./gpt/culturax/culturax-v1-0-0_data_stats.json).
+
+We define the percentage of samples we would like to extract samples for prepocessing per language (default applies to non-mentioned languages): [culturax-custom-data-split.json](./gpt/culturax/culturax-custom-data-split.json).
+
+Afterwards, run the following script to submit preprocessing jobs for all languages (1 slurm job per language):
+
+```bash
+python3 preprocess_large_data.py
+```
+
+The processed datasets will be available at the mentioned `DATA_PATH` in `preprocess_large_data.sh`.
