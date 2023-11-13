@@ -560,7 +560,7 @@
         "documents": "7566"
     },
     {
-        "code": "als[*]",
+        "code": "als",
         "language": "Swiss German",
         "documents": "6936"
     },
@@ -730,7 +730,7 @@
         "documents": "93"
     },
     {
-        "code": "eml[*]",
+        "code": "eml",
         "language": "Emiliano-Romagnol",
         "documents": "91"
     },

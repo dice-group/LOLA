@@ -28,7 +28,7 @@ source $VENV_PATH/bin/activate
 LIB_DIR=/scratch/hpc-prf-lola/nikit/repos/LOLA-Megatron-DeepSpeed
 
 # remove if exists
-rm -r $DATA_PATH
+[ -d $DATA_PATH ] && rm -rf $DATA_PATH
 
 mkdir -p $DATA_PATH
 

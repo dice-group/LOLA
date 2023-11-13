@@ -46,7 +46,7 @@ print("Final split information", cus_lang_split)
 def submit_data_prepocess_job(lang, start_ind, end_ind):
     # sbatch args
     process_list = ['sbatch']
-    process_list.append(f"--name={lang}_large_data_prep")
+    process_list.append(f"--job-name={lang}_large_data_prep")
     process_list.append(f"--output={LOG_PATH}/%x_slurm_%j.out")
     
     # Script args
