@@ -5,7 +5,10 @@ import re
 import json
 
 STAT_JSON_PATH="./culturax/culturax-v1-0-0_data_stats.json"
-EXCLUDE_LANG_LIST = []
+# Excluding languages that did failed during prep or have less than 2 documents
+EXCLUDE_LANG_LIST = ["yi", "io", "cbk", "bcl", "vls", "rue"]
+
+EXCLUDE_DOC_LIMIT = 1000000
 
 with open(STAT_JSON_PATH, 'r') as stat_fs:
     stat_json_arr = json.load(stat_fs)
@@ -33,15 +36,16 @@ def compose_data_blend_string(data_root_path):
     # For each language
     for lang_item in stat_json_arr:
         lang = lang_item["code"]
+        doc_count = int(lang_item["documents"])
         # skip if language is excluded
-        if lang in EXCLUDE_LANG_LIST:
+        if lang in EXCLUDE_LANG_LIST or doc_count < EXCLUDE_DOC_LIMIT:
             continue
         # Find the directory
         lang_dir = find_directory(data_root_path, r'data-'+ re.escape(lang) +r'-\d+-\d+-\w+')
         if lang_dir:
             blend_item=f"1 {lang_dir}/meg-culturax-{lang}_text_document "
             data_blend_string+= blend_item
-    return data_blend_string
+    return data_blend_string.strip()
         
 
 if __name__ == "__main__":
