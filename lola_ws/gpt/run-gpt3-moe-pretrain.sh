@@ -19,14 +19,14 @@ export DGX_NODE=false
 export SLURM=false
 export MASTER_ADDR=$HOSTNAME
 export MASTER_PORT=6005
-export RUNTIME="500:00:00"
+export RUNTIME="150:00:00"
 export RDZV_ID=$RANDOM
 
 # Default (dense) Model size (number of parameters in billions)
 ## Only values that will work: 0.125, 0.35, 0.76, 1.3, 2.7, 6.7, 13 or 175
 export MODEL_SIZE=1.3
 # Default batch size per GPU
-export MICRO_BATCH_SIZE=14
+export MICRO_BATCH_SIZE=10
 # Number of tokens to train for
 # export TRAIN_TOKENS=3000000000 # 3B
 # export TRAIN_TOKENS=12000000000 # 12B
@@ -134,8 +134,8 @@ if [[ "$SLURM" == "true" ]]; then
     # Set paths
     export LIB_DIR=../../
     ### data blend generation start ###
-    VOCAB_PATH=/scratch/hpc-prf-lola/data/misc/mgpt/mgpt_vocab.json
-    MERGE_PATH=/scratch/hpc-prf-lola/data/misc/mgpt/mgpt_merges.txt
+    export VOCAB_PATH=/scratch/hpc-prf-lola/data/misc/mgpt/mgpt_vocab.json
+    export MERGE_PATH=/scratch/hpc-prf-lola/data/misc/mgpt/mgpt_merges.txt
     # directory with all the data directories
     export DATA_DIR=/scratch/hpc-prf-lola/data/culturaX/mgpt-tokenized
     # call python script to fetch blend string
@@ -164,6 +164,7 @@ if [[ "$SLURM" == "true" ]]; then
      --gres=gpu:a100:$GPUS_PER_NODE \
      --time=$RUNTIME \
      --output="train_logs/%x_slurm-%j.out" \
+     --mail-user=$USER_EMAIL --mail-type=BEGIN,END,FAIL\
       $EXTRA_PARAMS gpt3-moe-pretrain.sh
 else
     echo -e "PyTorch rendezvous id: ${RDZV_ID}\nIf this is the master node, then provide the id above to the worker nodes: --rdzv_id=${RDZV_ID}"
