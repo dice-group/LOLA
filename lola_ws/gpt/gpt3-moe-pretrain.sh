@@ -1,7 +1,7 @@
 #!/bin/bash
 # Deleting previously built files
 rm $LIB_DIR/megatron/data/helpers.cpython-310-x86_64-linux-gnu.so
-rm -r $LIB_DIR/megatron/fused_kernels/build/
+# rm -r $LIB_DIR/megatron/fused_kernels/build/
 
 # activating venv
 
@@ -182,14 +182,16 @@ PP_SIZE=1
 # EP_SIZE=1
 # EP_SIZE=4
 
-#if [[ $EP_SIZE -gt $NUM_GPUS ]]; then
-#    EP_PARALLEL_SIZE=$NUM_GPUS
-#else
-#    EP_PARALLEL_SIZE=$EP_SIZE
-#fi
+if [[ $EP_SIZE -gt $NUM_GPUS ]]; then
+   EP_PARALLEL_SIZE=$NUM_GPUS
+else
+   EP_PARALLEL_SIZE=$EP_SIZE
+fi
 
+##### Obsolete start #####
 # For LOLA, we are keeping EP_PARALLEL_SIZE as 1, to have the full model on each GPU.
-EP_PARALLEL_SIZE=1
+## EP_PARALLEL_SIZE=1
+##### Obsolete end #####
 
 ## Original GPT-3 model always set min LR at 10% of max LR. For MoE model, we
 ## found that lower LR and min LR (than the base dense model) helps.
@@ -226,7 +228,7 @@ CL_STEP=$(( ${CL_TOKENS} / (${GLOBAL_BATCH_SIZE} * ${CL_AVG_SEQLEN}) ))
 ###############################################################################
 ### Misc configs
 LOG_INTERVAL=5
-EVAL_ITERS=50
+EVAL_ITERS=200
 EVAL_INTERVAL=500
 SAVE_INTERVAL=500
 
@@ -244,13 +246,13 @@ ACTIVATION_CHECKPOINT="true"
 current_time=$(date "+%Y.%m.%d-%H.%M.%S")
 host="${HOSTNAME}"
 
-NAME="${RUN_NAME}-lr_${LR}-minlr_${MIN_LR}"
+NAME="${RUN_NAME}_lr-${LR}_minlr-${MIN_LR}"
 
 if [[ $EP_SIZE -gt 1 ]]; then
-    NAME="${NAME}-ep-${EP_SIZE}-mlc-${MLC}-cap-${MOE_TRAIN_CAP_FACTOR}-drop-${MOE_DROP_TOKEN}"
+    NAME="${NAME}_ep-${EP_SIZE}_mlc-${MLC}_cap-${MOE_TRAIN_CAP_FACTOR}_drop-${MOE_DROP_TOKEN}"
 fi
 if [ "${CL_ENABLED}" = "true" ]; then
-    NAME="${NAME}-cl-${CL_START_SEQLEN}-${CL_STEP}"
+    NAME="${NAME}_cl-${CL_START_SEQLEN}-${CL_STEP}"
 fi
 
 mkdir -p "${OUTPUT_BASEPATH}/tensorboard/"
@@ -265,10 +267,10 @@ mkdir -p ${TENSORBOARD_DIR}
 CHECKPOINT_PATH="${OUTPUT_BASEPATH}/checkpoint/${NAME}"
 
 # The sample data comes from here: https://github.com/nikit91/Megatron-DeepSpeed-BigScience/blob/main/start_fast.md#2-data
-VOCAB_PATH=$DATA_DIR/gpt2-vocab.json
-MERGE_PATH=$DATA_DIR/gpt2-merges.txt
+#VOCAB_PATH=$DATA_DIR/gpt2-vocab.json
+#MERGE_PATH=$DATA_DIR/gpt2-merges.txt
 # Public the Pile dataset, can be downloaded at https://mystic.the-eye.eu/public/AI/pile_neox/
-DATA_BLEND=$DATA_DIR/meg-gpt-mc4-1m_text_document
+#DATA_BLEND=$DATA_DIR/meg-gpt-mc4-1m_text_document
 #DATA_BLEND=$DATA_DIR/mc4-gpt-4pt5m_text_document
 ###############################################################################
 data_options=" \
@@ -402,6 +404,11 @@ echo LAUNCHER: $LAUNCHER
 echo CMD: $CMD
 export NCCL_DEBUG=TRACE
 if [[ "$SLURM" == "true" ]]; then
+    ### Workaround for link-flip issue: https://apps.fz-juelich.de/jsc/hps/juwels/known-issues.html#flipping-links
+    export NCCL_IB_TIMEOUT=50
+    export UCX_RC_TIMEOUT=4s
+    export NCCL_IB_RETRY_CNT=10
+    ###
     srun --wait=60 --kill-on-bad-exit=1 bash -c "$LAUNCHER --node_rank \$SLURM_PROCID $CMD" 2>&1 | tee -a ${OUTPUT_BASEPATH}/log/${NAME}_${host}_${current_time}.log
 else
     $LAUNCHER --node_rank $NODE_RANK $CMD 2>&1 | tee -a ${OUTPUT_BASEPATH}/log/${NAME}_${host}_${current_time}.log
