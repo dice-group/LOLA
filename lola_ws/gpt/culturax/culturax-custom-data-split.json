@@ -4,5 +4,5 @@
         "en": 2,
         "de": 16
     },
-    "min-doc-count": 1000
+    "min-doc-count": 100000
 }
