@@ -84,3 +84,18 @@ python3 preprocess_large_data.py
 ```
 
 The processed datasets will be available at the mentioned `DATA_PATH` in `preprocess_large_data.sh`.
+
+
+**Note:** In our experience on lustre file system, the steps below degrade the final throughput.
+
+As per the discussion here: https://github.com/NVIDIA/Megatron-LM/issues/452, merging the data into one big file makes sense for some filesystems.
+To merge the files, first copy all the `*_text_document` files with `.bin` and `.idx` extension into a single directory and then use the merge tool:
+
+```bash
+# copy files for merge
+cp -r <path-to-processed-data>/data-*/meg-culturax-*_text_document* <path-to-collect-files-for-merge>
+# merge the dataset
+sbatch merge_datasets.sh <path-to-collected-files-for-merge> <path-to-output-dir>  meg-culturax
+```
+
+

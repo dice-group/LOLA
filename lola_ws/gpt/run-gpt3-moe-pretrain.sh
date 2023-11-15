@@ -133,9 +133,9 @@ if [[ "$SLURM" == "true" ]]; then
 
     # Set paths
     export LIB_DIR=../../
-    ### data blend generation start ###
     export VOCAB_PATH=/scratch/hpc-prf-lola/data/misc/mgpt/mgpt_vocab.json
     export MERGE_PATH=/scratch/hpc-prf-lola/data/misc/mgpt/mgpt_merges.txt
+    ### data blend generation start ###
     # directory with all the data directories
     export DATA_DIR=/scratch/hpc-prf-lola/data/culturaX/mgpt-tokenized
     # call python script to fetch blend string
@@ -146,6 +146,8 @@ if [[ "$SLURM" == "true" ]]; then
         exit 1
     fi
     ### data blend generation end ###
+    #export DATA_BLEND=/scratch/hpc-prf-lola/data/culturaX/merged/mgpt-tokenized/meg-culturax
+
     export VENV_PATH=~/virt-envs/venv-lola
 
     export RUN_NAME="noctua2-${NAME_POSTFIX}"
