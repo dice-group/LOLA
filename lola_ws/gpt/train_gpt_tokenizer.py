@@ -43,9 +43,10 @@ def merge_and_shuffle_jsonl(file_paths):
         print(f"opening file: {file_path}", flush=True)
         with open(file_path, 'r', encoding='utf-8') as file:
             lines = file.readlines()
-            for line in lines:
-                all_data.append(json.loads(line))
-
+            all_data.extend(lines)
+            # for line in lines:
+            #     all_data.append(json.loads(line))
+    print(f"All files read to memory, starting data shuffling...", flush=True)
     # Shuffle the collected data
     random.shuffle(all_data)
 

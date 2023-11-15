@@ -20,4 +20,12 @@ source $VENV_PATH/bin/activate
 
 export HF_DATASETS_CACHE=/scratch/hpc-prf-lola/nikit/.cache/huggingface
 
-srun --wait=60 --kill-on-bad-exit=1 python train_gpt_tokenizer.py
+DATA_DIR=/scratch/hpc-prf-lola/data/culturaX/jsonl
+OUTPUT_FILE=/scratch/hpc-prf-lola/data/culturaX/tokenizers/shuffled_culturax.jsonl
+
+export TMPDIR=/scratch/hpc-prf-lola/data/culturaX/tokenizers/temp
+
+mkdir -p $TMPDIR
+
+sort --parallel=128 -R $DATA_DIR/*.jsonl > $OUTPUT_FILE
+# srun --wait=60 --kill-on-bad-exit=1 python train_gpt_tokenizer.py

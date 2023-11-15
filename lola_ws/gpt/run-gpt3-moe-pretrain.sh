@@ -26,6 +26,7 @@ export RDZV_ID=$RANDOM
 ## Only values that will work: 0.125, 0.35, 0.76, 1.3, 2.7, 6.7, 13 or 175
 export MODEL_SIZE=1.3
 # Default batch size per GPU
+#export MICRO_BATCH_SIZE=6
 export MICRO_BATCH_SIZE=8
 # Number of tokens to train for
 # export TRAIN_TOKENS=3000000000 # 3B
