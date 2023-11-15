@@ -50,10 +50,11 @@ cp lola_ws/gpt/overriden_classes/layer.py venv-lola/lib/<your-python-version>/si
 ```
 
 
-
-### Downloading CulturaX
+### CulturaX
 
 **Note:** The scripts provided below are written for noctua2 cluster and have hardcoded paths in them. Please go through them before reusing. 
+
+#### Downloading CulturaX
 
 ```bash
 # This command might fail from time to time, rerunning it resumes the download
@@ -71,7 +72,7 @@ Then run the following command to generate arrow files for all the languages:
 bash run_process_culturax.sh
 ```
 
-### Pre-Processing CulturaX
+#### Pre-Processing CulturaX
 
 We collected the CulturaX stats in this file: [culturax-v1-0-0_data_stats.json](./gpt/culturax/culturax-v1-0-0_data_stats.json).
 
@@ -86,7 +87,7 @@ python3 preprocess_large_data.py
 The processed datasets will be available at the mentioned `DATA_PATH` in `preprocess_large_data.sh`.
 
 
-**Note:** In our experience on lustre file system, the steps below degrade the final throughput.
+<!-- **Note:** In our experience on lustre file system, the steps below degrade the final throughput. -->
 
 As per the discussion here: https://github.com/NVIDIA/Megatron-LM/issues/452, merging the data into one big file makes sense for some filesystems.
 To merge the files, first copy all the `*_text_document` files with `.bin` and `.idx` extension into a single directory and then use the merge tool:
