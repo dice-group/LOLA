@@ -13,7 +13,7 @@ START_IND=$2
 END_IND=$3
 
 export VENV_PATH=~/virt-envs/venv-lola
-export OUTPUT_PATH=/scratch/hpc-prf-lola/data/culturaX/jsonl/mgpt-tokenized
+export OUTPUT_PATH=/scratch/hpc-prf-lola/data/culturaX/jsonl/
 
 mkdir -p $OUTPUT_PATH
 

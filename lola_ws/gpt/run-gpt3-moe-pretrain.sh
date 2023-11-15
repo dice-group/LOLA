@@ -26,7 +26,7 @@ export RDZV_ID=$RANDOM
 ## Only values that will work: 0.125, 0.35, 0.76, 1.3, 2.7, 6.7, 13 or 175
 export MODEL_SIZE=1.3
 # Default batch size per GPU
-export MICRO_BATCH_SIZE=10
+export MICRO_BATCH_SIZE=8
 # Number of tokens to train for
 # export TRAIN_TOKENS=3000000000 # 3B
 # export TRAIN_TOKENS=12000000000 # 12B
@@ -136,17 +136,17 @@ if [[ "$SLURM" == "true" ]]; then
     export VOCAB_PATH=/scratch/hpc-prf-lola/data/misc/mgpt/mgpt_vocab.json
     export MERGE_PATH=/scratch/hpc-prf-lola/data/misc/mgpt/mgpt_merges.txt
     ### data blend generation start ###
-    # directory with all the data directories
-    export DATA_DIR=/scratch/hpc-prf-lola/data/culturaX/mgpt-tokenized
-    # call python script to fetch blend string
-    export DATA_BLEND=$(python3 fetch_data_blend.py "$DATA_DIR")
-    # echo "Data blend: ${DATA_BLEND}"
-    if [[ -z $DATA_BLEND ]]; then
-        echo "Error: Data blend path is empty" >&2
-        exit 1
-    fi
+    # # directory with all the data directories
+    # export DATA_DIR=/scratch/hpc-prf-lola/data/culturaX/mgpt-tokenized
+    # # call python script to fetch blend string
+    # export DATA_BLEND=$(python3 fetch_data_blend.py "$DATA_DIR")
+    # # echo "Data blend: ${DATA_BLEND}"
+    # if [[ -z $DATA_BLEND ]]; then
+    #     echo "Error: Data blend path is empty" >&2
+    #     exit 1
+    # fi
     ### data blend generation end ###
-    #export DATA_BLEND=/scratch/hpc-prf-lola/data/culturaX/merged/mgpt-tokenized/meg-culturax
+    export DATA_BLEND=/scratch/hpc-prf-lola/data/culturaX/merged/mgpt-tokenized/meg-culturax
 
     export VENV_PATH=~/virt-envs/venv-lola
 
