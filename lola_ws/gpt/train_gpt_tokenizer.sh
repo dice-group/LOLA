@@ -35,4 +35,4 @@ export TMPDIR=/scratch/hpc-prf-lola/data/culturaX/tokenizers/temp
 mkdir -p $TMPDIR
 
 # sort --parallel=128 -R $DATA_DIR/*.jsonl > $OUTPUT_FILE
-srun --wait=60 --kill-on-bad-exit=1 python train_gpt_tokenizer.py
+srun --wait=60 --kill-on-bad-exit=1 python train_gpt_tokenizer.py 2>&1 

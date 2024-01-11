@@ -19,7 +19,7 @@ export DGX_NODE=false
 export SLURM=false
 export MASTER_ADDR=$HOSTNAME
 export MASTER_PORT=6005
-export RUNTIME="150:00:00"
+export RUNTIME="50:00:00"
 export RDZV_ID=$RANDOM
 
 # Default (dense) Model size (number of parameters in billions)

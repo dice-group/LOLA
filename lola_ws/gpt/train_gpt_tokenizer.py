@@ -5,6 +5,7 @@ from tokenizers import ByteLevelBPETokenizer
 import random
 import datasets
 from datasets import load_dataset, Features, Value
+from tqdm import tqdm
 
 data_dir = "/scratch/hpc-prf-lola/data/culturaX/jsonl"
 # output_dir = '/scratch/hpc-prf-lola/data/culturaX/tokenizers'
@@ -112,22 +113,27 @@ features = Features({
 #dataset = load_dataset('json', data_files=non_empty_files, features=features, num_proc=128)
 datasets.config.IN_MEMORY_MAX_SIZE = 1500000000000 # 1.5 TB
 dataset = load_dataset('json', data_files=non_empty_files, features=features, num_proc=128, keep_in_memory=True)
+#dataset = load_dataset('json', data_files=non_empty_files, features=features, num_proc=128)
 # Performing steps mentioned here: https://huggingface.co/docs/datasets/process#shuffle
 iterable_dataset = dataset['train'].to_iterable_dataset(num_shards=128)
 # printing status
 print("Data loading finished, shuffling the dataset...", flush=True)
 shuffled_iterable_dataset = iterable_dataset.shuffle(seed=42, buffer_size=10000)
-# Create dataset iterator to return text
-def dataset_iterator(dataset, text_field):
-    for example in dataset:
-        yield example[text_field]
 # printing status
 print("Data shuffling finished, training tokenizer...", flush=True)
+progress_bar = tqdm(total=len(dataset['train']))
+# Create dataset iterator to return text
+def dataset_iterator(dataset_it, text_field):
+    for example in dataset_it:
+        progress_bar.update(1)
+        yield example[text_field]
 # training tokenizer
 tokenizer = ByteLevelBPETokenizer()
 # tokenizer.train_from_iterator(read_jsonl_files(shuffled_data), vocab_size=250000, special_tokens=["<pad>", "<eos>", "<unk>", "<s>", "</s>"])
-tokenizer.train_from_iterator(dataset_iterator(shuffled_iterable_dataset, 'text'), length=len(dataset['train']), vocab_size=250000, special_tokens=["<pad>", "<eos>", "<unk>", "<s>", "</s>"], show_progress=True)
-
+# tokenizer.train_from_iterator(dataset_iterator(shuffled_iterable_dataset, 'text'), length=len(dataset['train']), vocab_size=250000, special_tokens=["<pad>", "<eos>", "<unk>", "<s>", "</s>"], show_progress=True)
+tokenizer.train_from_iterator(dataset_iterator(shuffled_iterable_dataset, 'text'), vocab_size=100000, min_frequency=10, special_tokens=["<pad>", "<eos>", "<unk>", "<s>", "</s>"])
+progress_bar.close()
+print("Tokenizer training finished, saving model...", flush=True)
 tokenizer.save_model(output_dir)
 
 print("Done!")
