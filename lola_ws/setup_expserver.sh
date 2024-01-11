@@ -23,7 +23,7 @@ python -m venv ./venv-lola
 source venv-lola/bin/activate
 pip3 install --upgrade pip
 
-pip3 install torch torchvision torchaudio transformers "numpy<1.24" packaging datasets nltk tensorboard deepspeed==0.11.1 wheel pybind11 wandb mpi4py
+pip3 install torch torchvision torchaudio transformers "numpy<1.24" packaging datasets nltk tensorboard deepspeed==0.11.1 wheel pybind11 wandb
 
 
 mkdir -p temp_repos
