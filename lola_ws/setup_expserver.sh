@@ -1,10 +1,3 @@
-#!/bin/bash
-#SBATCH -J "Deepspeed Megatron: dependencies installation"
-#SBATCH -N 1
-#SBATCH --ntasks-per-node=1
-#SBATCH --gres=gpu:a100:1
-#SBATCH -t 01:00:00
-
 # Sample usage: sbatch setup_slurm.sh ~/virt-envs
 set -eu
 
@@ -37,6 +30,6 @@ cp $LOLA_WS/overriden_classes/setup.py .
 export LD_LIBRARY_PATH=$VENVPATH/venv-lola/lib/python3.10/site-packages/nvidia/nvjitlink/lib:$LD_LIBRARY_PATH
 pip install -v --disable-pip-version-check --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" ./
 
-cp $LOLA_WS/overriden_classes/layer.py $VENVPATH/venv-lola/lib/python3.10/site-packages/deepspeed/moe/
+cp $LOLA_WS/overriden_classes/layer.py $VENVPATH/venv-lola/lib/python*/site-packages/deepspeed/moe/
 
 rm -rf ../../temp_repos
