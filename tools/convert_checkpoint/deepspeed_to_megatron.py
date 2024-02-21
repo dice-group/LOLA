@@ -4,7 +4,10 @@ import argparse
 import os
 import torch
 from collections import OrderedDict
-from .deepspeed_checkpoint import ARGS_KEY, DeepSpeedCheckpoint
+# imports
+import sys
+sys.path.append('./tools/convert_checkpoint/')
+from deepspeed_checkpoint import ARGS_KEY, DeepSpeedCheckpoint
 
 MODEL_KEY = 'model'
 ARGS_KEY = 'args'
@@ -136,8 +139,8 @@ def main():
 
     args = parse_arguments()
     print(f'Converting DeepSpeed checkpoint in {args.input_folder} to Megatron checkpoint in {args.output_folder}')
-
-    ds_checkpoint = DeepSpeedCheckpoint(args.input_folder, args.target_tp, args.target_pp)
+    # LOLA: Modifying below initialization for MoE model
+    ds_checkpoint = DeepSpeedCheckpoint(args.input_folder, args.target_tp, args.target_pp, True)
     iteration = ds_checkpoint.get_iteration()
     _create_latest_file(args.output_folder, iteration)
     checkpoint_paths = _create_checkpoint_paths(args.output_folder, iteration, ds_checkpoint.tp_degree, ds_checkpoint.pp_degree)

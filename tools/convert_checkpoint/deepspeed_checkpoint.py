@@ -28,8 +28,11 @@ class DeepSpeedCheckpoint(object):
         self.no_pp = no_pp
         self.file_list = self._get_files(dir)
         self.zero_files = self._get_files_with_prefix(self.file_list, ZERO_FILE_PREFIX)
+        print('LOLA: Zero files:',self.zero_files)
         self.layer_files = self._get_files_with_prefix(self.file_list, LAYER_FILE_PREFIX)
+        print('LOLA: Layer files:',self.layer_files)
         self.mp_rank_files = self._get_files_with_prefix(self.file_list, MP_RANK_FILE_PREFIX)
+        print('LOLA: MP Rank files:',self.mp_rank_files)
         self.layer_keys = self._get_layer_keys()
         self.layer_count = len(self.layer_keys)
         if not self.no_pp:

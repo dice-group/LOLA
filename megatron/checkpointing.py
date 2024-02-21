@@ -149,6 +149,7 @@ def get_checkpoint_tracker_filename(checkpoints_path):
 
 
 def read_metadata(tracker_filename):
+    print('LOLA: Reading tracker file:', tracker_filename)
     # Read the tracker file and either set the iteration or
     # mark it as a release checkpoint.
     iteration = 0
@@ -405,6 +406,8 @@ def _load_base_checkpoint(load_dir, rank0=False):
     # Otherwise, read the tracker file and either set the iteration or
     # mark it as a release checkpoint.
     iteration, release = read_metadata(tracker_filename)
+    
+    print('LOLA: Iteration, release and rank0:', iteration, release, rank0)
 
     # Checkpoint.
     if rank0:
@@ -416,6 +419,7 @@ def _load_base_checkpoint(load_dir, rank0=False):
         else:
             print_rank_0(f' loading checkpoint from {load_dir} at iteration {iteration}')
 
+    print('LOLA: checkpoint_name:', checkpoint_name)
     # Load the checkpoint.
     try:
         state_dict = torch.load(checkpoint_name, map_location='cpu')
@@ -459,6 +463,8 @@ def load_args_from_checkpoint(args, load_arg='load'):
         return args
 
     state_dict, release = _load_base_checkpoint(load_dir, rank0=True)
+    
+    print('LOLA: state_dict:', state_dict)
 
     # Args.
     if not state_dict:
