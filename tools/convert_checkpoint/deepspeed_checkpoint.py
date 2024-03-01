@@ -28,13 +28,15 @@ class DeepSpeedCheckpoint(object):
         self.no_pp = no_pp
         self.file_list = self._get_files(dir)
         self.zero_files = self._get_files_with_prefix(self.file_list, ZERO_FILE_PREFIX)
-        print('LOLA: Zero files:',self.zero_files)
+        #print('LOLA: Zero files:',self.zero_files)
         self.layer_files = self._get_files_with_prefix(self.file_list, LAYER_FILE_PREFIX)
-        print('LOLA: Layer files:',self.layer_files)
+        #print('LOLA: Layer files:',self.layer_files)
         self.mp_rank_files = self._get_files_with_prefix(self.file_list, MP_RANK_FILE_PREFIX)
         print('LOLA: MP Rank files:',self.mp_rank_files)
         self.layer_keys = self._get_layer_keys()
+        print('LOLA: Layer Keys:',self.layer_keys)
         self.layer_count = len(self.layer_keys)
+        print('LOLA: Layer Count:',self.layer_count)
         if not self.no_pp:
             self.original_tp_degree = len(self._get_files_with_prefix(self.layer_files, f'{LAYER_FILE_PREFIX}01'))
             self.original_pp_degree = len(self.mp_rank_files) // self.original_tp_degree
@@ -49,6 +51,9 @@ class DeepSpeedCheckpoint(object):
         self._sanity_check()
         self.pp_to_transformer_map = self._build_pp_transformer_map()
         self.transformer_file_map = self._build_transformer_file_map()
+        
+        # print('LOLA: Transformer file map:',self.transformer_file_map)
+        
         if not self.no_pp:
             self.tp_to_embedding_map = self._build_tp_other_layer_map(EMBEDDING_LAYER_INDEX)
             self.tp_to_final_norm_map = self._build_tp_other_layer_map(FINAL_LAYER_NORM_INDEX)
@@ -190,6 +195,7 @@ class DeepSpeedCheckpoint(object):
 
     def _merge_state_dicts(self, sd_list):
         merged_sd = {}
+        print('LOLA: SD List Keys:',sd_list[0].keys())
         for key in sd_list[0].keys():
             if not key in SEQUENTIAL_LAYERS:
                 cat_dim = LAYER_CONCAT_DIM.get(key, 0)

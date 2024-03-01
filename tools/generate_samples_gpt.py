@@ -79,8 +79,8 @@ def add_text_generate_args(parser):
     group.add_argument("--recompute", action='store_true',
                        help='During generation recompute all attention '
                        'instead of using previously computed keys/values.')
-    group.add_argument("--local_rank", type=int, default=0,
-                       help='local_rank')
+    #group.add_argument("--local_rank", type=int, default=0,
+    #                   help='local_rank')
 
     return parser
 

@@ -390,6 +390,8 @@ def load_ds_checkpoint_and_setup_megatron(extra_args_provider):
         model = model.float()
 
     torch.distributed.barrier()
+    # LOLA: Attempting to save fp16 model
+    #model.save_fp16_model(save_dir="/scratch/hpc-prf-lola/nikit/repos/LOLA-Megatron-DeepSpeed/lola_ws/gpt/sample-output")
     return model
 
 def tasks_args(parser):

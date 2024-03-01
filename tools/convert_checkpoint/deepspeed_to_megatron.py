@@ -6,7 +6,7 @@ import torch
 from collections import OrderedDict
 # imports
 import sys
-sys.path.append('./tools/convert_checkpoint/')
+sys.path.append('/scratch/hpc-prf-lola/nikit/repos/LOLA-Megatron-DeepSpeed/tools/convert_checkpoint')
 from deepspeed_checkpoint import ARGS_KEY, DeepSpeedCheckpoint
 
 MODEL_KEY = 'model'
@@ -85,8 +85,13 @@ def _create_rank_checkpoint(ds_checkpoint, tp_index, pp_index, for_release=False
     meg_encoder_sd = OrderedDict()
     meg_embedding_sd = OrderedDict()
     meg_embedding_for_head_sd = OrderedDict()
+    
+    
 
     transformer_sd = ds_checkpoint.get_transformer_state(tp_index, pp_index)
+    
+    print('LOLA: transformer_sd:',transformer_sd)
+    
     meg_encoder_sd.update(_convert_ds_transformer_state(transformer_sd))
 
     if pp_index in [0, ds_checkpoint.pp_degree - 1]:
@@ -144,6 +149,7 @@ def main():
     iteration = ds_checkpoint.get_iteration()
     _create_latest_file(args.output_folder, iteration)
     checkpoint_paths = _create_checkpoint_paths(args.output_folder, iteration, ds_checkpoint.tp_degree, ds_checkpoint.pp_degree)
+    print('LOLA: checkpoint_paths:',checkpoint_paths)
     for i in range(0, ds_checkpoint.tp_degree):
         for j in range(0, ds_checkpoint.pp_degree):
             sd = _create_rank_checkpoint(ds_checkpoint, i, j, args.for_release)

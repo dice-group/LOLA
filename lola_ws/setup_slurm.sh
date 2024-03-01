@@ -32,6 +32,8 @@ source venv-lola/bin/activate
 pip3 install --upgrade pip
 
 pip3 install torch torchvision torchaudio transformers "numpy<1.24" packaging datasets nltk tensorboard deepspeed==0.11.1 wheel pybind11 wandb mpi4py
+# For evaluation
+pip install best-download lm-eval==0.3.0 datasets==2.0.0 transformers==4.20.1 huggingface-hub==0.17.0
 
 
 mkdir -p temp_repos
