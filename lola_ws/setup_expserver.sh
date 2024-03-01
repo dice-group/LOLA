@@ -16,9 +16,11 @@ python -m venv ./venv-lola
 source venv-lola/bin/activate
 pip3 install --upgrade pip
 
-pip3 install torch torchvision torchaudio transformers "numpy<1.24" packaging datasets nltk tensorboard deepspeed==0.11.1 wheel pybind11 wandb
+pip3 install torch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 transformers "numpy<1.24" packaging datasets nltk tensorboard deepspeed==0.11.1 wheel pybind11 wandb
 # For evaluation
-pip install best-download==0.0.7 lm-eval datasets==1.15.1 transformers==4.20.1 huggingface-hub==0.8.1
+pip install best-download lm-eval==0.3.0 datasets==2.0.0 transformers==4.20.1 huggingface-hub==0.17.0
+
+# python ../../tasks/eval_harness/download.py --task_list triviaqa,webqs,winogrande,piqa,arc_challenge,arc_easy,openbookqa,race,boolq,cb,copa,rte,wic,wsc,multirc,record,anli_r1,anli_r2,anli_r3,wikitext,logiqa,mathqa,mc_taco,mrpc,prost,pubmedqa,qnli,qqp,sciq,sst,wnli
 
 mkdir -p temp_repos
 cd temp_repos
