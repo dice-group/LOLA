@@ -20,8 +20,6 @@ pip3 install torch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 transformers "nu
 # For evaluation
 pip install best-download lm-eval==0.3.0 datasets==2.0.0 transformers==4.20.1 huggingface-hub==0.17.0
 
-# python ../../tasks/eval_harness/download.py --task_list triviaqa,webqs,winogrande,piqa,arc_challenge,arc_easy,openbookqa,race,boolq,cb,copa,rte,wic,wsc,multirc,record,anli_r1,anli_r2,anli_r3,wikitext,logiqa,mathqa,mc_taco,mrpc,prost,pubmedqa,qnli,qqp,sciq,sst,wnli
-
 mkdir -p temp_repos
 cd temp_repos
 
