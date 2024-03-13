@@ -5,6 +5,10 @@ from functools import reduce
 from logging import logMultiprocessing
 import os
 import sys
+from checkpoint_reshaping_and_interoperability import convert_checkpoint_from_megatron_to_transformers
+from transformers import GPT2Tokenizer, AutoTokenizer, AutoModelForCausalLM
+import types
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__),
                                              os.path.pardir,os.path.pardir)))
 
@@ -48,6 +52,8 @@ from tools.convert_checkpoint.deepspeed_to_megatron import _create_rank_checkpoi
 
 
 from collections import OrderedDict
+
+from modeling_lola_gpt2 import LOLAModel
 
 MODEL_KEY = 'model'
 ARGS_KEY = 'args'
@@ -283,26 +289,65 @@ def tasks_args(parser):
 from megatron.arguments import parse_args
 
 def main():
-    model, ds_checkpoint = load_ds_checkpoint_and_setup_megatron(extra_args_provider=tasks_args)
+    # model, ds_checkpoint = load_ds_checkpoint_and_setup_megatron(extra_args_provider=tasks_args)
 
-    args = get_args()
+    # args = get_args()
     
-    output_dir = args.output_path
-    for_release = args.for_release
+    # output_dir = args.output_path
+    # for_release = args.for_release
     
-    print(f'Converting DeepSpeed checkpoint in {args.load} to Megatron checkpoint in {output_dir}')
-    # LOLA: Modifying below initialization for MoE model
-    # ds_checkpoint = DeepSpeedCheckpoint(args.input_folder, args.target_tp, args.target_pp, True)
-    iteration = ds_checkpoint.get_iteration()
-    _create_latest_file(args.output_path, iteration)
-    # there's only 1 checkpoint path as tp_degree and pp_degree is 1 for LOLA model (MoE)
-    checkpoint_paths = _create_checkpoint_paths(output_dir, iteration=iteration, tp_degree=1, pp_degree=1)
-    print('LOLA: checkpoint_paths:',checkpoint_paths)
+    # print(f'Converting DeepSpeed checkpoint in {args.load} to Megatron checkpoint in {output_dir}')
+    # # LOLA: Modifying below initialization for MoE model
+    # # ds_checkpoint = DeepSpeedCheckpoint(args.input_folder, args.target_tp, args.target_pp, True)
+    # iteration = ds_checkpoint.get_iteration()
+    # _create_latest_file(args.output_path, iteration)
+    # # there's only 1 checkpoint path as tp_degree and pp_degree is 1 for LOLA model (MoE)
+    # checkpoint_paths = _create_checkpoint_paths(output_dir, iteration=iteration, tp_degree=1, pp_degree=1)
+    # print('LOLA: checkpoint_paths:',checkpoint_paths)
             
-    sd = _create_rank_checkpoint_lola(model, args, iteration, for_release)
-    _save_checkpoint(checkpoint_paths[0][0], sd)
+    # sd = _create_rank_checkpoint_lola(model, args, iteration, for_release)
+    # # _save_checkpoint(checkpoint_paths[0][0], sd)
+
+    # Convert to huggingface
+    conversion_args_dict = {
+        'megatron_path': '/data/nikit_ws/LOLA-Megatron-DeepSpeed',
+        'load_path': '/data/nikit_ws/lola_converted_model/iter_0296000',
+        'save_path': '/data/nikit_ws/lola_converted_model2',
+        'tokenizer_name': 'ai-forever/mGPT',
+        'max_shard_size': '100GB',
+        'print_checkpoint_structure': True
+    }
+
+    conversion_args = types.SimpleNamespace(**conversion_args_dict)
+
+    #convert_checkpoint_from_megatron_to_transformers(conversion_args)
     
     print('LOLA: model conversion finished, model saved successfully')
+
+    # # test
+    # model = LOLAModel.from_pretrained(conversion_args_dict['save_path'])
+    # # try this to test https://huggingface.co/docs/transformers/en/model_doc/gpt2
+    # tokenizer = AutoTokenizer.from_pretrained('ai-forever/mGPT')
+    # inputs = tokenizer("Hello, my dog is cute", return_tensors="pt")
+    # outputs = model(**inputs)
+    # last_hidden_states = outputs.last_hidden_state
+
+
+    # Load the model and tokenizer
+    model = AutoModelForCausalLM.from_pretrained(conversion_args_dict['save_path'])
+    # model = AutoModelForCausalLM.from_pretrained('ai-forever/mGPT')
+    tokenizer = AutoTokenizer.from_pretrained('ai-forever/mGPT')
+
+    # Encode the input text
+    inputs = tokenizer("Hello, my dog is cute", return_tensors="pt")
+    # Generate token indices
+    # Adjust parameters like max_length according to your needs
+    output_sequences = model.generate(input_ids=inputs['input_ids'], max_length=500)
+
+    # Decode the generated indices to text
+    generated_text = tokenizer.decode(output_sequences[0], skip_special_tokens=True)
+
+    print(generated_text)
 
 if __name__ == '__main__':
     main()

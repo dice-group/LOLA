@@ -1,8 +1,12 @@
 # This is an example zero-shot eval script. Please first read the readme_evalharness.md under the same directory.
 
-CHECKPOINT_PATH=/scratch/hpc-prf-lola/nikit/repos/LOLA-Megatron-DeepSpeed/lola_ws/gpt/gpt-normal-16moe-output/checkpoint/noctua2-gpt-normal-16moe_ms-1.3B_bs-768_gpus-96_lr-2.0e-4_minlr-2.0e-5_ep-16_mlc-0.01_cap-1.0_drop-true/global_step296000
-CONFIG_PATH=/scratch/hpc-prf-lola/nikit/repos/LOLA-Megatron-DeepSpeed/lola_ws/gpt/gpt-normal-16moe-output/eval_demo_config.json
-RESULT_PATH=/scratch/hpc-prf-lola/nikit/repos/LOLA-Megatron-DeepSpeed/lola_ws/gpt/converted_model
+#CHECKPOINT_PATH=/scratch/hpc-prf-lola/nikit/repos/LOLA-Megatron-DeepSpeed/lola_ws/gpt/gpt-normal-16moe-output/checkpoint/noctua2-gpt-normal-16moe_ms-1.3B_bs-768_gpus-96_lr-2.0e-4_minlr-2.0e-5_ep-16_mlc-0.01_cap-1.0_drop-true/global_step296000
+#CONFIG_PATH=/scratch/hpc-prf-lola/nikit/repos/LOLA-Megatron-DeepSpeed/lola_ws/gpt/gpt-normal-16moe-output/eval_demo_config.json
+#RESULT_PATH=/scratch/hpc-prf-lola/nikit/repos/LOLA-Megatron-DeepSpeed/lola_ws/gpt/converted_model
+
+CHECKPOINT_PATH=/data/lola-model/large/global_step296000
+CONFIG_PATH=/data/lola-model/misc/eval_demo_config.json
+RESULT_PATH=/data/nikit_ws/lola_converted_model
 
 PP_SIZE=1
 TP_SIZE=1
@@ -17,8 +21,11 @@ EP_PARALLEL_SIZE=1
 NUM_NODE=1
 NUM_GPU_PER_NODE=1
 
-VOCAB_FILE=/scratch/hpc-prf-lola/data/misc/mgpt/mgpt_vocab.json
-MERGE_FILE=/scratch/hpc-prf-lola/data/misc/mgpt/mgpt_merges.txt
+#VOCAB_FILE=/scratch/hpc-prf-lola/data/misc/mgpt/mgpt_vocab.json
+#MERGE_FILE=/scratch/hpc-prf-lola/data/misc/mgpt/mgpt_merges.txt
+
+VOCAB_FILE=/data/lola-model/vocab/mgpt/mgpt_vocab.json
+MERGE_FILE=/data/lola-model/vocab/mgpt/mgpt_merges.txt
 
 # export HF_DATASETS_OFFLINE=1
 
@@ -41,7 +48,7 @@ CMD="../../tasks/eval_harness/lola_inference.py \
     --moe-expert-parallel-size ${EP_PARALLEL_SIZE} \
     --vocab-file $VOCAB_FILE\
     --merge-file $MERGE_FILE\
-    --micro-batch-size 12\
+    --micro-batch-size 1 \
     --no-load-optim \
     --no-load-rng \
     --inference \

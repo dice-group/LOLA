@@ -168,6 +168,8 @@ class EvalHarnessAdaptor(GPT2LM):
                         contlen = len(cont_toks)
                         logits = logits[inplen - contlen:inplen].unsqueeze(0)  # [1, seq, vocab]
                         greedy_tokens = logits.argmax(dim=-1)
+                        input_sequence = self.tokenizer.tokenizer.decode(inp.data[0].tolist())
+                        predicted_sequence = self.tokenizer.tokenizer.decode(greedy_tokens.data[0].tolist())
                         # cont_toks :: [1, seq]
                         cont_toks = torch.tensor(cont_toks, dtype=torch.long).unsqueeze(0)
                         max_equal = (greedy_tokens == cont_toks).all()
