@@ -4,9 +4,10 @@
 from evaluate import *
 from megatron import get_args
 from megatron import get_tokenizer
+import deepspeed
 
 class LOLAInference(EvalHarnessAdaptor):
-    def infer_batch(self, query_list, disable_tqdm=False):
+    def infer_batch(self, query_list, disable_tqdm=True):
         requests = []
         for context in query_list:
             if context == "":
@@ -64,10 +65,11 @@ class LOLAInference(EvalHarnessAdaptor):
                         contlen = len(cont_toks)
                         #logits = logits[inplen - contlen:inplen].unsqueeze(0)  # [1, seq, vocab]
                         logits = logits.unsqueeze(0)  # [1, seq, vocab]
-                        greedy_tokens = logits.argmax(dim=-1)
-                        res.append(self.tokenizer.tokenizer.decode(greedy_tokens.data[0].tolist()))
+                        #greedy_tokens = logits.argmax(dim=-1)
+                        # res.append(self.tokenizer.tokenizer.decode(greedy_tokens.data[0].tolist()))
+                        res.append(self.tokenizer.tokenizer.decode([logits.argmax(dim=-1)[-1][-1].tolist()]))
 
-        return res
+        return ''.join(res)
 
 def tasks_args(parser):
     """Provide extra arguments required for tasks."""
@@ -83,6 +85,12 @@ def tasks_args(parser):
 
 from megatron.arguments import parse_args
 
+def generate_output(input_text, max_tokens, infer_tool):
+    generated_text = ''
+    for i in range(max_tokens):
+        generated_text = infer_tool.infer_batch([input_text + ' '])
+        input_text+=generated_text
+    return input_text
 
 def main():
 
@@ -101,16 +109,34 @@ def main():
     model._compute_loss = False
     model.fwd_outputs = []
 
+    # import megatron.model as mm
+    # engine = deepspeed.init_inference(model=model,
+    #                                   mp_size=1,
+    #                                   tensor_parallel={"mpu": mpu},
+    #                                   dtype=torch.half,
+    #                                   replace_with_kernel_inject=True,
+    #                                   moe_experts=[16],
+    #                                   moe_type='standard')
+    
+    # model = engine.module
+    
+    # print(model)
+    # output = model('Input String')
+    # print(output)
+
     tokenizer = get_tokenizer()
 
     infer_tool = LOLAInference(model, tokenizer)
     
+    input_text = "O mar enrola na areia"
     # input_text = "The quick brown fox"
-    #input_text = "Hallo! Ich bin Mario, I komme aus "
+    #input_text = "Hallo! Ich bin Mario, I komme aus"
     #input_text = "Привет, меня зовут Иван"
-    input_text = "Question: To make Belgian waffles\nAnswer:"
-    generated_text = infer_tool.infer_batch([input_text])
-    print("Generated text:", generated_text[0])
+    #input_text = "Question: To make Belgian waffles\nAnswer:"
+    
+    output_text = generate_output(input_text, 50, infer_tool)
+    
+    print("Generated text: ", output_text)
     
 
 if __name__ == '__main__':
