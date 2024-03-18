@@ -106,6 +106,71 @@ class LOLAInference(EvalHarnessAdaptor):
                     res.append(self.tokenizer.tokenizer.decode([logits.argmax(dim=-1)[-1][-1].tolist()]))
 
         return ''.join(res)
+    
+    def fetch_last_hidden_states(self, inps, fetch_contextual=False):
+        args = get_args()
+        # self.model.set_batch_fn(self.create_model_inputs)
+        # round up to multiple of micro_batch_size
+        new_size = ((len(inps) + args.micro_batch_size-1)  // args.micro_batch_size) * args.micro_batch_size
+        padded = F.pad(inps, (0, 0, 0, new_size-len(inps)), value = 0)
+        # dummy data iterator for pipelining.
+        data_iterator = list((torch.stack(inp) for inp in utils.chunks(padded, args.micro_batch_size)))
+        self.model.micro_batches = len(data_iterator)
+        # output = self.model.eval_batch(iter(data_iterator), compute_loss = False, reduce_output = None)
+        output = []
+        for tokens in data_iterator:
+            attention_mask, loss_mask, position_ids = get_ltor_masks_and_position_ids(
+                                                        tokens,
+                                                        self.EOT_TOKEN_ID,
+                                                        args.reset_position_ids,
+                                                        args.reset_attention_mask,
+                                                        args.eod_mask_loss)
+            if fetch_contextual:
+                a_output, *other_losses = self.model(tokens,
+                    position_ids,
+                    attention_mask,
+                    tokentype_ids=None,
+                    output_last_hidden_states=True)
+            else:
+                a_output = self.model.module.language_model.embedding(tokens, position_ids, tokentype_ids=None)
+            output.append(a_output)
+        
+        return output
+    
+    def get_token_embeddings(self, context, fetch_contextual=False):
+        if context == "":
+            # end of text as context
+            context_enc = [self.EOT_TOKEN_ID]
+        else:
+            context_enc = self.tokenizer_encode(context)
+
+        token_units = self.tokenizer.tokenizer.tokenize(context)
+
+        token_embeddings = []
+
+        len_context = len(context_enc)
+        
+        self.model.eval()
+        with torch.no_grad():
+            # when too long to fit in context, truncate from the left
+            inp = torch.tensor(
+                (context_enc)[-(self.max_length + 1):]
+                , dtype=torch.long).to(self.device)
+
+            new_inp = inp.unsqueeze(0)
+
+            embeddings_tensor = self.fetch_last_hidden_states(torch.cat([new_inp], dim=0), fetch_contextual)
+            embedding_list = embeddings_tensor[0].tolist()
+
+            for i in range(len_context):
+                token_embeddings.append({
+                    'token' : token_units[i],
+                    'tokenid': context_enc[i],
+                    'embedding': embedding_list[i][0]
+                })
+
+            return token_embeddings
+
 
 def tasks_args(parser):
     """Provide extra arguments required for tasks."""
@@ -169,12 +234,16 @@ def main():
     infer_tool = LOLAInference(model, tokenizer)
     
     # input_text = "O mar enrola na areia"
-    # input_text = "The quick brown fox"
+    input_text = "The quick brown fox"
     #input_text = "Hallo! Ich bin Sven, I komme aus"
     #input_text = "Привет, меня зовут Иван"
-    input_text = "Question: To make Belgian waffles\nAnswer:"
+    # input_text = "Question: To make Belgian waffles\nAnswer:"
     
     output_text = generate_output(input_text, 2, infer_tool)
+
+    embeddings_1 = infer_tool.get_token_embeddings(input_text)
+
+    embeddings_2 = infer_tool.get_token_embeddings(input_text, True)
     
     print("Generated text: ", output_text)
     

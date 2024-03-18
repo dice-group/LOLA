@@ -64,8 +64,8 @@ fi
 
 export PYTHONPATH="../:../tools/convert_checkpoint:${PYTHONPATH}"
 
-LAUNCHER="deepspeed --num_nodes $NUM_NODE --num_gpus $NUM_GPU_PER_NODE"
-
+# LAUNCHER="deepspeed --num_nodes $NUM_NODE --num_gpus $NUM_GPU_PER_NODE"
+LAUNCHER="python -m torch.distributed.run --master_port 2335 "
 # LAUNCHER="python -u -m debugpy --wait-for-client --listen 0.0.0.0:12121 -m torch.distributed.run "
 
 $LAUNCHER $CMD

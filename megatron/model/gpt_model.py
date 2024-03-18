@@ -93,7 +93,8 @@ class GPTModel(MegatronModule):
                 retriever_position_ids=None,
                 retriever_attn_mask=None,
                 labels=None, tokentype_ids=None, inference_params=None,
-                curriculum_seqlen=None):
+                curriculum_seqlen=None,
+                output_last_hidden_states=False):
         args = get_args()
         if curriculum_seqlen is not None:
             args.curriculum_seqlen = curriculum_seqlen
@@ -121,7 +122,7 @@ class GPTModel(MegatronModule):
             retriever_attn_mask=retriever_attn_mask,
             inference_params=inference_params)
 
-        if self.post_process:
+        if self.post_process and (not output_last_hidden_states):
             lm_output = post_language_model_processing(
                 lm_output, labels,
                 self.language_model.output_layer.weight if self.untie_embeddings_and_output_weights else self.shared_embedding_or_output_weight(),
