@@ -22,6 +22,7 @@ class LOLAInference(EvalHarnessAdaptor):
 
     
     def fetch_last_hidden_states(self, inps, fetch_contextual=False):
+        self.reset_stuff()
         args = get_args()
         # self.model.set_batch_fn(self.create_model_inputs)
         # round up to multiple of micro_batch_size
@@ -86,7 +87,7 @@ class LOLAInference(EvalHarnessAdaptor):
             return token_embeddings
     
     
-    def infer_single(self, context):
+    def infer_single(self, context, /, greedy=False, temperature=1.0, top_k=50, top_p=0.95):
         self.reset_stuff()
         if context == "":
             # end of text as context
@@ -104,20 +105,21 @@ class LOLAInference(EvalHarnessAdaptor):
 
             new_inp = inp.unsqueeze(0)
 
-            logits = self._model_call(torch.cat([new_inp], dim=0))
+            multi_logits = self._model_call(torch.cat([new_inp], dim=0))
             
-            # testing non-repetition logic
-            temperature = 1
-            top_k = 50
-            top_p = 0.95
-            
-            if logits is not None:
-                # logits /= temperature
-                # logits = top_k_logits(logits, top_k, top_p)
-                multi_logits = F.log_softmax(logits, dim=-1)
-                for logits in  multi_logits :
-                    logits = logits.unsqueeze(0)  # [1, seq, vocab]
-                    res.append(self.tokenizer.tokenizer.decode([logits.argmax(dim=-1)[-1][-1].tolist()]))
+            if multi_logits is not None:
+                if greedy:
+                    multi_logits = F.log_softmax(multi_logits, dim=-1)
+                    for logits in  multi_logits :
+                        res.append(self.tokenizer.tokenizer.decode([logits.argmax(dim=-1)[-1].tolist()]))
+                else:
+                    multi_logits /= temperature
+                    for i in range(multi_logits.shape[0]):
+                        multi_logits[i] = top_k_logits(multi_logits[i], top_k, top_p)
+                        multi_logits[i] = F.softmax(multi_logits[i], dim=-1)
+                    for logits in multi_logits :
+                        pred_tokens = torch.multinomial(logits, num_samples=1)
+                        res.append(self.tokenizer.tokenizer.decode(pred_tokens[-1].tolist()))
 
         return ''.join(res)
     
@@ -136,12 +138,12 @@ def tasks_args(parser):
     group.add_argument("--port", type=int, default=8989, help="Port for the Flask app")
     return parser
 
-def generate_output(input_text, max_sentences, max_tokens=500):
+def generate_output(input_text, max_sentences, max_tokens=500, **kwargs):
     global INFER_TOOL
     
     sent_count = 0
     for i in range(max_tokens):
-        generated_text = INFER_TOOL.infer_single(input_text)
+        generated_text = INFER_TOOL.infer_single(input_text, **kwargs)
         input_text+=generated_text
         if generated_text == '.':
             sent_count+=1
@@ -169,15 +171,21 @@ def generate_text():
     max_sentences = int(req_data['max_sentences']) if 'max_sentences' in req_data else 2
     max_tokens = int(req_data['max_tokens']) if 'max_tokens' in req_data else 200
     
-    output_str = generate_output(question_str, max_sentences, max_tokens)
+    greedy = req_data['greedy'] == '1' if 'greedy' in req_data else False
+
+    temperature = float(req_data['temperature']) if 'temperature' in req_data else 0.9
+    top_k = int(req_data['top_k']) if 'top_k' in req_data else 50
+    top_p = float(req_data['top_p']) if 'top_p' in req_data else 0.95
+    
+    output_str = generate_output(question_str, max_sentences, max_tokens, greedy=greedy, temperature=temperature, top_k=top_k, top_p=top_p)
     
     
     logging.info('Generated text: %s' % str(output_str))
     
     return output_str
 
-@app.route('/contextual-token-embeddings', methods=['POST'])
-def get_contextual_token_embeddings():
+@app.route('/token-embedding', methods=['POST'])
+def get_token_embedding():
     req_data = request.form
     logging.info('Query received for token embeddings: %s' % str(req_data))
     

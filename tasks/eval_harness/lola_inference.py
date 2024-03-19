@@ -73,7 +73,7 @@ class LOLAInference(EvalHarnessAdaptor):
         return ''.join(res)
     
     
-    def infer_single(self, context):
+    def infer_single(self, context, /, temperature=1.0, top_k=50, top_p=0.95):
         if context == "":
             # end of text as context
             context_enc = [self.EOT_TOKEN_ID]
@@ -90,20 +90,23 @@ class LOLAInference(EvalHarnessAdaptor):
 
             new_inp = inp.unsqueeze(0)
 
-            logits = self._model_call(torch.cat([new_inp], dim=0))
+            multi_logits = self._model_call(torch.cat([new_inp], dim=0))
             
             # testing non-repetition logic
-            temperature = 1
-            top_k = 50
-            top_p = 0.95
+            # temperature = 1
+            # top_k = 50
+            # top_p = 0.95
             
-            if logits is not None:
-                # logits /= temperature
-                # logits = top_k_logits(logits, top_k, top_p)
-                multi_logits = F.log_softmax(logits, dim=-1)
-                for logits in  multi_logits :
-                    logits = logits.unsqueeze(0)  # [1, seq, vocab]
-                    res.append(self.tokenizer.tokenizer.decode([logits.argmax(dim=-1)[-1][-1].tolist()]))
+            if multi_logits is not None:
+                multi_logits /= temperature
+                for i in range(multi_logits.shape[0]):
+                    multi_logits[i] = top_k_logits(multi_logits[i], top_k, top_p)
+                    multi_logits[i] = F.softmax(multi_logits[i], dim=-1)
+                for logits in multi_logits :
+                    # logits = logits.unsqueeze(0)  # [1, seq, vocab]
+                    pred_tokens = torch.multinomial(logits, num_samples=1)
+                    res.append(self.tokenizer.tokenizer.decode(pred_tokens[-1].tolist()))
+                    #res.append(self.tokenizer.tokenizer.decode([logits.argmax(dim=-1)[-1][-1].tolist()]))
 
         return ''.join(res)
     
@@ -184,12 +187,12 @@ def tasks_args(parser):
     group.add_argument('--eval_fp32',  default = True, action='store_true', help='Should the evaluation run in fp32')
     return parser
 
-def generate_output(input_text, max_sentences, infer_tool: LOLAInference, max_tokens=500):
+def generate_output(input_text, max_sentences, infer_tool: LOLAInference, max_tokens=500, **kwargs):
     generated_text = ''
     sent_count = 0
     for i in range(max_tokens):
         # generated_text = infer_tool.infer_batch([input_text + ' '])
-        generated_text = infer_tool.infer_single(input_text)
+        generated_text = infer_tool.infer_single(input_text, **kwargs)
         input_text+=generated_text
         if generated_text == '.':
             sent_count+=1
@@ -239,7 +242,7 @@ def main():
     #input_text = "Привет, меня зовут Иван"
     # input_text = "Question: To make Belgian waffles\nAnswer:"
     
-    output_text = generate_output(input_text, 2, infer_tool)
+    output_text = generate_output(input_text, 2, infer_tool, temperature=1.0, top_k=50, top_p=0.95)
 
     embeddings_1 = infer_tool.get_token_embeddings(input_text)
 
