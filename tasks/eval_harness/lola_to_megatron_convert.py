@@ -289,12 +289,12 @@ def tasks_args(parser):
 from megatron.arguments import parse_args
 
 def main():
-    # model, ds_checkpoint = load_ds_checkpoint_and_setup_megatron(extra_args_provider=tasks_args)
+    model, ds_checkpoint = load_ds_checkpoint_and_setup_megatron(extra_args_provider=tasks_args)
 
-    # args = get_args()
+    args = get_args()
     
-    # output_dir = args.output_path
-    # for_release = args.for_release
+    output_dir = args.output_path
+    for_release = args.for_release
     
     # print(f'Converting DeepSpeed checkpoint in {args.load} to Megatron checkpoint in {output_dir}')
     # # LOLA: Modifying below initialization for MoE model
@@ -306,23 +306,26 @@ def main():
     # print('LOLA: checkpoint_paths:',checkpoint_paths)
             
     # sd = _create_rank_checkpoint_lola(model, args, iteration, for_release)
-    # # _save_checkpoint(checkpoint_paths[0][0], sd)
+    # _save_checkpoint(checkpoint_paths[0][0], sd)
+    
+    # Sending the loaded weights to garbage collection
+    sd = None
 
     # Convert to huggingface
     conversion_args_dict = {
         'megatron_path': '/data/nikit_ws/LOLA-Megatron-DeepSpeed',
-        'load_path': '/data/nikit_ws/lola_converted_model/iter_0296000',
-        'save_path': '/data/nikit_ws/lola_converted_model2',
+        'load_path': output_dir + '/iter_0296000',
+        'save_path': output_dir + '/lola_converted_hf_model',
         'tokenizer_name': 'ai-forever/mGPT',
         'max_shard_size': '100GB',
         'print_checkpoint_structure': True
     }
 
-    conversion_args = types.SimpleNamespace(**conversion_args_dict)
+    #conversion_args = types.SimpleNamespace(**conversion_args_dict)
 
     #convert_checkpoint_from_megatron_to_transformers(conversion_args)
     
-    print('LOLA: model conversion finished, model saved successfully')
+    #print('LOLA: model conversion finished, model saved successfully')
 
     # # test
     # model = LOLAModel.from_pretrained(conversion_args_dict['save_path'])
@@ -334,12 +337,15 @@ def main():
 
 
     # Load the model and tokenizer
-    model = AutoModelForCausalLM.from_pretrained(conversion_args_dict['save_path'])
+    # model = AutoModelForCausalLM.from_pretrained(conversion_args_dict['save_path'])
+    model = LOLAModel.from_pretrained(conversion_args_dict['save_path'])
     # model = AutoModelForCausalLM.from_pretrained('ai-forever/mGPT')
-    tokenizer = AutoTokenizer.from_pretrained('ai-forever/mGPT')
+    #tokenizer = AutoTokenizer.from_pretrained('ai-forever/mGPT')
+    tokenizer = AutoTokenizer.from_pretrained(conversion_args_dict['save_path'])
 
     # Encode the input text
-    inputs = tokenizer("Hello, my dog is cute", return_tensors="pt")
+    #inputs = tokenizer("Hello, my dog is cute", return_tensors="pt")
+    inputs = tokenizer("The quick brown fox", return_tensors="pt")
     # Generate token indices
     # Adjust parameters like max_length according to your needs
     output_sequences = model.generate(input_ids=inputs['input_ids'], max_length=500)
