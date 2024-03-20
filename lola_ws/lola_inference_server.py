@@ -12,6 +12,10 @@ import os
 from flask import request
 from flask import Flask
 
+from threading import Lock
+
+MUTEX = Lock()
+
 class LOLAInference(EvalHarnessAdaptor):
     
     def reset_stuff(self):
@@ -138,13 +142,19 @@ def tasks_args(parser):
     group.add_argument("--port", type=int, default=8989, help="Port for the Flask app")
     return parser
 
-def generate_output(input_text, max_sentences, max_tokens=500, **kwargs):
+def generate_output(input_text, max_sentences, max_tokens=500, remove_newlines=True, **kwargs):
     global INFER_TOOL
-    
+    input_text = input_text.strip()
     sent_count = 0
     for i in range(max_tokens):
         generated_text = INFER_TOOL.infer_single(input_text, **kwargs)
+        # TODO fix this to be the decoding of INFER_TOOL.EOT_TOKEN_ID
+        if generated_text.rstrip() == '<|endoftext|>':
+            break
         input_text+=generated_text
+        if remove_newlines:
+            # removing generated new lines
+            input_text = input_text.rstrip()
         if generated_text == '.':
             sent_count+=1
             if sent_count >= max_sentences:
@@ -173,12 +183,16 @@ def generate_text():
     
     greedy = req_data['greedy'] == '1' if 'greedy' in req_data else False
 
-    temperature = float(req_data['temperature']) if 'temperature' in req_data else 0.9
+    temperature = float(req_data['temperature']) if 'temperature' in req_data else 0.65
     top_k = int(req_data['top_k']) if 'top_k' in req_data else 50
     top_p = float(req_data['top_p']) if 'top_p' in req_data else 0.95
+
+    remove_newlines = req_data['remove_newlines'] == '1' if 'remove_newlines' in req_data else True
     
-    output_str = generate_output(question_str, max_sentences, max_tokens, greedy=greedy, temperature=temperature, top_k=top_k, top_p=top_p)
-    
+    # preventing concurrent calls
+    MUTEX.acquire()
+    output_str = generate_output(question_str, max_sentences, max_tokens, remove_newlines, greedy=greedy, temperature=temperature, top_k=top_k, top_p=top_p)
+    MUTEX.release()
     
     logging.info('Generated text: %s' % str(output_str))
     
@@ -198,7 +212,10 @@ def get_token_embedding():
     
     fetch_contextual = req_data['contextual_embedding'] == '1' if 'contextual_embedding' in req_data else False
     
+    # preventing concurrent calls
+    MUTEX.acquire()
     embeddings = INFER_TOOL.get_token_embeddings(context, fetch_contextual)
+    MUTEX.release()
     
     return embeddings
 
@@ -229,7 +246,7 @@ def main():
     log_filename = args.log_file
     os.makedirs(os.path.dirname(log_filename), exist_ok=True)
     logging.basicConfig(filename=log_filename, level=logging.DEBUG,
-                        format=f'%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s', filemode='w')
+                        format=f'%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s', filemode='a')
     
     port = args.port
     
