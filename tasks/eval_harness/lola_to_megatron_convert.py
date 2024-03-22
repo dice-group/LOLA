@@ -275,16 +275,21 @@ def _create_latest_file(base_folder, iteration):
 
 
 
-
-
-
-
 def tasks_args(parser):
     """Provide extra arguments required for tasks."""
     group = parser.add_argument_group(title='Model conversion options')
     group.add_argument('--output_path', default=None, type=str, help='Output Megatron checkpoint folder')
     group.add_argument('--for_release', action='store_true', help='Convert for release purpose, reset some (progress) counters.')
     return parser
+
+
+def generate_hf_model_text(inp_text, max_length, tokenizer, model):
+    inputs = tokenizer(inp_text, return_tensors="pt").to(model.device)
+    output_sequences = model.generate(input_ids=inputs['input_ids'], max_length=max_length)
+
+    # Decode the generated indices to text
+    generated_text = tokenizer.decode(output_sequences[0], skip_special_tokens=True)
+    return generated_text
 
 from megatron.arguments import parse_args
 
@@ -345,16 +350,18 @@ def main():
     #tokenizer = AutoTokenizer.from_pretrained('ai-forever/mGPT')
     tokenizer = AutoTokenizer.from_pretrained(conversion_args_dict['save_path'])
 
-    # Encode the input text
-    #inputs = tokenizer("Hello, my dog is cute", return_tensors="pt")
-    #inputs = tokenizer("The quick brown fox", return_tensors="pt").to("cuda:0")
-    inputs = tokenizer("My name is Sven", return_tensors="pt").to("cuda:0")
-    # Generate token indices
-    # Adjust parameters like max_length according to your needs
-    output_sequences = model.generate(input_ids=inputs['input_ids'], max_length=100)
+    # # Encode the input text
+    # #inputs = tokenizer("Hello, my dog is cute", return_tensors="pt")
+    # inputs = tokenizer("The quick brown fox", return_tensors="pt").to("cuda:0")
+    # #inputs = tokenizer("My name is Sven", return_tensors="pt").to("cuda:0")
+    # # Generate token indices
+    # # Adjust parameters like max_length according to your needs
+    # output_sequences = model.generate(input_ids=inputs['input_ids'], max_length=100)
 
-    # Decode the generated indices to text
-    generated_text = tokenizer.decode(output_sequences[0], skip_special_tokens=True)
+    # # Decode the generated indices to text
+    # generated_text = tokenizer.decode(output_sequences[0], skip_special_tokens=True)
+    
+    generated_text = generate_hf_model_text("The quick brown fox", 100, tokenizer, model)
 
     print(generated_text)
 

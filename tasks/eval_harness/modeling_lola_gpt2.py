@@ -2048,10 +2048,15 @@ class LOLAMOE(nn.Module):
 
         router_logits = self.gate(hidden_states)
         # router_logits = router_logits.squeeze(dim=0)
+
+        # TODO: fix the weights logic to be the same as Megatron
         routing_weights = F.softmax(router_logits, dim=1)
         routing_weights, selected_experts = torch.topk(routing_weights, self.top_k, dim=-1)
-        routing_weights /= routing_weights.sum(dim=-1, keepdim=True)
+        # routing_weights /= routing_weights.sum(dim=-1, keepdim=True)
+        # commenting the statement above for LOLA and removing the "/" operator to avoid getting weights as 1
+        routing_weights = routing_weights.sum(dim=-1, keepdim=True)
         routing_weights = routing_weights.to(hidden_states.dtype)
+
         final_hidden_states = torch.zeros(
             (batch_size * sequence_length, hidden_dim), dtype=hidden_states.dtype, device=hidden_states.device
         )
