@@ -53,7 +53,7 @@ from tools.convert_checkpoint.deepspeed_to_megatron import _create_rank_checkpoi
 
 from collections import OrderedDict
 
-from modeling_lola_gpt2 import LOLAModel
+from modeling_lola_gpt2 import LOLAModel, LOLALMHeadModel
 
 MODEL_KEY = 'model'
 ARGS_KEY = 'args'
@@ -310,6 +310,7 @@ def main():
     
     # Sending the loaded weights to garbage collection
     sd = None
+    model = None
 
     # Convert to huggingface
     conversion_args_dict = {
@@ -321,11 +322,11 @@ def main():
         'print_checkpoint_structure': True
     }
 
-    #conversion_args = types.SimpleNamespace(**conversion_args_dict)
+    # conversion_args = types.SimpleNamespace(**conversion_args_dict)
 
-    #convert_checkpoint_from_megatron_to_transformers(conversion_args)
+    # convert_checkpoint_from_megatron_to_transformers(conversion_args)
     
-    #print('LOLA: model conversion finished, model saved successfully')
+    # print('LOLA: model conversion finished, model saved successfully')
 
     # # test
     # model = LOLAModel.from_pretrained(conversion_args_dict['save_path'])
@@ -338,17 +339,19 @@ def main():
 
     # Load the model and tokenizer
     # model = AutoModelForCausalLM.from_pretrained(conversion_args_dict['save_path'])
-    model = LOLAModel.from_pretrained(conversion_args_dict['save_path'])
+    # model = LOLAModel.from_pretrained(conversion_args_dict['save_path'])
+    model = LOLALMHeadModel.from_pretrained(conversion_args_dict['save_path']).to("cuda:0")
     # model = AutoModelForCausalLM.from_pretrained('ai-forever/mGPT')
     #tokenizer = AutoTokenizer.from_pretrained('ai-forever/mGPT')
     tokenizer = AutoTokenizer.from_pretrained(conversion_args_dict['save_path'])
 
     # Encode the input text
     #inputs = tokenizer("Hello, my dog is cute", return_tensors="pt")
-    inputs = tokenizer("The quick brown fox", return_tensors="pt")
+    #inputs = tokenizer("The quick brown fox", return_tensors="pt").to("cuda:0")
+    inputs = tokenizer("My name is Sven", return_tensors="pt").to("cuda:0")
     # Generate token indices
     # Adjust parameters like max_length according to your needs
-    output_sequences = model.generate(input_ids=inputs['input_ids'], max_length=500)
+    output_sequences = model.generate(input_ids=inputs['input_ids'], max_length=100)
 
     # Decode the generated indices to text
     generated_text = tokenizer.decode(output_sequences[0], skip_special_tokens=True)

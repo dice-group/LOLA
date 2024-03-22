@@ -133,9 +133,11 @@ class GPT2Attention(nn.Module):
             torch.tril(torch.ones((max_positions, max_positions), dtype=torch.bool)).view(
                 1, 1, max_positions, max_positions
             ),
-            persistent=False,
+            #persistent=False,
         )
-        self.register_buffer("masked_bias", torch.tensor(-1e4), persistent=False)
+        self.register_buffer("masked_bias", torch.tensor(-1e4), 
+                             #persistent=False
+                             )
 
         self.embed_dim = config.hidden_size
         self.num_heads = config.num_attention_heads
@@ -2094,3 +2096,24 @@ class LOLAMOE(nn.Module):
 #            expert_outputs += [out]
 #
 #        return torch.cat(expert_outputs, dim=1)
+
+@add_start_docstrings(
+    """
+    The LOLA Model transformer with a language modeling head on top.
+    """,
+    GPT2_START_DOCSTRING,
+)
+class LOLALMHeadModel(GPT2LMHeadModel):
+    _tied_weights_keys = ["lm_head.weight"]
+
+    def __init__(self, config):
+        super().__init__(config)
+        self.transformer = LOLAModel(config)
+        self.lm_head = nn.Linear(config.n_embd, config.vocab_size, bias=False)
+
+        # Model parallel
+        self.model_parallel = False
+        self.device_map = None
+
+        # Initialize weights and apply final processing
+        self.post_init()

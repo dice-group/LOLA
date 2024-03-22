@@ -177,9 +177,7 @@ class LOLAInference(EvalHarnessAdaptor):
 
 def tasks_args(parser):
     """Provide extra arguments required for tasks."""
-    group = parser.add_argument_group(title='Model conversion options')
-    group.add_argument('--output_path', default=None, type=str, help='Output Megatron checkpoint folder')
-    group.add_argument('--for_release', action='store_true', help='Convert for release purpose, reset some (progress) counters.')
+    group = parser.add_argument_group(title='Model inference options')
     # default arg for evaluate.py
     group.add_argument('--adaptive_seq_len',  default = True, action='store_true',
                        help='Should the sequence length be adapted to the batch during evaluation, if in fp16 the results will be slightly different due to numerical errors but greatly speed up evaluation.')

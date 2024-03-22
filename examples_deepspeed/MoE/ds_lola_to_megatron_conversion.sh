@@ -40,8 +40,7 @@ MEGATRON_REQUIRED_ARGS="\
     --max-position-embeddings -1
 "
 
-# CMD="../../tasks/eval_harness/lola_to_megatron_convert.py \
-CMD="../../tasks/eval_harness/lola_inference.py \
+CMD="../../tasks/eval_harness/lola_to_megatron_convert.py \
     --load $CHECKPOINT_PATH\
     --tensor-model-parallel-size $TP_SIZE \
     --pipeline-model-parallel-size $PP_SIZE\
@@ -68,6 +67,6 @@ fi
 
 # LAUNCHER="deepspeed --num_nodes $NUM_NODE --num_gpus $NUM_GPU_PER_NODE"
 
-LAUNCHER="python -u -m debugpy --wait-for-client --listen 0.0.0.0:12121 -m torch.distributed.run "
+LAUNCHER="python -u -m debugpy --wait-for-client --listen 0.0.0.0:12121 -m torch.distributed.run --master_port 2344 "
 
 $LAUNCHER $CMD
