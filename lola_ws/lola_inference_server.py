@@ -194,9 +194,24 @@ def generate_text():
     output_str = generate_output(question_str, max_sentences, max_tokens, remove_newlines, greedy=greedy, temperature=temperature, top_k=top_k, top_p=top_p)
     MUTEX.release()
     
-    logging.info('Generated text: %s' % str(output_str))
+    response_dict = {
+        'input_text': question_str,
+        'generated_text': output_str,
+        'control_params': {
+            'max_sentences': max_sentences,
+            'max_tokens': max_tokens,
+            'greedy': greedy,
+            'temperature': temperature,
+            'top_k': top_k,
+            'top_p': top_p,
+            'remove_newlines': remove_newlines  
+        }
+    }
     
-    return output_str
+    logging.info('Generated text: %s' % str(output_str))
+    logging.info('Control params: %s' % str(response_dict['control_params']))
+    
+    return response_dict
 
 @app.route('/token-embedding', methods=['POST'])
 def get_token_embedding():
@@ -217,7 +232,14 @@ def get_token_embedding():
     embeddings = INFER_TOOL.get_token_embeddings(context, fetch_contextual)
     MUTEX.release()
     
-    return embeddings
+    response_dict = {
+        'token_embeddings': embeddings,
+        'control_params': {
+            'fetch_contextual': fetch_contextual
+        }
+    }
+    
+    return response_dict
 
 @app.route('/check-service', methods=['GET'])
 def check_service():
