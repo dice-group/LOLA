@@ -428,7 +428,7 @@ def convert_checkpoint_from_megatron_to_transformers(args):
         use_cache=True,
         bos_token_id=vocab_size - 1,
         eos_token_id=vocab_size - 1,
-        architectures=["GPT2LMHeadModel"],
+        architectures=["LOLALMHeadModel"],
         num_experts=16,
         topk=1
     )

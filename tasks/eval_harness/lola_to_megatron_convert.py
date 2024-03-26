@@ -53,7 +53,7 @@ from tools.convert_checkpoint.deepspeed_to_megatron import _create_rank_checkpoi
 
 from collections import OrderedDict
 
-from modeling_lola_gpt2 import LOLAModel, LOLALMHeadModel
+from modeling_lola_gpt2 import LOLALMHeadModel
 
 MODEL_KEY = 'model'
 ARGS_KEY = 'args'
@@ -294,6 +294,8 @@ def generate_hf_model_text(inp_text, max_length, tokenizer, model):
 from megatron.arguments import parse_args
 
 def main():
+    ### Step 1: Convert from DeepSpeed to Megatron
+
     model, ds_checkpoint = load_ds_checkpoint_and_setup_megatron(extra_args_provider=tasks_args)
 
     args = get_args()
@@ -301,69 +303,54 @@ def main():
     output_dir = args.output_path
     for_release = args.for_release
     
-    # print(f'Converting DeepSpeed checkpoint in {args.load} to Megatron checkpoint in {output_dir}')
-    # # LOLA: Modifying below initialization for MoE model
-    # # ds_checkpoint = DeepSpeedCheckpoint(args.input_folder, args.target_tp, args.target_pp, True)
-    # iteration = ds_checkpoint.get_iteration()
-    # _create_latest_file(args.output_path, iteration)
-    # # there's only 1 checkpoint path as tp_degree and pp_degree is 1 for LOLA model (MoE)
-    # checkpoint_paths = _create_checkpoint_paths(output_dir, iteration=iteration, tp_degree=1, pp_degree=1)
-    # print('LOLA: checkpoint_paths:',checkpoint_paths)
+    print(f'Converting DeepSpeed checkpoint in {args.load} to Megatron checkpoint in {output_dir}')
+    # LOLA: Modifying below initialization for MoE model
+    iteration = ds_checkpoint.get_iteration()
+    _create_latest_file(args.output_path, iteration)
+    # there's only 1 checkpoint path as tp_degree and pp_degree is 1 for LOLA model (MoE)
+    checkpoint_paths = _create_checkpoint_paths(output_dir, iteration=iteration, tp_degree=1, pp_degree=1)
+    print('LOLA: checkpoint_paths:',checkpoint_paths)
             
-    # sd = _create_rank_checkpoint_lola(model, args, iteration, for_release)
-    # _save_checkpoint(checkpoint_paths[0][0], sd)
+    sd = _create_rank_checkpoint_lola(model, args, iteration, for_release)
+    # Saving intermediate Megatron model
+    _save_checkpoint(checkpoint_paths[0][0], sd)
     
     # Sending the loaded weights to garbage collection
     sd = None
     model = None
 
-    # Convert to huggingface
+    ### Step 2: Convert from Megatron to Huggingface
+
     conversion_args_dict = {
         'megatron_path': '/data/nikit_ws/LOLA-Megatron-DeepSpeed',
         'load_path': output_dir + '/iter_0296000',
-        'save_path': output_dir + '/lola_converted_hf_model',
+        'save_path': output_dir + '/lola_hf_model',
         'tokenizer_name': 'ai-forever/mGPT',
-        'max_shard_size': '100GB',
+        'max_shard_size': '10GB',
         'print_checkpoint_structure': True
     }
 
-    # conversion_args = types.SimpleNamespace(**conversion_args_dict)
+    conversion_args = types.SimpleNamespace(**conversion_args_dict)
 
-    # convert_checkpoint_from_megatron_to_transformers(conversion_args)
+    convert_checkpoint_from_megatron_to_transformers(conversion_args)
     
-    # print('LOLA: model conversion finished, model saved successfully')
+    print('LOLA: model conversion finished, model saved successfully.')
 
-    # # test
-    # model = LOLAModel.from_pretrained(conversion_args_dict['save_path'])
-    # # try this to test https://huggingface.co/docs/transformers/en/model_doc/gpt2
-    # tokenizer = AutoTokenizer.from_pretrained('ai-forever/mGPT')
-    # inputs = tokenizer("Hello, my dog is cute", return_tensors="pt")
-    # outputs = model(**inputs)
-    # last_hidden_states = outputs.last_hidden_state
-
+    ### Step 3: Test the converted model
 
     # Load the model and tokenizer
-    # model = AutoModelForCausalLM.from_pretrained(conversion_args_dict['save_path'])
-    # model = LOLAModel.from_pretrained(conversion_args_dict['save_path'])
     model = LOLALMHeadModel.from_pretrained(conversion_args_dict['save_path']).to("cuda:0")
-    # model = AutoModelForCausalLM.from_pretrained('ai-forever/mGPT')
+    # saving model
+    # model.save_pretrained("/data/nikit_ws/lola_converted_model/lola_v1_huggingface", from_pt=True)
     #tokenizer = AutoTokenizer.from_pretrained('ai-forever/mGPT')
     tokenizer = AutoTokenizer.from_pretrained(conversion_args_dict['save_path'])
-
-    # # Encode the input text
-    # #inputs = tokenizer("Hello, my dog is cute", return_tensors="pt")
-    # inputs = tokenizer("The quick brown fox", return_tensors="pt").to("cuda:0")
-    # #inputs = tokenizer("My name is Sven", return_tensors="pt").to("cuda:0")
-    # # Generate token indices
-    # # Adjust parameters like max_length according to your needs
-    # output_sequences = model.generate(input_ids=inputs['input_ids'], max_length=100)
-
-    # # Decode the generated indices to text
-    # generated_text = tokenizer.decode(output_sequences[0], skip_special_tokens=True)
     
-    generated_text = generate_hf_model_text("The quick brown fox", 100, tokenizer, model)
+    input_text = "The quick brown fox"
 
-    print(generated_text)
+    generated_text = generate_hf_model_text(input_text, 100, tokenizer, model)
+
+    print('Input text:', input_text)
+    print('Generated text:', generated_text)
 
 if __name__ == '__main__':
     main()
