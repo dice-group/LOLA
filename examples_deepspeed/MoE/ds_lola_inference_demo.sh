@@ -39,7 +39,7 @@ MEGATRON_REQUIRED_ARGS="\
     --max-position-embeddings -1
 "
 
-CMD="../../tasks/eval_harness/lola_inference.py \
+CMD="../../lola_ws/util/lola_inference.py \
     --load $CHECKPOINT_PATH\
     --tensor-model-parallel-size $TP_SIZE \
     --pipeline-model-parallel-size $PP_SIZE\

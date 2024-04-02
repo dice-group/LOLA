@@ -1,6 +1,10 @@
 # This code is originally from https://github.com/bigscience-workshop/Megatron-DeepSpeed
 # under the license https://huggingface.co/spaces/bigscience/license
 
+import sys
+
+sys.path.append("../../tasks/eval_harness/")
+
 from evaluate import *
 from megatron import get_args
 from megatron import get_tokenizer
