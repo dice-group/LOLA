@@ -1,6 +1,5 @@
 
-from transformers import AutoTokenizer
-from modeling_lola_gpt2 import *
+from transformers import AutoTokenizer, AutoModelForCausalLM
 
 PROMPT_DICT = {
     "prompt_input": (
@@ -33,8 +32,8 @@ def generate_instruction_response(example_map, tokenizer, model):
 
 def main():
     
-    model = LOLALMHeadModel.from_pretrained("./output_model/").to("cuda:0")
-    tokenizer = AutoTokenizer.from_pretrained('./output_model/')
+    model = AutoModelForCausalLM.from_pretrained("dice-research/lola_v1_alpaca_instructions", trust_remote_code=True).to("cuda:0")
+    tokenizer = AutoTokenizer.from_pretrained('ai-forever/mGPT')
     
     example = {
         "instruction": "Give three tips for staying healthy.",
