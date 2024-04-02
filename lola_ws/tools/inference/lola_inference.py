@@ -3,7 +3,7 @@
 
 import sys
 
-sys.path.append("../../tasks/eval_harness/")
+sys.path.append("../../../tasks/eval_harness/")
 
 from evaluate import *
 from megatron import get_args
