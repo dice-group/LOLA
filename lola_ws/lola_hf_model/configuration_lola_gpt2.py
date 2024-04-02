@@ -1,5 +1,6 @@
 from transformers.configuration_utils import PretrainedConfig
 from transformers.utils import logging
+from transformers import GPT2Config
 
 
 logger = logging.get_logger(__name__)
@@ -10,7 +11,7 @@ class LOLAConfig(PretrainedConfig):
     This is the configuration class is a modified copy of https://huggingface.co/openai-community/gpt2 with MoE support.
     """
 
-    model_type = "gpt2"
+    model_type = "lola_v1"
     keys_to_ignore_at_inference = ["past_key_values"]
     attribute_map = {
         "hidden_size": "n_embd",
@@ -21,12 +22,12 @@ class LOLAConfig(PretrainedConfig):
 
     def __init__(
         self,
-        vocab_size=50257,
-        n_positions=1024,
-        n_embd=768,
-        n_layer=12,
-        n_head=12,
-        n_inner=None,
+        vocab_size=100096,
+        n_positions=2048,
+        n_embd=2048,
+        n_layer=24,
+        n_head=16,
+        n_inner=8192,
         activation_function="gelu_new",
         resid_pdrop=0.1,
         embd_pdrop=0.1,
@@ -40,8 +41,8 @@ class LOLAConfig(PretrainedConfig):
         summary_first_dropout=0.1,
         scale_attn_weights=True,
         use_cache=True,
-        bos_token_id=50256,
-        eos_token_id=50256,
+        bos_token_id=100095,
+        eos_token_id=100095,
         scale_attn_by_inverse_layer_idx=False,
         reorder_and_upcast_attn=False,
         num_experts=16,

@@ -7,6 +7,7 @@
 import warnings
 from typing import Optional, Tuple, Union
 
+from configuration_lola_gpt2 import LOLAConfig
 import torch
 import torch.utils.checkpoint
 from torch import nn
@@ -33,6 +34,9 @@ logger = logging.get_logger(__name__)
 
 # LOLA
 class LOLAModel(GPT2PreTrainedModel):
+    
+    config_class = LOLAConfig
+    
     def __init__(self, config):
         super().__init__(config)
 
@@ -493,6 +497,8 @@ class LOLAAttention(GPT2Attention):
 
 
 class LOLALMHeadModel(GPT2LMHeadModel):
+    
+    config_class = LOLAConfig
 
     def __init__(self, config):
         # preventing initiation of GPT2LMHeadModel directly
@@ -509,6 +515,8 @@ class LOLALMHeadModel(GPT2LMHeadModel):
 
 
 class LOLADoubleHeadsModel(GPT2DoubleHeadsModel):
+    
+    config_class = LOLAConfig
 
     def __init__(self, config):
         super(GPT2DoubleHeadsModel, self).__init__(config)
@@ -526,6 +534,9 @@ class LOLADoubleHeadsModel(GPT2DoubleHeadsModel):
 
       
 class LOLAForSequenceClassification(GPT2ForSequenceClassification):
+    
+    config_class = LOLAConfig
+    
     def __init__(self, config):
         super(GPT2ForSequenceClassification, self).__init__(config)
         self.num_labels = config.num_labels
@@ -540,6 +551,9 @@ class LOLAForSequenceClassification(GPT2ForSequenceClassification):
         self.post_init()
 
 class LOLAForTokenClassification(GPT2ForTokenClassification):
+    
+    config_class = LOLAConfig
+    
     def __init__(self, config):
         super(GPT2ForTokenClassification, self).__init__(config)
         self.num_labels = config.num_labels
@@ -562,6 +576,9 @@ class LOLAForTokenClassification(GPT2ForTokenClassification):
         self.post_init()
 
 class LOLAForQuestionAnswering(GPT2PreTrainedModel):
+    
+    config_class = LOLAConfig
+    
     def __init__(self, config):
         super().__init__(config)
         self.num_labels = config.num_labels
