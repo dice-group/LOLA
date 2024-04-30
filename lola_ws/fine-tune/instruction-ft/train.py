@@ -199,35 +199,33 @@ def train():
     parser = transformers.HfArgumentParser((ModelArguments, DataArguments, TrainingArguments))
     model_args, data_args, training_args = parser.parse_args_into_dataclasses()
 
-    # model = transformers.AutoModelForCausalLM.from_pretrained(
-    #     model_args.model_name_or_path,
-    #     cache_dir=training_args.cache_dir,
-    # )
-
-    
-    
-    # tokenizer = transformers.AutoTokenizer.from_pretrained(
-    #     model_args.model_name_or_path,
-    #     cache_dir=training_args.cache_dir,
-    #     model_max_length=training_args.model_max_length,
-    #     padding_side="right",
-    #     use_fast=False,
-    # )
-
-    ## loading /scratch/hpc-prf-lola/nikit/repos/LOLA-Megatron-DeepSpeed/lola_ws/converted_model
-
-    model = LOLALMHeadModel.from_pretrained(
-            "/scratch/hpc-prf-lola/nikit/repos/LOLA-Megatron-DeepSpeed/lola_ws/converted_model",
-            cache_dir=training_args.cache_dir,
-        )
+    model = transformers.AutoModelForCausalLM.from_pretrained(
+        model_args.model_name_or_path,
+        cache_dir=training_args.cache_dir,
+    )
 
     tokenizer = transformers.AutoTokenizer.from_pretrained(
-        "ai-forever/mGPT",
+        model_args.model_name_or_path,
         cache_dir=training_args.cache_dir,
         model_max_length=training_args.model_max_length,
         padding_side="right",
         use_fast=False,
     )
+
+    ## loading /scratch/hpc-prf-lola/nikit/repos/LOLA-Megatron-DeepSpeed/lola_ws/converted_model
+
+    # model = LOLALMHeadModel.from_pretrained(
+    #         "/scratch/hpc-prf-lola/nikit/repos/LOLA-Megatron-DeepSpeed/lola_ws/converted_model",
+    #         cache_dir=training_args.cache_dir,
+    #     )
+
+    # tokenizer = transformers.AutoTokenizer.from_pretrained(
+    #     "ai-forever/mGPT",
+    #     cache_dir=training_args.cache_dir,
+    #     model_max_length=training_args.model_max_length,
+    #     padding_side="right",
+    #     use_fast=False,
+    # )
 
     special_tokens_dict = dict()
     if tokenizer.pad_token is None:

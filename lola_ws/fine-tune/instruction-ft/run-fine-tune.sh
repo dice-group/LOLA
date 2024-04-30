@@ -1,13 +1,15 @@
 #!/bin/bash
 
+export CUDA_VISIBLE_DEVICES=0
+
 torchrun --nnodes=1 --nproc_per_node=1 --master_port=4545 train.py \
-    --model_name_or_path mistralai/Mistral-7B-v0.1 \
-    --data_path ./alpaca_data.json \
+    --model_name_or_path dice-research/lola_v1 \
+    --data_path ./alpaca_multilingual.json \
     --bf16 True \
-    --output_dir ./output_model \
+    --output_dir ./lola_alpaca_multi \
     --num_train_epochs 3 \
-    --per_device_train_batch_size 4 \
-    --per_device_eval_batch_size 4 \
+    --per_device_train_batch_size 8 \
+    --per_device_eval_batch_size 8 \
     --gradient_accumulation_steps 8 \
     --evaluation_strategy "no" \
     --save_strategy "steps" \
