@@ -5,20 +5,21 @@ from random import shuffle
 
 # List of URLs containing JSON arrays
 urls = [
-    "https://raw.githubusercontent.com/hplt-project/monolingual-multilingual-instruction-tuning/main/training-data/alpaca_data_cleaned.bg.json",
-    "https://raw.githubusercontent.com/hplt-project/monolingual-multilingual-instruction-tuning/main/training-data/alpaca_data_cleaned.cs.json",
+    #"https://raw.githubusercontent.com/hplt-project/monolingual-multilingual-instruction-tuning/main/training-data/alpaca_data_cleaned.bg.json",
+    #"https://raw.githubusercontent.com/hplt-project/monolingual-multilingual-instruction-tuning/main/training-data/alpaca_data_cleaned.cs.json",
     "https://raw.githubusercontent.com/hplt-project/monolingual-multilingual-instruction-tuning/main/training-data/alpaca_data_cleaned.de.json",
     "https://raw.githubusercontent.com/hplt-project/monolingual-multilingual-instruction-tuning/main/training-data/alpaca_data_cleaned.en.json",
     "https://raw.githubusercontent.com/hplt-project/monolingual-multilingual-instruction-tuning/main/training-data/alpaca_data_cleaned.es.json",
-    "https://raw.githubusercontent.com/hplt-project/monolingual-multilingual-instruction-tuning/main/training-data/alpaca_data_cleaned.fi.json",
+    #"https://raw.githubusercontent.com/hplt-project/monolingual-multilingual-instruction-tuning/main/training-data/alpaca_data_cleaned.fi.json",
     "https://raw.githubusercontent.com/hplt-project/monolingual-multilingual-instruction-tuning/main/training-data/alpaca_data_cleaned.fr.json",
     "https://raw.githubusercontent.com/hplt-project/monolingual-multilingual-instruction-tuning/main/training-data/alpaca_data_cleaned.pt.json",
     "https://raw.githubusercontent.com/hplt-project/monolingual-multilingual-instruction-tuning/main/training-data/alpaca_data_cleaned.ru.json",
-    "https://raw.githubusercontent.com/hplt-project/monolingual-multilingual-instruction-tuning/main/training-data/alpaca_data_cleaned.zh.json"
+    #"https://raw.githubusercontent.com/hplt-project/monolingual-multilingual-instruction-tuning/main/training-data/alpaca_data_cleaned.zh.json"
 ]
 
 # Filename to write the combined JSON
-filename = "alpaca_multilingual.json"
+# filename = "alpaca_multilingual.json"
+filename = "alpaca_multilingual_limited.json"
 
 def download_json(url):
     """Download and return JSON data from the given URL."""
@@ -44,8 +45,8 @@ def main():
     shuffle(all_data)
 
     # Write the combined and shuffled data to a file
-    with open(filename, "w") as f:
-        json.dump(all_data, f, indent=4)
+    with open(filename, "w", encoding='utf-8') as f:
+        json.dump(all_data, f, ensure_ascii=False, indent=4)
 
     print(f"Data combined, shuffled, and written to '{filename}'.")
 
