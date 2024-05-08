@@ -93,6 +93,22 @@ get_task_languages() {
     fi
 }
 
+# Function to extract subtasks for a given task
+get_subtasks_for_task() {
+    local task_name="$1"
+    local json_file="$2"
+
+    # Use jq to check if the task has subtasks and extract them if available
+    subtasks=$(jq -r ".tasks[] | select(.name == \"$task_name\") | .subtasks[]?.name" "$json_file")
+
+    # Check if the subtasks variable is empty
+    if [[ -z "$subtasks" ]]; then
+        echo "none"
+    else
+        echo "$subtasks"
+    fi
+}
+
 task_lang_map_file="task_lang.json"
 model_lang_map_file="llm_lang.json"
 
@@ -111,8 +127,8 @@ IFS=',' # Set Internal Field Separator to comma for splitting
 for task in "${!taskSubtasksMap[@]}"; do
     subtasks=${taskSubtasksMap[$task]}
     if [[ -z "$subtasks" ]]; then
-        # No subtasks defined, fetch all possible ones from tsv
-        subtasks_list=("all")
+        # If subtasks exist in json then extract all otherwise set it to 'none'
+        subtasks=$(get_subtasks_for_task "$task" "$task_lang_map_file")
     else
         IFS=',' read -ra subtasks_list <<< "$subtasks"
     fi
@@ -143,8 +159,9 @@ for task in "${!taskSubtasksMap[@]}"; do
                     continue
                 fi
                 echo "Processing Task: $task Subtask: $subtask Language: $language Model: $model"
+                RUN_NAME="lola-eval-$model-$task-$subtask-$language"
                 # Create a job on the computing cluster
-                sbatch noctua2_execute_job.sh $task $subtask $model $language $results_dir
+                # sbatch --job-name=$RUN_NAME noctua2_execute_job.sh $task $subtask $model $language $results_dir
             done
         done
     done
