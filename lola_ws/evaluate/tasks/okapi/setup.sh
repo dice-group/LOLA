@@ -25,3 +25,10 @@ pip install  -e ".[multilingual]"
 bash scripts/download.sh
 
 echo  'installation finished'
+
+# edit files to add trust_remote_code
+cd ..
+
+python3 edits.py $REPO_DIR
+
+echo  'files adjusted'
