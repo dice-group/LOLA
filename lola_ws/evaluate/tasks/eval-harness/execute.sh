@@ -1,4 +1,5 @@
 #!/bin/bash
+. task.config
 
 # Parse the commandline args into models, sub tasks and languages
 while getopts ":m:s:l:r:" opt; do
@@ -26,7 +27,7 @@ done
 
 # Activate the virtual environment
 # source eleuther_env/bin/activate
-source eleuther_env/bin/activate
+conda activate $TASK_NAME-eval
 
 
 # Multi model/subtasks/language support
@@ -43,7 +44,8 @@ mkdir "$result_dir"
 mkdir "${result_dir}/$model"
 sub="${sub_task}_$lang"
 mkdir "${result_dir}/${model}/$sub"
-chdir "lm-evaluation-harness"
+chdir $REPO_DIR
+
 lm_eval --model hf \
     --model_args "${model}" \
     --tasks "${sub}" \
