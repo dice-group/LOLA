@@ -2,6 +2,7 @@
     "llms": [
         {
             "name": "XLM-R",
+            "id": "xlmr",
             "huggingface_model_id": "FacebookAI/xlm-roberta-base",
             "languages": [
                 "af",
@@ -102,6 +103,7 @@
         },
         {
             "name": "XLM",
+            "id": "xlm",
             "huggingface_model_id": "",
             "languages": [
                 "af",
@@ -199,6 +201,7 @@
         },
         {
             "name": "MT5",
+            "id": "mt5",
             "huggingface_model_id": "google/mt5-base",
             "languages": [
                 "af",
@@ -306,6 +309,7 @@
         },
         {
             "name": "M2M-100",
+            "id": "m2m",
             "huggingface_model_id": "facebook/m2m100_1.2B",
             "languages": [
                 "af",
@@ -412,6 +416,7 @@
         },
         {
             "name": "mGPT-1.3B",
+            "id": "mgpt",
             "huggingface_model_id": "ai-forever/mGPT",
             "languages": [
                 "af",
@@ -477,6 +482,7 @@
         },
         {
             "name": "BLOOM-7B",
+            "id": "bloom",
             "huggingface_model_id": "meta-llama/Llama-2-7b",
             "languages": [
                 "ak",
@@ -529,6 +535,7 @@
         },
         {
             "name": "mBART",
+            "id": "mbart",
             "huggingface_model_id": "facebook/mbart-large-50",
             "languages": [
                 "ar",
@@ -560,6 +567,7 @@
         },
         {
             "name": "XGen-7B",
+            "id": "xgen",
             "huggingface_model_id": "Salesforce/xgen-7b-8k-base",
             "languages": [
                 "bg",
@@ -588,6 +596,7 @@
         },
         {
             "name": "LLAMA-2-7B",
+            "id": "llama2",
             "huggingface_model_id": "meta-llama/Llama-2-7b",
             "languages": [
                 "bg",
@@ -621,6 +630,7 @@
         },
         {
             "name": "Zephyr-7B Beta",
+            "id": "zephyr",
             "huggingface_model_id": "HuggingFaceH4/zephyr-7b-beta",
             "languages": [
                 "de",
@@ -638,6 +648,7 @@
         },
         {
             "name": "TowerBase",
+            "id": "towerbase",
             "huggingface_model_id": "Unbabel/TowerBase-7B-v0.1",
             "languages": [
                 "de",
@@ -654,6 +665,7 @@
         },
         {
             "name": "SeaLLM-7B",
+            "id": "seallm",
             "huggingface_model_id": "SeaLLMs/SeaLLM-7B-v2",
             "languages": [
                 "en",
@@ -670,6 +682,7 @@
         },
         {
             "name": "MMedLM-7B",
+            "id": "mmedlm",
             "huggingface_model_id": "Henrychur/MMedLM",
             "languages": [
                 "en",
@@ -682,6 +695,7 @@
         },
         {
             "name": "MIXTRAL-7B",
+            "id": "mixtral",
             "huggingface_model_id": "mistralai/Mixtral-8x7B-Instruct-v0.1",
             "languages": [
                 "de",
@@ -693,6 +707,7 @@
         },
         {
             "name": "Falcon-7B",
+            "id": "falcon",
             "huggingface_model_id": "tiiuae/falcon-7b-instruct",
             "languages": [
                 "en",
@@ -701,6 +716,7 @@
         },
         {
             "name": "Breeze-7B",
+            "id": "breeze",
             "huggingface_model_id": "MediaTek-Research/Breeze-7B-Instruct-v1_0",
             "languages": [
                 "en",
@@ -709,6 +725,7 @@
         },
         {
             "name": "Glot500m-390M",
+            "id": "glot",
             "huggingface_model_id": "https://huggingface.co/cis-lmu/glot500-base",
             "languages": [
                 "af",

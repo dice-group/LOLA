@@ -2,6 +2,7 @@
     "tasks": [
         {
             "name": "MultiQ",
+            "id": "multiq",
             "languages": [
                 "af",
                 "ak",
@@ -144,9 +145,11 @@
         },
         {
             "name": "Mega",
+            "id": "mega",
             "subtasks": [
                 {
                     "name": "XNLI",
+                    "id": "mega_xnli",
                     "languages": [
                         "ar",
                         "bg",
@@ -167,6 +170,7 @@
                 },
                 {
                     "name": "Indic-XNLI",
+                    "id": "mega_indic_xnli",
                     "languages": [
                         "as",
                         "bn",
@@ -183,10 +187,12 @@
                 },
                 {
                     "name": "GLUECoS (NLI)",
+                    "id": "mega_gluecos-nli",
                     "languages": []
                 },
                 {
                     "name": "PAWS-X (Paraphrase Id)",
+                    "id": "mega_pawsx",
                     "languages": [
                         "de",
                         "en",
@@ -199,6 +205,7 @@
                 },
                 {
                     "name": "XCOPA",
+                    "id": "mega_xcopa",
                     "languages": [
                         "en",
                         "et",
@@ -214,6 +221,7 @@
                 },
                 {
                     "name": "XStoryCloze",
+                    "id": "mega_xstorycloze",
                     "languages": [
                         "ar",
                         "en",
@@ -230,6 +238,7 @@
                 },
                 {
                     "name": "TyDiQA-GoldP",
+                    "id": "mega_tydiqa-goldp",
                     "languages": [
                         "ar",
                         "bn",
@@ -244,6 +253,7 @@
                 },
                 {
                     "name": "MLQA",
+                    "id": "mega_mlqa",
                     "languages": [
                         "ar",
                         "de",
@@ -256,6 +266,7 @@
                 },
                 {
                     "name": "XQuAD",
+                    "id": "mega_xquad",
                     "languages": [
                         "ar",
                         "de",
@@ -272,6 +283,7 @@
                 },
                 {
                     "name": "IndicQA",
+                    "id": "mega_indicqa",
                     "languages": [
                         "as",
                         "bn",
@@ -288,6 +300,7 @@
                 },
                 {
                     "name": "UDPOS",
+                    "id": "mega_udpos",
                     "languages": [
                         "af",
                         "ar",
@@ -331,6 +344,7 @@
                 },
                 {
                     "name": "PANX (NER)",
+                    "id": "mega_panx",
                     "languages": [
                         "af",
                         "ar",
@@ -384,6 +398,7 @@
                 },
                 {
                     "name": "WinoMT (Gender Bias)",
+                    "id": "mega_winomt",
                     "languages": [
                         "ar",
                         "de",
@@ -397,10 +412,12 @@
                 },
                 {
                     "name": "GLUECoS (Sentiment Analysis)",
+                    "id": "mega_gluecos-sa",
                     "languages": []
                 },
                 {
                     "name": "Jigsaw (Tox classification)",
+                    "id": "mega_jigsaw",
                     "languages": [
                         "es",
                         "fr",
@@ -412,6 +429,7 @@
                 },
                 {
                     "name": "XLSum (Summarizer)",
+                    "id": "mega_xlsum",
                     "languages": [
                         "am",
                         "ar",
@@ -460,9 +478,11 @@
         },
         {
             "name": "EleutherAI",
+            "id": "lm-eval-harness",
             "subtasks": [
                 {
                     "name": "XCOPA",
+                    "id": "lm-eval-harness_xcopa",
                     "languages": [
                         "et",
                         "ht",
@@ -479,6 +499,7 @@
                 },
                 {
                     "name": "XNLI",
+                    "id": "lm-eval-harness_xnli",
                     "languages": [
                         "ar",
                         "bg",
@@ -499,6 +520,7 @@
                 },
                 {
                     "name": "XWinograd",
+                    "id": "lm-eval-harness_xwinograd",
                     "languages": [
                         "en",
                         "fr",
@@ -510,6 +532,7 @@
                 },
                 {
                     "name": "XStoryCloze",
+                    "id": "lm-eval-harness_xstorycloze",
                     "languages": [
                         "ar",
                         "en",
@@ -528,6 +551,7 @@
         },
         {
             "name": "XLSUM",
+            "id": "xlsum",
             "languages": [
                 "am",
                 "ar",
@@ -576,10 +600,12 @@
         },
         {
             "name": "XTREME-R",
+            "id": "xtreme-r",
             "subtasks": [
                 
                 {
                     "name": "XNLI",
+                    "id": "xtreme-r_xnli",
                     "languages": [
                         "ar",
                         "bg",
@@ -600,6 +626,7 @@
                 },
                 {
                     "name": "XCOPA",
+                    "id": "xtreme-r_xcopa",
                     "languages": [
                         "et",
                         "ht",
@@ -616,6 +643,7 @@
                 },
                 {
                     "name": "UD-POS",
+                    "id": "xtreme-r_udpos",
                     "languages": [
                         "af",
                         "ar",
@@ -659,6 +687,7 @@
                 },
                 {
                     "name": "WikiANN-NER",
+                    "id": "xtreme-r_wikiann",
                     "languages": [
                         "af",
                         "ar",
@@ -712,6 +741,7 @@
                 },
                 {
                     "name": "XQuAD",
+                    "id": "xtreme-r_xquad",
                     "languages": [
                         "ar",
                         "de",
@@ -728,6 +758,7 @@
                 },
                 {
                     "name": "MLQA",
+                    "id": "xtreme-r_mlqa",
                     "languages": [
                         "ar",
                         "de",
@@ -740,6 +771,7 @@
                 },
                 {
                     "name": "TyDiQA-GoldP",
+                    "id": "xtreme-r_tydiqa-goldp",
                     "languages": [
                         "ar",
                         "bn",
@@ -754,6 +786,7 @@
                 },
                 {
                     "name": "Tatoeba",
+                    "id": "xtreme-r_tatoeba",
                     "languages": [
                         "af",
                         "ar",
@@ -800,6 +833,7 @@
                 },
                 {
                     "name": "Mewsli-X",
+                    "id": "xtreme-r_mewslix",
                     "languages": [
                         "ar",
                         "de",
@@ -816,6 +850,7 @@
                 },
                 {
                     "name": "LAReQA",
+                    "id": "xtreme-r_lareqa",
                     "languages": [
                         "ar",
                         "de",
@@ -834,6 +869,7 @@
         },
         {
             "name": "Okapi",
+            "id": "okapi",
             "languages": [
                 "ar",
                 "bn",
@@ -866,6 +902,7 @@
         },
         {
             "name": "XNLI",
+            "id": "xnli",
             "languages": [
                 "ar",
                 "bg",
@@ -886,6 +923,7 @@
         },
         {
             "name": "XCOPA",
+            "id": "xcopa",
             "languages": [
                 "et",
                 "ht",
@@ -902,7 +940,8 @@
         },
         {
             "name": "XQuAD",
-    "languages": [
+            "id": "xquad",
+            "languages": [
                 "ar",
                 "de",
                 "el",
@@ -918,6 +957,7 @@
         },
         {
             "name": "MLQA",
+            "id": "mlqa",
             "languages": [
                 "ar",
                 "de",
@@ -930,6 +970,7 @@
         },
         {
             "name": "OMGEval",
+            "id": "omgeval",
             "languages": [
                 "ar",
                 "en",
