@@ -188,7 +188,10 @@
                 {
                     "name": "GLUECoS (NLI)",
                     "id": "mega_gluecos-nli",
-                    "languages": []
+                    "languages": [
+                        "en",
+                        "hi"
+                    ]
                 },
                 {
                     "name": "PAWS-X (Paraphrase Id)",
@@ -413,7 +416,10 @@
                 {
                     "name": "GLUECoS (Sentiment Analysis)",
                     "id": "mega_gluecos-sa",
-                    "languages": []
+                    "languages": [
+                        "en",
+                        "es"
+                    ]
                 },
                 {
                     "name": "Jigsaw (Tox classification)",
