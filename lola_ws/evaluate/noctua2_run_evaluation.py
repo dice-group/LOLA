@@ -1,9 +1,38 @@
+"""
+This script is used to evaluate LLMs on various tasks. The script submits a job to a SLURM-based computing cluster for each unique and valid combination of the provided tasks, models, and languages. This allows for parallel execution and efficient utilization of cluster resources. 
+Below is an example of how to run the evaluation with specific models, tasks, and languages.
+
+Command:
+    python noctua2_run_evaluation.py --models=XLM-R,mBART --tasks="Mega:XNLI,XCOPA;MultiQ;EleutherAI" --languages=hi,bn --results-dir=./output
+
+Parameters:
+    --models: Specifies the models to be used for evaluation. In this example, XLM-R and mBART models are used.
+        Example: --models=XLM-R,mBART
+    
+    --tasks: Specifies the tasks for evaluation, with optional task-specific datasets/sub-tasks. 
+        In this example:
+            - Mega task includes XNLI and XCOPA datasets.
+            - MultiQ task is included without specifying datasets (default datasets will be used).
+            - EleutherAI task is included without specifying datasets (default datasets will be used).
+        Example: --tasks="Mega:XNLI,XCOPA;MultiQ;EleutherAI"
+    
+    --languages: Specifies the languages to evaluate the models on. In this example, Hindi (hi) and Bengali (bn) are used.
+        Example: --languages=hi,bn
+    
+    --results-dir: Specifies the directory where the evaluation results will be saved.
+        Example: --results-dir=./output
+
+To run this evaluation, simply copy the command above and execute it in your terminal.
+"""
+
 import argparse
 import os
 import json
 import subprocess
 
 NONE_VAL = 'none'
+task_lang_map_file = "task_lang.json"
+model_lang_map_file = "llm_lang.json"
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Process some models, tasks, and languages.")
@@ -42,7 +71,7 @@ def get_subtasks_for_task(task_name, json_file):
 
     for task in data['tasks']:
         if task['name'] == task_name:
-            return [subtask['name'] for subtask in task.get('subtasks', [])] or ['none']
+            return [subtask['name'] for subtask in task.get('subtasks', [])] or [NONE_VAL]
     return [NONE_VAL]
 
 def get_model_languages(model_name, json_file):
@@ -65,26 +94,26 @@ def main():
 
     os.makedirs(results_dir, exist_ok=True)
 
-    task_lang_map_file = "task_lang.json"
-    model_lang_map_file = "llm_lang.json"
-
     for task, subtasks in task_subtask_map.items():
         if not subtasks:
             subtasks = get_subtasks_for_task(task, task_lang_map_file)
 
         for subtask in subtasks:
             supported_subtask_languages = get_task_languages(task, subtask, task_lang_map_file)
+            selected_languages = languages
+            if 'all' in selected_languages:
+                selected_languages = supported_subtask_languages
 
-            for language in languages:
-                if language != "all" and language not in supported_subtask_languages:
-                    print(f"Skipping: {language} is not supported for {task} and {subtask}")
+            for language in selected_languages:
+                if language not in supported_subtask_languages:
+                    print(f"Skipping: \"{language}\" is not supported for \"{task}\" and \"{subtask}\"")
                     continue
 
                 for model in models:
                     supported_model_languages = get_model_languages(model, model_lang_map_file)
 
-                    if language != "all" and language not in supported_model_languages:
-                        print(f"Skipping: {language} is not supported for {model}")
+                    if language not in supported_model_languages:
+                        print(f"Skipping: \"{language}\" is not supported for model \"{model}\"")
                         continue
 
                     print(f'Processing Task: "{task}" Subtask: "{subtask}" Language: "{language}" Model: "{model}"')
