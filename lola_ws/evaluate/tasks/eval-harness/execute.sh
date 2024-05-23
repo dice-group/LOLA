@@ -45,6 +45,9 @@ conda activate $TASK_NAME-eval
 
 # declare -a langs_array=($(echo $langs | tr "$delimiter" " "))
 
+if [[ ! $result_dir ]]; then
+    result_dir="Experiment_results"
+fi
 
 mkdir "$result_dir"
 mkdir "${result_dir}/$model"

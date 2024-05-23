@@ -46,15 +46,23 @@ conda activate $TASK_NAME-eval
 
 # declare -a langs_array=($(echo $langs | tr "$delimiter" " "))
 
+if [[ ! $result_dir ]]; then
+    result_dir="Experiment_results"
+fi
 
 mkdir "$result_dir"
 mkdir "${result_dir}/$model"
-sub="${sub_task}_$lang"
+if [[ ! $sub_task ]]; then
+    sub="$lang"
+else
+    sub="${sub_task}_$lang"
+fi
 mkdir "${result_dir}/${model}/$sub"
 cd $REPO_DIR
 
 
-bash scripts/run.sh $lang $model
+bash scripts/run.sh $lang $model > "../${model}/${sub}/output.txt"
+
 
 
 
