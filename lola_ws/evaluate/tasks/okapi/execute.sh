@@ -27,6 +27,7 @@ done
 
 # Activate the virtual environment
 # source eleuther_env/bin/activate
+conda init
 conda activate $TASK_NAME-eval
 
 
@@ -45,7 +46,7 @@ mkdir "$result_dir"
 mkdir "${result_dir}/$model"
 sub="${sub_task}_$lang"
 mkdir "${result_dir}/${model}/$sub"
-chdir $REPO_DIR
+cd $REPO_DIR
 
 
 bash scripts/run.sh $lang $model
