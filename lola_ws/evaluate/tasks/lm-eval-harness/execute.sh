@@ -31,9 +31,9 @@ done
 
 
 # Activate the virtual environment
-# source eleuther_env/bin/activate
-conda init
-conda activate $TASK_NAME-eval
+source ./$TASK_NAME-eval/bin/activate
+
+
 
 
 # Multi model/subtasks/language support
@@ -49,18 +49,23 @@ if [[ ! $result_dir ]]; then
     result_dir="Experiment_results"
 fi
 
+if [[ -d "$result_dir" ]]; then
+  result_dir="${result_dir}_$(date +%s)"
+fi
+
 mkdir "$result_dir"
-mkdir "${result_dir}/$model"
+model_dir="$(cut -d'/' -f2 <<<$model)"
+mkdir "${result_dir}/$model_dir"
 sub="${sub_task}_$lang"
-mkdir "${result_dir}/${model}/$sub"
+mkdir "${result_dir}/${model_dir}/$sub"
 cd $REPO_DIR
 
 lm_eval --model hf \
-    --model_args "${model}" \
+    --model_args pretrained="${model}" \
     --tasks "${sub}" \
     --device cuda:0 \
-    --batch_size 8
-    --trust_remote_code > "../${result_dir}/${model}/${sub}/output.txt"
+    --batch_size 8 \
+    --trust_remote_code > "../${result_dir}/${model_dir}/${sub}/output.txt"
 
 
 
