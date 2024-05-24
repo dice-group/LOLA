@@ -6,9 +6,9 @@
 #PRETRAINED_MODEL= your_model
 
 #create and activate environment task
-conda create --prefix ./$TASK_NAME-eval python=3
+yes | conda create --prefix ./$TASK_NAME-eval python=3
 
-conda activate ./$TASK_NAME-eval
+source ./$TASK_NAME-eval/bin/activate
 
 
 #clone the eval repository
