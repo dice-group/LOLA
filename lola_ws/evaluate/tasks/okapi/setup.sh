@@ -8,7 +8,7 @@
 #create and activate environment task
 yes | conda create --prefix ./$TASK_NAME-eval python=3
 
-source ./$TASK_NAME-eval/bin/activate
+source activate ./$TASK_NAME-eval
 
 
 #clone the eval repository

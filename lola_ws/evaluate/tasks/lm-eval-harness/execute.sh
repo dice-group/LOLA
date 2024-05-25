@@ -2,10 +2,10 @@
 . task.config
 
 # # Parse the commandline args into models, sub tasks and languages
-# Execute this script in the following manner:
-# bash execute.sh -m model_id -s subtask -l language -r result_directory
-# Not using the flag will set default values in case of subtask and result directory, 
-# will give an error if model_id and language are not specified
+# Sample usage: bash execute.sh -m model_id -s subtask -l language -r result_directory
+# Example: bash execute.sh -m dice-research/lola_v1 -s xnli -l de -r Results
+# Not using the flag will set default value in case of result directory, 
+# will give an error if model_id, subtask and language are not specified
 
 while getopts ":m:s:l:r:" opt; do
   case $opt in
@@ -31,7 +31,7 @@ done
 
 
 # Activate the virtual environment
-source ./$TASK_NAME-eval/bin/activate
+source activate ./$TASK_NAME-eval
 
 
 
