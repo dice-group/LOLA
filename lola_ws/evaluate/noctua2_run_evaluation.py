@@ -55,25 +55,25 @@ def parse_tasks(tasks):
         task_subtask_map[task] = subtasks[0].split(',') if subtasks else []
     return task_subtask_map
 
-def get_task_languages(task_name, subtask_name):
+def get_task_languages(task_id, subtask_id):
     data = task_lang_map
 
     for task in data['tasks']:
-        if task['name'] == task_name:
-            if subtask_name and subtask_name != NONE_VAL:
+        if task['id'] == task_id:
+            if subtask_id and subtask_id != NONE_VAL:
                 for subtask in task.get('subtasks', []):
-                    if subtask['name'] == subtask_name:
+                    if subtask['id'] == subtask_id:
                         return subtask['languages']
             else:
                 return task.get('languages', [])
     return []
 
-def get_subtasks_for_task(task_name):
+def get_subtasks_for_task(task_id):
     data = task_lang_map
 
     for task in data['tasks']:
-        if task['name'] == task_name:
-            return [subtask['name'] for subtask in task.get('subtasks', [])] or [NONE_VAL]
+        if task['id'] == task_id:
+            return [subtask['id'] for subtask in task.get('subtasks', [])] or [NONE_VAL]
     return [NONE_VAL]
 
 def get_model_information(model_id):
