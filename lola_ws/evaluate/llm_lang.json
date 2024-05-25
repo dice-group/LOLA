@@ -725,8 +725,8 @@
         },
         {
             "name": "Glot500m-390M",
-            "id": "glot",
-            "huggingface_model_id": "https://huggingface.co/cis-lmu/glot500-base",
+            "id": "glot500",
+            "huggingface_model_id": "cis-lmu/glot500-base",
             "languages": [
                 "af",
                 "ak",
