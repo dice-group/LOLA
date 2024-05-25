@@ -50,6 +50,6 @@ mkdir "${result_dir}/${model_dir}/$lang"
 cd $REPO_DIR
 
 
-bash scripts/run.sh $lang $model > "../${model_dir}/${lang}/output.txt"
+bash scripts/run.sh $lang $model > "../${result_dir}/${model_dir}/${lang}/output.txt"
 
 
