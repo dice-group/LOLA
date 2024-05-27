@@ -1,5 +1,0 @@
-#!/data/tatiana/evaluation/test/LOLA-Megatron-DeepSpeed/lola_ws/evaluate/tasks/okapi/okapi-eval/bin/python3.12
-
-from idlelib.pyshell import main
-if __name__ == '__main__':
-    main()
