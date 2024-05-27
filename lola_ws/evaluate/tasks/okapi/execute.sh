@@ -1,6 +1,7 @@
 #!/bin/bash
 . task.config
 
+
 # # Parse the commandline args into models, sub tasks and languages
 # Sample usage: bash execute.sh -m model_id -s subtask -l language -r result_directory
 # Example: bash execute.sh -m dice-research/lola_v1 -l de -r Results

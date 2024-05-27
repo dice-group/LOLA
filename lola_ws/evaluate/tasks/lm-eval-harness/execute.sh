@@ -1,6 +1,8 @@
 #!/bin/bash
 . task.config
 
+ export CUDA_VISIBLE_DEVICES=1
+
 # # Parse the commandline args into models, sub tasks and languages
 # Sample usage: bash execute.sh -m model_id -s subtask -l language -r result_directory
 # Example: bash execute.sh -m dice-research/lola_v1 -s xnli -l de -r Results

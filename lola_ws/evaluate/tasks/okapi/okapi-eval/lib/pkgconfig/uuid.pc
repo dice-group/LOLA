@@ -1,0 +1,11 @@
+prefix=/data/tatiana/evaluation/test/LOLA-Megatron-DeepSpeed/lola_ws/evaluate/tasks/okapi/okapi-eval
+exec_prefix=/data/tatiana/evaluation/test/LOLA-Megatron-DeepSpeed/lola_ws/evaluate/tasks/okapi/okapi-eval
+libdir=/data/tatiana/evaluation/test/LOLA-Megatron-DeepSpeed/lola_ws/evaluate/tasks/okapi/okapi-eval/lib
+includedir=/data/tatiana/evaluation/test/LOLA-Megatron-DeepSpeed/lola_ws/evaluate/tasks/okapi/okapi-eval/include
+
+Name: uuid
+Description: Universally unique id library
+Version: 2.32.1
+Requires:
+Cflags: -I${includedir}/uuid
+Libs: -L${libdir} -luuid

@@ -1,0 +1,523 @@
+{
+  "build": "py312h06a4308_0",
+  "build_number": 0,
+  "channel": "https://repo.anaconda.com/pkgs/main/linux-64",
+  "constrains": [],
+  "depends": [
+    "python >=3.12,<3.13.0a0"
+  ],
+  "extracted_package_dir": "/upb/users/t/tatianam/profiles/unix/cs/.conda/pkgs/wheel-0.43.0-py312h06a4308_0",
+  "files": [
+    "bin/wheel",
+    "lib/python3.12/site-packages/wheel-0.43.0.dist-info/LICENSE.txt",
+    "lib/python3.12/site-packages/wheel-0.43.0.dist-info/METADATA",
+    "lib/python3.12/site-packages/wheel-0.43.0.dist-info/RECORD",
+    "lib/python3.12/site-packages/wheel-0.43.0.dist-info/WHEEL",
+    "lib/python3.12/site-packages/wheel-0.43.0.dist-info/entry_points.txt",
+    "lib/python3.12/site-packages/wheel/__init__.py",
+    "lib/python3.12/site-packages/wheel/__main__.py",
+    "lib/python3.12/site-packages/wheel/__pycache__/__init__.cpython-312.pyc",
+    "lib/python3.12/site-packages/wheel/__pycache__/__main__.cpython-312.pyc",
+    "lib/python3.12/site-packages/wheel/__pycache__/_setuptools_logging.cpython-312.pyc",
+    "lib/python3.12/site-packages/wheel/__pycache__/bdist_wheel.cpython-312.pyc",
+    "lib/python3.12/site-packages/wheel/__pycache__/macosx_libfile.cpython-312.pyc",
+    "lib/python3.12/site-packages/wheel/__pycache__/metadata.cpython-312.pyc",
+    "lib/python3.12/site-packages/wheel/__pycache__/util.cpython-312.pyc",
+    "lib/python3.12/site-packages/wheel/__pycache__/wheelfile.cpython-312.pyc",
+    "lib/python3.12/site-packages/wheel/_setuptools_logging.py",
+    "lib/python3.12/site-packages/wheel/bdist_wheel.py",
+    "lib/python3.12/site-packages/wheel/cli/__init__.py",
+    "lib/python3.12/site-packages/wheel/cli/__pycache__/__init__.cpython-312.pyc",
+    "lib/python3.12/site-packages/wheel/cli/__pycache__/convert.cpython-312.pyc",
+    "lib/python3.12/site-packages/wheel/cli/__pycache__/pack.cpython-312.pyc",
+    "lib/python3.12/site-packages/wheel/cli/__pycache__/tags.cpython-312.pyc",
+    "lib/python3.12/site-packages/wheel/cli/__pycache__/unpack.cpython-312.pyc",
+    "lib/python3.12/site-packages/wheel/cli/convert.py",
+    "lib/python3.12/site-packages/wheel/cli/pack.py",
+    "lib/python3.12/site-packages/wheel/cli/tags.py",
+    "lib/python3.12/site-packages/wheel/cli/unpack.py",
+    "lib/python3.12/site-packages/wheel/macosx_libfile.py",
+    "lib/python3.12/site-packages/wheel/metadata.py",
+    "lib/python3.12/site-packages/wheel/util.py",
+    "lib/python3.12/site-packages/wheel/vendored/__init__.py",
+    "lib/python3.12/site-packages/wheel/vendored/__pycache__/__init__.cpython-312.pyc",
+    "lib/python3.12/site-packages/wheel/vendored/packaging/__init__.py",
+    "lib/python3.12/site-packages/wheel/vendored/packaging/__pycache__/__init__.cpython-312.pyc",
+    "lib/python3.12/site-packages/wheel/vendored/packaging/__pycache__/_elffile.cpython-312.pyc",
+    "lib/python3.12/site-packages/wheel/vendored/packaging/__pycache__/_manylinux.cpython-312.pyc",
+    "lib/python3.12/site-packages/wheel/vendored/packaging/__pycache__/_musllinux.cpython-312.pyc",
+    "lib/python3.12/site-packages/wheel/vendored/packaging/__pycache__/_parser.cpython-312.pyc",
+    "lib/python3.12/site-packages/wheel/vendored/packaging/__pycache__/_structures.cpython-312.pyc",
+    "lib/python3.12/site-packages/wheel/vendored/packaging/__pycache__/_tokenizer.cpython-312.pyc",
+    "lib/python3.12/site-packages/wheel/vendored/packaging/__pycache__/markers.cpython-312.pyc",
+    "lib/python3.12/site-packages/wheel/vendored/packaging/__pycache__/requirements.cpython-312.pyc",
+    "lib/python3.12/site-packages/wheel/vendored/packaging/__pycache__/specifiers.cpython-312.pyc",
+    "lib/python3.12/site-packages/wheel/vendored/packaging/__pycache__/tags.cpython-312.pyc",
+    "lib/python3.12/site-packages/wheel/vendored/packaging/__pycache__/utils.cpython-312.pyc",
+    "lib/python3.12/site-packages/wheel/vendored/packaging/__pycache__/version.cpython-312.pyc",
+    "lib/python3.12/site-packages/wheel/vendored/packaging/_elffile.py",
+    "lib/python3.12/site-packages/wheel/vendored/packaging/_manylinux.py",
+    "lib/python3.12/site-packages/wheel/vendored/packaging/_musllinux.py",
+    "lib/python3.12/site-packages/wheel/vendored/packaging/_parser.py",
+    "lib/python3.12/site-packages/wheel/vendored/packaging/_structures.py",
+    "lib/python3.12/site-packages/wheel/vendored/packaging/_tokenizer.py",
+    "lib/python3.12/site-packages/wheel/vendored/packaging/markers.py",
+    "lib/python3.12/site-packages/wheel/vendored/packaging/requirements.py",
+    "lib/python3.12/site-packages/wheel/vendored/packaging/specifiers.py",
+    "lib/python3.12/site-packages/wheel/vendored/packaging/tags.py",
+    "lib/python3.12/site-packages/wheel/vendored/packaging/utils.py",
+    "lib/python3.12/site-packages/wheel/vendored/packaging/version.py",
+    "lib/python3.12/site-packages/wheel/vendored/vendor.txt",
+    "lib/python3.12/site-packages/wheel/wheelfile.py"
+  ],
+  "fn": "wheel-0.43.0-py312h06a4308_0.conda",
+  "license": "MIT",
+  "link": {
+    "source": "/upb/users/t/tatianam/profiles/unix/cs/.conda/pkgs/wheel-0.43.0-py312h06a4308_0",
+    "type": 1
+  },
+  "md5": "18d5f3b68a175c72576876db4afc9e9e",
+  "name": "wheel",
+  "package_tarball_full_path": "/upb/users/t/tatianam/profiles/unix/cs/.conda/pkgs/wheel-0.43.0-py312h06a4308_0.conda",
+  "paths_data": {
+    "paths": [
+      {
+        "_path": "bin/wheel",
+        "file_mode": "text",
+        "path_type": "hardlink",
+        "prefix_placeholder": "/croot/wheel_1714716995019/_h_env_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_placehold_p",
+        "sha256": "0145718c4792fa150cc37b089a32ff049d8b458f2d454c82efecd9fc268e3a9f",
+        "sha256_in_prefix": "2b25d67b8b2efe2846f479c7e3c0b551891dd64087675666b3484e8546034dd3",
+        "size_in_bytes": 462
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel-0.43.0.dist-info/LICENSE.txt",
+        "path_type": "hardlink",
+        "sha256": "30c23618679108f3e8ea1d2a658c7ca417bdfc891c98ef1a89fa4ff0c9828654",
+        "sha256_in_prefix": "30c23618679108f3e8ea1d2a658c7ca417bdfc891c98ef1a89fa4ff0c9828654",
+        "size_in_bytes": 1107
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel-0.43.0.dist-info/METADATA",
+        "path_type": "hardlink",
+        "sha256": "59bac22b00a59d3e5608a56b8cf8efc43831a36b72792ee4389c9cd4669c7841",
+        "sha256_in_prefix": "59bac22b00a59d3e5608a56b8cf8efc43831a36b72792ee4389c9cd4669c7841",
+        "size_in_bytes": 2153
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel-0.43.0.dist-info/RECORD",
+        "path_type": "hardlink",
+        "sha256": "0785c0170adbdc2ee4f8da0610ee5e4f4ef809a321fe465c4effa796ce3ff019",
+        "sha256_in_prefix": "0785c0170adbdc2ee4f8da0610ee5e4f4ef809a321fe465c4effa796ce3ff019",
+        "size_in_bytes": 2823
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel-0.43.0.dist-info/WHEEL",
+        "path_type": "hardlink",
+        "sha256": "1196c6921ec87b83e865f450f08d19b8ff5592537f4ef719e83484e546abe33e",
+        "sha256_in_prefix": "1196c6921ec87b83e865f450f08d19b8ff5592537f4ef719e83484e546abe33e",
+        "size_in_bytes": 81
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel-0.43.0.dist-info/entry_points.txt",
+        "path_type": "hardlink",
+        "sha256": "ad363505b90f1e1906326e10dc5d29233241cd6da4331a06d68ae27dfbc6740d",
+        "sha256_in_prefix": "ad363505b90f1e1906326e10dc5d29233241cd6da4331a06d68ae27dfbc6740d",
+        "size_in_bytes": 104
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/__init__.py",
+        "path_type": "hardlink",
+        "sha256": "0fa8e11f4d1e3336e0ad718078ec157c3e62fa508030cc9cb86d4bd2eb1e0e5a",
+        "sha256_in_prefix": "0fa8e11f4d1e3336e0ad718078ec157c3e62fa508030cc9cb86d4bd2eb1e0e5a",
+        "size_in_bytes": 59
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/__main__.py",
+        "path_type": "hardlink",
+        "sha256": "3643149ee4c219c3a4818d0804b8010950bf04619c58e471d8af236064b5d941",
+        "sha256_in_prefix": "3643149ee4c219c3a4818d0804b8010950bf04619c58e471d8af236064b5d941",
+        "size_in_bytes": 455
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/__pycache__/__init__.cpython-312.pyc",
+        "path_type": "hardlink",
+        "sha256": "43b161b29ef6aa1c06d2488b5589afc9ec62c8d414690bc97bab02bb8ab71f71",
+        "sha256_in_prefix": "43b161b29ef6aa1c06d2488b5589afc9ec62c8d414690bc97bab02bb8ab71f71",
+        "size_in_bytes": 222
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/__pycache__/__main__.cpython-312.pyc",
+        "path_type": "hardlink",
+        "sha256": "47111463a843f026d3d657fe9c4a73553eb6af59a7deaea54b4b388a47de0ddf",
+        "sha256_in_prefix": "47111463a843f026d3d657fe9c4a73553eb6af59a7deaea54b4b388a47de0ddf",
+        "size_in_bytes": 957
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/__pycache__/_setuptools_logging.cpython-312.pyc",
+        "path_type": "hardlink",
+        "sha256": "8e64601f2c0dd8329baead1a791946039fd52879180c233fef755465b3747caf",
+        "sha256_in_prefix": "8e64601f2c0dd8329baead1a791946039fd52879180c233fef755465b3747caf",
+        "size_in_bytes": 1311
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/__pycache__/bdist_wheel.cpython-312.pyc",
+        "path_type": "hardlink",
+        "sha256": "77f9d88827ea05107f9f360bf5dfa5fa3e53a8fdfa94dd4d86b386391db2e434",
+        "sha256_in_prefix": "77f9d88827ea05107f9f360bf5dfa5fa3e53a8fdfa94dd4d86b386391db2e434",
+        "size_in_bytes": 24849
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/__pycache__/macosx_libfile.cpython-312.pyc",
+        "path_type": "hardlink",
+        "sha256": "b83cd68a2e8a76854b2f3f0d7c104e5f9d0c8d784761c3d5dbc13aed89aba179",
+        "sha256_in_prefix": "b83cd68a2e8a76854b2f3f0d7c104e5f9d0c8d784761c3d5dbc13aed89aba179",
+        "size_in_bytes": 15610
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/__pycache__/metadata.cpython-312.pyc",
+        "path_type": "hardlink",
+        "sha256": "af57aac983600731d177e78dbbefc3bb8fdc68d100dbf3792f94664f69c1db94",
+        "sha256_in_prefix": "af57aac983600731d177e78dbbefc3bb8fdc68d100dbf3792f94664f69c1db94",
+        "size_in_bytes": 8245
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/__pycache__/util.cpython-312.pyc",
+        "path_type": "hardlink",
+        "sha256": "4dbc723f60a12519c75bf0b9ce42f0e306e83e6bc21346b8743e6e0dc273f6fa",
+        "sha256_in_prefix": "4dbc723f60a12519c75bf0b9ce42f0e306e83e6bc21346b8743e6e0dc273f6fa",
+        "size_in_bytes": 1151
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/__pycache__/wheelfile.cpython-312.pyc",
+        "path_type": "hardlink",
+        "sha256": "da3f651595937f90cab486baf9e4b8422643e6e0ea9ea436d5c97a0dc1a12443",
+        "sha256_in_prefix": "da3f651595937f90cab486baf9e4b8422643e6e0ea9ea436d5c97a0dc1a12443",
+        "size_in_bytes": 10466
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/_setuptools_logging.py",
+        "path_type": "hardlink",
+        "sha256": "3680a78c9e03144678e44a3ed817572ec5890b01a46a2b75b69ff5ee96a5795c",
+        "sha256_in_prefix": "3680a78c9e03144678e44a3ed817572ec5890b01a46a2b75b69ff5ee96a5795c",
+        "size_in_bytes": 746
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/bdist_wheel.py",
+        "path_type": "hardlink",
+        "sha256": "38a272a7d13cdf5cc9af1a117e633d0203a30721b5081fa9cc5e645d016668a9",
+        "sha256_in_prefix": "38a272a7d13cdf5cc9af1a117e633d0203a30721b5081fa9cc5e645d016668a9",
+        "size_in_bytes": 20938
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/cli/__init__.py",
+        "path_type": "hardlink",
+        "sha256": "7813619cfc164ed74a0091f2efb96fcfb80e43912edc66af1ae817c614ac9fe5",
+        "sha256_in_prefix": "7813619cfc164ed74a0091f2efb96fcfb80e43912edc66af1ae817c614ac9fe5",
+        "size_in_bytes": 4264
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/cli/__pycache__/__init__.cpython-312.pyc",
+        "path_type": "hardlink",
+        "sha256": "63b197a600d4102cb4df46137a4f2ffe8be6d78635e1f8e14015357c27e4316f",
+        "sha256_in_prefix": "63b197a600d4102cb4df46137a4f2ffe8be6d78635e1f8e14015357c27e4316f",
+        "size_in_bytes": 6842
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/cli/__pycache__/convert.cpython-312.pyc",
+        "path_type": "hardlink",
+        "sha256": "536014f3baf7d1905cbee9d0788c310a1f1f348ab4ab6f8f3294df31d70d30e3",
+        "sha256_in_prefix": "536014f3baf7d1905cbee9d0788c310a1f1f348ab4ab6f8f3294df31d70d30e3",
+        "size_in_bytes": 10791
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/cli/__pycache__/pack.cpython-312.pyc",
+        "path_type": "hardlink",
+        "sha256": "20b558aa4d93099f497fc0fef84375625fa2cae51b14fd90128bdec614607e28",
+        "sha256_in_prefix": "20b558aa4d93099f497fc0fef84375625fa2cae51b14fd90128bdec614607e28",
+        "size_in_bytes": 4418
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/cli/__pycache__/tags.cpython-312.pyc",
+        "path_type": "hardlink",
+        "sha256": "5157587e2a1d5a0d08685b063137c57e9dcf46ac4ea01c083346cdc445d1cc8f",
+        "sha256_in_prefix": "5157587e2a1d5a0d08685b063137c57e9dcf46ac4ea01c083346cdc445d1cc8f",
+        "size_in_bytes": 6708
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/cli/__pycache__/unpack.cpython-312.pyc",
+        "path_type": "hardlink",
+        "sha256": "fa851ed514635c9b41595e4f3eafe27596ad6d2cee75e22ffe6e080d1bd2f446",
+        "sha256_in_prefix": "fa851ed514635c9b41595e4f3eafe27596ad6d2cee75e22ffe6e080d1bd2f446",
+        "size_in_bytes": 1492
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/cli/convert.py",
+        "path_type": "hardlink",
+        "sha256": "a897296062aa75fc353fa05e9603751e7fecb8d80ce9bbf211616565eb925b1d",
+        "sha256_in_prefix": "a897296062aa75fc353fa05e9603751e7fecb8d80ce9bbf211616565eb925b1d",
+        "size_in_bytes": 9439
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/cli/pack.py",
+        "path_type": "hardlink",
+        "sha256": "08015c1dd055ba5bec1d82659dd2953bb28c23d26a053673e628b43cac7108eb",
+        "sha256_in_prefix": "08015c1dd055ba5bec1d82659dd2953bb28c23d26a053673e628b43cac7108eb",
+        "size_in_bytes": 3103
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/cli/tags.py",
+        "path_type": "hardlink",
+        "sha256": "947c3e2da5ab912e49cbfa96730fbaa528de34ceb20230e7a8a2371392534c25",
+        "sha256_in_prefix": "947c3e2da5ab912e49cbfa96730fbaa528de34ceb20230e7a8a2371392534c25",
+        "size_in_bytes": 4760
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/cli/unpack.py",
+        "path_type": "hardlink",
+        "sha256": "63f27bca7c4f4a81454d3ec7d1f3206c195512bc320c670e6e099ee4c06ecf9f",
+        "sha256_in_prefix": "63f27bca7c4f4a81454d3ec7d1f3206c195512bc320c670e6e099ee4c06ecf9f",
+        "size_in_bytes": 1021
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/macosx_libfile.py",
+        "path_type": "hardlink",
+        "sha256": "1e75ba38f74df7dde9b12b6fc25e3dc6dc76930ee1a156deea7bf099ff16b0a2",
+        "sha256_in_prefix": "1e75ba38f74df7dde9b12b6fc25e3dc6dc76930ee1a156deea7bf099ff16b0a2",
+        "size_in_bytes": 16103
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/metadata.py",
+        "path_type": "hardlink",
+        "sha256": "abec420aa4802bb1f3c99c4af40ebf1c05a686a4b5a01e01170d7eac74310624",
+        "sha256_in_prefix": "abec420aa4802bb1f3c99c4af40ebf1c05a686a4b5a01e01170d7eac74310624",
+        "size_in_bytes": 5884
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/util.py",
+        "path_type": "hardlink",
+        "sha256": "7b48e99ec6db33d42169a312c9aa7efd9814c5cc70a722c393a44772b76e3cb8",
+        "sha256_in_prefix": "7b48e99ec6db33d42169a312c9aa7efd9814c5cc70a722c393a44772b76e3cb8",
+        "size_in_bytes": 621
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/vendored/__init__.py",
+        "path_type": "hardlink",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "sha256_in_prefix": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size_in_bytes": 0
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/vendored/__pycache__/__init__.cpython-312.pyc",
+        "path_type": "hardlink",
+        "sha256": "80534ab547d3a5762da8287c3134a5e18a0777990709d1e48f4efaa6097b87d9",
+        "sha256_in_prefix": "80534ab547d3a5762da8287c3134a5e18a0777990709d1e48f4efaa6097b87d9",
+        "size_in_bytes": 152
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/vendored/packaging/__init__.py",
+        "path_type": "hardlink",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "sha256_in_prefix": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size_in_bytes": 0
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/vendored/packaging/__pycache__/__init__.cpython-312.pyc",
+        "path_type": "hardlink",
+        "sha256": "6fdd0a0b411a01ef92afcd77aed6328f96700065b7f053af2cefb8f264a96289",
+        "sha256_in_prefix": "6fdd0a0b411a01ef92afcd77aed6328f96700065b7f053af2cefb8f264a96289",
+        "size_in_bytes": 162
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/vendored/packaging/__pycache__/_elffile.cpython-312.pyc",
+        "path_type": "hardlink",
+        "sha256": "cb1b797fac9e7812e74b9fade47288bca79bd95c4f998680e9f2a81197431afb",
+        "sha256_in_prefix": "cb1b797fac9e7812e74b9fade47288bca79bd95c4f998680e9f2a81197431afb",
+        "size_in_bytes": 4995
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/vendored/packaging/__pycache__/_manylinux.cpython-312.pyc",
+        "path_type": "hardlink",
+        "sha256": "2d2db9f43ce55733386a28e9cb572fc9460c0902d1634dfa9e667b67dd299348",
+        "sha256_in_prefix": "2d2db9f43ce55733386a28e9cb572fc9460c0902d1634dfa9e667b67dd299348",
+        "size_in_bytes": 9860
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/vendored/packaging/__pycache__/_musllinux.cpython-312.pyc",
+        "path_type": "hardlink",
+        "sha256": "66f8969ce80bc6cb0830019018f3baf516ceabfe67b27b855de37427bd093f33",
+        "sha256_in_prefix": "66f8969ce80bc6cb0830019018f3baf516ceabfe67b27b855de37427bd093f33",
+        "size_in_bytes": 4543
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/vendored/packaging/__pycache__/_parser.cpython-312.pyc",
+        "path_type": "hardlink",
+        "sha256": "42d6dca6fb1190bbb12025768891fa13eef73e6c542a4af08effbe344c3dcfd8",
+        "sha256_in_prefix": "42d6dca6fb1190bbb12025768891fa13eef73e6c542a4af08effbe344c3dcfd8",
+        "size_in_bytes": 14033
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/vendored/packaging/__pycache__/_structures.cpython-312.pyc",
+        "path_type": "hardlink",
+        "sha256": "7b181d56fda6bca1b4f5ef8d7a1ed09d453dea499ff905937dbef541084751ee",
+        "sha256_in_prefix": "7b181d56fda6bca1b4f5ef8d7a1ed09d453dea499ff905937dbef541084751ee",
+        "size_in_bytes": 3210
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/vendored/packaging/__pycache__/_tokenizer.cpython-312.pyc",
+        "path_type": "hardlink",
+        "sha256": "f7daff739812cc2f6092ce10a87068217258c1943a6c06e63d7f5fc86f55ee95",
+        "sha256_in_prefix": "f7daff739812cc2f6092ce10a87068217258c1943a6c06e63d7f5fc86f55ee95",
+        "size_in_bytes": 7906
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/vendored/packaging/__pycache__/markers.cpython-312.pyc",
+        "path_type": "hardlink",
+        "sha256": "31ebc595e5a37be9257ebb2fa01367abd92238a2ba69cb671eb7e03b629efd7b",
+        "sha256_in_prefix": "31ebc595e5a37be9257ebb2fa01367abd92238a2ba69cb671eb7e03b629efd7b",
+        "size_in_bytes": 10483
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/vendored/packaging/__pycache__/requirements.cpython-312.pyc",
+        "path_type": "hardlink",
+        "sha256": "6018a411f6d7ccac76ddc17d4472d24a31396940e3294a918fcf0b25d03994c0",
+        "sha256_in_prefix": "6018a411f6d7ccac76ddc17d4472d24a31396940e3294a918fcf0b25d03994c0",
+        "size_in_bytes": 4423
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/vendored/packaging/__pycache__/specifiers.cpython-312.pyc",
+        "path_type": "hardlink",
+        "sha256": "56c7d73876d3b0f351117efc20eb744af2e3cb7c8e153085fa6bba0af6f4a882",
+        "sha256_in_prefix": "56c7d73876d3b0f351117efc20eb744af2e3cb7c8e153085fa6bba0af6f4a882",
+        "size_in_bytes": 39518
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/vendored/packaging/__pycache__/tags.cpython-312.pyc",
+        "path_type": "hardlink",
+        "sha256": "5ccf032c805b84adc01290dd57e44dd5acdb782d9ea2f4091c86355eeb38fe7a",
+        "sha256_in_prefix": "5ccf032c805b84adc01290dd57e44dd5acdb782d9ea2f4091c86355eeb38fe7a",
+        "size_in_bytes": 21730
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/vendored/packaging/__pycache__/utils.cpython-312.pyc",
+        "path_type": "hardlink",
+        "sha256": "1a85bd2f078a80957b3d8566d32a52569c2b728b76f1efa3297786bb48634625",
+        "sha256_in_prefix": "1a85bd2f078a80957b3d8566d32a52569c2b728b76f1efa3297786bb48634625",
+        "size_in_bytes": 7253
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/vendored/packaging/__pycache__/version.cpython-312.pyc",
+        "path_type": "hardlink",
+        "sha256": "87d048f2cd270e9bf62ffc4545e62b53d3092d19b34d0545865c7d3a352afdbc",
+        "sha256_in_prefix": "87d048f2cd270e9bf62ffc4545e62b53d3092d19b34d0545865c7d3a352afdbc",
+        "size_in_bytes": 19966
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/vendored/packaging/_elffile.py",
+        "path_type": "hardlink",
+        "sha256": "85b98af0e0fa67b7d8ea1c229c7114703d5bcbb73390688d62eed28671449369",
+        "sha256_in_prefix": "85b98af0e0fa67b7d8ea1c229c7114703d5bcbb73390688d62eed28671449369",
+        "size_in_bytes": 3266
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/vendored/packaging/_manylinux.py",
+        "path_type": "hardlink",
+        "sha256": "3fbb1d479ffb5c1634f4b55860f8479b274c2482303d75ac878a2593be14ba3e",
+        "sha256_in_prefix": "3fbb1d479ffb5c1634f4b55860f8479b274c2482303d75ac878a2593be14ba3e",
+        "size_in_bytes": 9588
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/vendored/packaging/_musllinux.py",
+        "path_type": "hardlink",
+        "sha256": "cf5b3c4e8da1434be99ff77e3b68b9ab11b010af1698694bb7777fdba57b35e6",
+        "sha256_in_prefix": "cf5b3c4e8da1434be99ff77e3b68b9ab11b010af1698694bb7777fdba57b35e6",
+        "size_in_bytes": 2674
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/vendored/packaging/_parser.py",
+        "path_type": "hardlink",
+        "sha256": "e2d4f87a64a5daa4da53b553404d576bda358cc3c2b017b3b18071c8d31437eb",
+        "sha256_in_prefix": "e2d4f87a64a5daa4da53b553404d576bda358cc3c2b017b3b18071c8d31437eb",
+        "size_in_bytes": 10347
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/vendored/packaging/_structures.py",
+        "path_type": "hardlink",
+        "sha256": "ab77953666d62461bf4b40e2b7f4b7028f2a42acffe4f6135c500a0597b9cabe",
+        "sha256_in_prefix": "ab77953666d62461bf4b40e2b7f4b7028f2a42acffe4f6135c500a0597b9cabe",
+        "size_in_bytes": 1431
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/vendored/packaging/_tokenizer.py",
+        "path_type": "hardlink",
+        "sha256": "6a50ad6f05e138502614667a050fb0093485a11009db3fb2b087fbfff31327f9",
+        "sha256_in_prefix": "6a50ad6f05e138502614667a050fb0093485a11009db3fb2b087fbfff31327f9",
+        "size_in_bytes": 5292
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/vendored/packaging/markers.py",
+        "path_type": "hardlink",
+        "sha256": "fd348f2350612583bb069f40cd398743122a1c45576938e60e1f46fb0f2accf0",
+        "sha256_in_prefix": "fd348f2350612583bb069f40cd398743122a1c45576938e60e1f46fb0f2accf0",
+        "size_in_bytes": 8232
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/vendored/packaging/requirements.py",
+        "path_type": "hardlink",
+        "sha256": "760a01795a6b3eed9813a43c9c67f038f4e30131db45afd918bc978451259fa4",
+        "sha256_in_prefix": "760a01795a6b3eed9813a43c9c67f038f4e30131db45afd918bc978451259fa4",
+        "size_in_bytes": 2933
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/vendored/packaging/specifiers.py",
+        "path_type": "hardlink",
+        "sha256": "2164add12acb48fef685e5a1002f142f4786bdab3b5c84078ea8958957e63ca1",
+        "sha256_in_prefix": "2164add12acb48fef685e5a1002f142f4786bdab3b5c84078ea8958957e63ca1",
+        "size_in_bytes": 39778
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/vendored/packaging/tags.py",
+        "path_type": "hardlink",
+        "sha256": "7de7475e2387901c4d6535e8b57bfcb973e630553d69ef93281ba38181e281c0",
+        "sha256_in_prefix": "7de7475e2387901c4d6535e8b57bfcb973e630553d69ef93281ba38181e281c0",
+        "size_in_bytes": 18950
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/vendored/packaging/utils.py",
+        "path_type": "hardlink",
+        "sha256": "5e07663f7cb1f7ec101058ceecebcc8fd46311fe49951e4714547af6fed243d1",
+        "sha256_in_prefix": "5e07663f7cb1f7ec101058ceecebcc8fd46311fe49951e4714547af6fed243d1",
+        "size_in_bytes": 5268
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/vendored/packaging/version.py",
+        "path_type": "hardlink",
+        "sha256": "3c525a6190f1060cb191f6211f7490c38a9f13d202096ad39a2b6fab5e32ddbb",
+        "sha256_in_prefix": "3c525a6190f1060cb191f6211f7490c38a9f13d202096ad39a2b6fab5e32ddbb",
+        "size_in_bytes": 16234
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/vendored/vendor.txt",
+        "path_type": "hardlink",
+        "sha256": "67610d8c1d62e69adf7b3f0274cd5276bddce99c6fdab451a253292e60677001",
+        "sha256_in_prefix": "67610d8c1d62e69adf7b3f0274cd5276bddce99c6fdab451a253292e60677001",
+        "size_in_bytes": 16
+      },
+      {
+        "_path": "lib/python3.12/site-packages/wheel/wheelfile.py",
+        "path_type": "hardlink",
+        "sha256": "0ed2435a864cbe7061e2578d3033c63a9ad053d77f769eaaf8c995d14fbee317",
+        "sha256_in_prefix": "0ed2435a864cbe7061e2578d3033c63a9ad053d77f769eaaf8c995d14fbee317",
+        "size_in_bytes": 7694
+      }
+    ],
+    "paths_version": 1
+  },
+  "requested_spec": "None",
+  "sha256": "abac6115d26169e4164a9cc1e46a5a417a87803dc88e26e40cd93008d79f70f0",
+  "size": 145411,
+  "subdir": "linux-64",
+  "timestamp": 1714717017000,
+  "url": "https://repo.anaconda.com/pkgs/main/linux-64/wheel-0.43.0-py312h06a4308_0.conda",
+  "version": "0.43.0"
+}

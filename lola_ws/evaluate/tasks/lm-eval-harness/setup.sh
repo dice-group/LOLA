@@ -18,6 +18,12 @@ cd $REPO_DIR
 git checkout $TASK_GIT_HASH
 
 # yes |
+
+# install librairies
 pip install -e .
+
+pip install tiktoken
+
+pip install protobuf
 
 echo  'installation finished'
