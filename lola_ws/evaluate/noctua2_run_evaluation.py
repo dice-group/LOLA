@@ -1,20 +1,18 @@
 """
-This script is used to evaluate LLMs on various tasks. The script submits a job to a SLURM-based computing cluster for each unique and valid combination of the provided tasks, models, and languages. This allows for parallel execution and efficient utilization of cluster resources. 
-Below is an example of how to run the evaluation with specific models, tasks, and languages.
+This script is used to evaluate LLMs on various tasks. The script submits a job to a SLURM-based computing cluster for each unique and valid combination of the provided tasks, models, and languages. This allows for parallel execution and efficient utilization of cluster resources. Below is an example of how to run the evaluation with specific models, tasks, and languages.
 
 Command:
-    python noctua2_run_evaluation.py --models=XLM-R,mBART --tasks="Mega:XNLI,XCOPA;MultiQ;EleutherAI" --languages=hi,bn --results-dir=./output
+    python noctua2_run_evaluation.py --models=xlmr,mbart --tasks="lm-eval-harness:lm-eval-harness_xcopa,lm-eval-harness_xnli;okapi" --languages=hi,bn --results-dir=./output
 
 Parameters:
-    --models: Specifies the models to be used for evaluation. In this example, XLM-R and mBART models are used.
-        Example: --models=XLM-R,mBART
+    --models: Specifies the models to be used for evaluation. In this example, xlmr and mbart models are used.
+        Example: --models=xlmr,mbart
     
     --tasks: Specifies the tasks for evaluation, with optional task-specific datasets/sub-tasks. 
         In this example:
-            - Mega task includes XNLI and XCOPA datasets.
-            - MultiQ task is included without specifying datasets (default datasets will be used).
-            - EleutherAI task is included without specifying datasets (default datasets will be used).
-        Example: --tasks="Mega:XNLI,XCOPA;MultiQ;EleutherAI"
+            - lm-eval-harness task includes lm-eval-harness_xcopa and lm-eval-harness_xnli datasets.
+            - okapi task is included without specifying datasets (default datasets will be used).
+        Example: --tasks="lm-eval-harness:lm-eval-harness_xcopa,lm-eval-harness_xnli;okapi"
     
     --languages: Specifies the languages to evaluate the models on. In this example, Hindi (hi) and Bengali (bn) are used.
         Example: --languages=hi,bn
@@ -25,6 +23,7 @@ Parameters:
 To run this evaluation, simply copy the command above and execute it in your terminal.
 """
 
+
 import argparse
 import os
 import json
@@ -33,6 +32,11 @@ import subprocess
 NONE_VAL = 'none'
 task_lang_map_file = "task_lang.json"
 model_lang_map_file = "llm_lang.json"
+
+with open(task_lang_map_file) as f1, open(model_lang_map_file) as f2:
+    task_lang_map = json.load(f1)
+    model_lang_map = json.load(f2)
+
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Process some models, tasks, and languages.")
@@ -51,36 +55,33 @@ def parse_tasks(tasks):
         task_subtask_map[task] = subtasks[0].split(',') if subtasks else []
     return task_subtask_map
 
-def get_task_languages(task_name, subtask_name, json_file):
-    with open(json_file) as f:
-        data = json.load(f)
+def get_task_languages(task_id, subtask_id):
+    data = task_lang_map
 
     for task in data['tasks']:
-        if task['name'] == task_name:
-            if subtask_name and subtask_name != NONE_VAL:
+        if task['id'] == task_id:
+            if subtask_id and subtask_id != NONE_VAL:
                 for subtask in task.get('subtasks', []):
-                    if subtask['name'] == subtask_name:
+                    if subtask['id'] == subtask_id:
                         return subtask['languages']
             else:
                 return task.get('languages', [])
     return []
 
-def get_subtasks_for_task(task_name, json_file):
-    with open(json_file) as f:
-        data = json.load(f)
+def get_subtasks_for_task(task_id):
+    data = task_lang_map
 
     for task in data['tasks']:
-        if task['name'] == task_name:
-            return [subtask['name'] for subtask in task.get('subtasks', [])] or [NONE_VAL]
+        if task['id'] == task_id:
+            return [subtask['id'] for subtask in task.get('subtasks', [])] or [NONE_VAL]
     return [NONE_VAL]
 
-def get_model_languages(model_name, json_file):
-    with open(json_file) as f:
-        data = json.load(f)
+def get_model_information(model_id):
+    data = model_lang_map
 
     for model in data['llms']:
-        if model['name'] == model_name:
-            return model['languages']
+        if model['id'] == model_id:
+            return model['huggingface_model_id'], model['languages']
     return []
 
 def main():
@@ -96,10 +97,10 @@ def main():
 
     for task, subtasks in task_subtask_map.items():
         if not subtasks:
-            subtasks = get_subtasks_for_task(task, task_lang_map_file)
+            subtasks = get_subtasks_for_task(task)
 
         for subtask in subtasks:
-            supported_subtask_languages = get_task_languages(task, subtask, task_lang_map_file)
+            supported_subtask_languages = get_task_languages(task, subtask)
             selected_languages = languages
             if 'all' in selected_languages:
                 selected_languages = supported_subtask_languages
@@ -110,16 +111,16 @@ def main():
                     continue
 
                 for model in models:
-                    supported_model_languages = get_model_languages(model, model_lang_map_file)
+                    model_hf_id, supported_model_languages = get_model_information(model)
 
                     if language not in supported_model_languages:
                         print(f"Skipping: \"{language}\" is not supported for model \"{model}\"")
                         continue
 
-                    print(f'Processing Task: "{task}" Subtask: "{subtask}" Language: "{language}" Model: "{model}"')
+                    print(f'Processing Task: "{task}" Subtask: "{subtask}" Language: "{language}" Model: "{model}" Huggingface ID: "{model_hf_id}"')
                     run_name = f"lola-eval-{model}-{task}-{subtask}-{language}"
                     # Create a job on the computing cluster
-                    # subprocess.run(['sbatch', '--job-name', run_name, 'noctua2_execute_job.sh', task, subtask, model, language, results_dir])
+                    subprocess.run(['sbatch', '--job-name', run_name, 'noctua2_execute_job.sh', task, subtask, model_hf_id, language, results_dir])
 
 if __name__ == "__main__":
     main()

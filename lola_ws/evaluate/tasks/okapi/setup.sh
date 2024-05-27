@@ -20,6 +20,9 @@ git checkout $TASK_GIT_HASH
 
 pip install  -e ".[multilingual]"
 
+# To handle conversion of slow to fast tokenizers
+pip install sentencepiece
+pip install protobuf
 
 #download rhe dataset
 bash scripts/download.sh
