@@ -120,7 +120,7 @@ def main():
                     print(f'Processing Task: "{task}" Subtask: "{subtask}" Language: "{language}" Model: "{model}" Huggingface ID: "{model_hf_id}"')
                     run_name = f"lola-eval-{model}-{task}-{subtask}-{language}"
                     # Create a job on the computing cluster
-                    # subprocess.run(['sbatch', '--job-name', run_name, 'noctua2_execute_job.sh', task, subtask, model_hf_id, language, results_dir])
+                    subprocess.run(['sbatch', '--job-name', run_name, 'noctua2_execute_job.sh', task, subtask, model_hf_id, language, results_dir])
 
 if __name__ == "__main__":
     main()
