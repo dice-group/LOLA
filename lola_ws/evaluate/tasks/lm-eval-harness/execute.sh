@@ -4,10 +4,9 @@
  export CUDA_VISIBLE_DEVICES=1
 
 # # Parse the commandline args into models, sub tasks and languages
-# Sample usage: bash execute.sh -m model_id -s subtask -l language -r result_directory
-# Example: bash execute.sh -m dice-research/lola_v1 -s xnli -l de -r Results
-# Not using the flag will set default value in case of result directory, 
-# will give an error if model_id, subtask and language are not specified
+# Sample usage: bash execute.sh -m model_id -s subtask -l language -r absolute_path_result_dir
+# Example: bash execute.sh -m dice-research/lola_v1 -s xnli -l de -r /data/kshitij/LOLA-Megatron-DeepSpeed/lola_ws/evaluate/tasks/lm-eval-harness/Results
+# Not using the flag will give an error if model_id, subtask, language and result_path are not specified
 
 while getopts ":m:s:l:r:" opt; do
   case $opt in
@@ -17,7 +16,7 @@ while getopts ":m:s:l:r:" opt; do
     ;;
     l) lang="$OPTARG"
     ;;
-    r) result_dir="$OPTARG"
+    r) result_path="$OPTARG"
     ;;
     \?) echo "Invalid option -$OPTARG" >&3
     exit 1
@@ -35,61 +34,33 @@ done
 # Activate the virtual environment
 source activate ./$TASK_NAME-eval
 
+make_dir() {
+	delimiter="/"
+	gen_path="/"
+	declare -a path_array=($(echo $1 | tr "$delimiter" " "))
+	for dir in "${path_array[@]}"
+	do
+		gen_path="$gen_path/$dir"
+		if [[ ! -d "$gen_path" ]]; then
+			mkdir $gen_path
+		fi
+	done
+	
+}
 
 
+# Ensuring existence/generating results directory in results/task/model/subtask/language support
 
-# Multi model/subtasks/language support
-# Separate strings into arrays
-# delimiter=", "
-# declare -a models_array=($(echo $models | tr "$delimiter" " "))
+result_path="$result_path/lm-eval-harness/$(cut -d'/' -f2 <<<$model)/$sub_task/$lang"
+make_dir $result_path
 
-# declare -a sub_tasks_array=($(echo $sub_tasks | tr "$delimiter" " "))
-
-# declare -a langs_array=($(echo $langs | tr "$delimiter" " "))
-
-if [[ ! $result_dir ]]; then
-    result_dir="Experiment_results"
-fi
-
-if [[ -d "$result_dir" ]]; then
-  result_dir="${result_dir}_$(date +%s)"
-fi
-
-mkdir "$result_dir"
-model_dir="$(cut -d'/' -f2 <<<$model)"
-mkdir "${result_dir}/$model_dir"
-sub="${sub_task}_$lang"
-mkdir "${result_dir}/${model_dir}/$sub"
-cd $REPO_DIR
 
 lm_eval --model hf \
     --model_args pretrained="${model}" \
-    --tasks "${sub}" \
+    --tasks "${sub_task}_$lang" \
     --device cuda:0 \
     --batch_size 8 \
-    --trust_remote_code > "../${result_dir}/${model_dir}/${sub}/output.txt"
+    --trust_remote_code > "${result_path}/output_$(date +%s).txt"
 
-
-
-# Multi model/subtasks/language support
-# for model in "${models_array[@]}"
-# do
-#     mkdir "results/$model"
-#     for sub_task in "${sub_tasks_array[@]}"
-#     do
-#         for lang in "${lang_array[@]}"
-#         do 
-#             sub="${sub_task}_$lang"
-#             mkdir "results/${model}/$sub"
-#             chdir "lm-evaluation-harness"
-#             lm_eval --model hf \
-#             --model_args "${model}" \
-#             --tasks "${sub}" \
-#             --device cuda:0 \
-#             --batch_size 8
-#             --trust_remote_code > "../${model}/${sub}/output.txt"
-#         done
-#     done
-# done
 
 

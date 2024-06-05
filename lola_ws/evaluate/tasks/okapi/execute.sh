@@ -3,10 +3,9 @@
 
 
 # # Parse the commandline args into models, sub tasks and languages
-# Sample usage: bash execute.sh -m model_id -s subtask -l language -r result_directory
-# Example: bash execute.sh -m dice-research/lola_v1 -l de -r Results
-# Not using the flag will set default value in case of result directory, 
-# will give an error if model_id and language are not specified
+# Sample usage: bash execute.sh -m model_id -s subtask -l language -r absolute_path_result_dir
+# Example: bash execute.sh -m dice-research/lola_v1 -l de -r /data/kshitij/LOLA-Megatron-DeepSpeed/lola_ws/evaluate/tasks/okapi/Results
+# Not using the flag will give an error if model_id, language and result_path are not specified
 # subtask flag is not necessary and will be ignored even if its provided
 while getopts ":m:s:l:r:" opt; do
   case $opt in
@@ -16,7 +15,7 @@ while getopts ":m:s:l:r:" opt; do
     ;;
     l) lang="$OPTARG"
     ;;
-    r) result_dir="$OPTARG"
+    r) result_path="$OPTARG"
     ;;
     \?) echo "Invalid option -$OPTARG" >&3
     exit 1
@@ -34,23 +33,23 @@ done
 # Activate the virtual environment
 source activate ./$TASK_NAME-eval
 
+make_dir() {
+	delimiter="/"
+	gen_path="/"
+	declare -a path_array=($(echo $1 | tr "$delimiter" " "))
+	for dir in "${path_array[@]}"
+	do
+		gen_path="$gen_path/$dir"
+		if [[ ! -d "$gen_path" ]]; then
+			mkdir $gen_path
+		fi
+	done
+	
+}
 
-if [[ ! $result_dir ]]; then
-    result_dir="Experiment_results"
-fi
+result_path="$result_path/okapi/$(cut -d'/' -f2 <<<$model)/$lang"
+make_dir $result_path
 
-if [ -d "$result_dir" ]; then
-  result_dir="${result_dir}_$(date +%s)"
-fi
-
-
-mkdir "$result_dir"
-model_dir="$(cut -d'/' -f2 <<<$model)"
-mkdir "${result_dir}/$model_dir"
-mkdir "${result_dir}/${model_dir}/$lang"
-cd $REPO_DIR
-
-
-bash scripts/run.sh $lang $model > "../${result_dir}/${model_dir}/${lang}/output.txt"
+bash scripts/run.sh $lang $model > "${result_path}/output_$(date +%s).txt"
 
 
