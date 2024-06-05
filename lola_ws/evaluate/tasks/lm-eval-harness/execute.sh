@@ -51,7 +51,7 @@ make_dir() {
 
 # Ensuring existence/generating results directory in results/task/model/subtask/language support
 
-result_path="$result_path/lm-eval-harness/$(cut -d'/' -f2 <<<$model)/$sub_task/$lang"
+result_path="$result_path/lm-eval-harness/$sub_task/$(cut -d'/' -f2 <<<$model)/$lang"
 make_dir $result_path
 
 
@@ -60,7 +60,7 @@ lm_eval --model hf \
     --tasks "${sub_task}_$lang" \
     --device cuda:0 \
     --batch_size 8 \
+    --log_samples \
+    --output_path "${result_path}/results" \
     --trust_remote_code > "${result_path}/output_$(date +%s).txt"
-
-
 
