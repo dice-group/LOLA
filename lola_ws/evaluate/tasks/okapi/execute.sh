@@ -1,6 +1,7 @@
 #!/bin/bash
 . task.config
 
+# export CUDA_VISIBLE_DEVICES=1
 
 # # Parse the commandline args into models, sub tasks and languages
 # Sample usage: bash execute.sh -m model_id -s subtask -l language -r absolute_path_result_dir
@@ -49,7 +50,11 @@ make_dir() {
 
 result_path="$result_path/okapi/$(cut -d'/' -f2 <<<$model)/$lang"
 make_dir $result_path
+json_path="$result_path/output_$(date +%s).json"
 
-bash scripts/run.sh $lang $model > "${result_path}/output_$(date +%s).txt"
+# python3 edits.py '2' $REPO_DIR $result_path
+cd $REPO_DIR
+# "/data/kshitij/LOLA-Megatron-DeepSpeed/lola_ws/evaluate/tasks/okapi/Results"
+bash scripts/run.sh $lang $model $json_path > "${result_path}/output_$(date +%s).txt"
 
 

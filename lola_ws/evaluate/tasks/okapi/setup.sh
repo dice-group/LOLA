@@ -5,13 +5,13 @@
 #SUB_TASK= task_name
 #PRETRAINED_MODEL= your_model
 
-#create and activate environment task
+create and activate environment task
 yes | conda create --prefix ./$TASK_NAME-eval python=3
 
 source activate ./$TASK_NAME-eval
 
 
-#clone the eval repository
+# clone the eval repository
 git clone $TASK_GIT_REPOSITORY $REPO_DIR
 
 cd $REPO_DIR
@@ -24,7 +24,7 @@ pip install  -e ".[multilingual]"
 pip install sentencepiece
 pip install protobuf
 
-#download rhe dataset
+# download the dataset
 bash scripts/download.sh
 
 echo  'installation finished'
