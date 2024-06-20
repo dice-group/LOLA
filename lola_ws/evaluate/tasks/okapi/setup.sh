@@ -23,6 +23,7 @@ pip install  -e ".[multilingual]"
 # To handle conversion of slow to fast tokenizers
 pip install sentencepiece
 pip install protobuf
+pip install tiktoken
 
 # download the dataset
 bash scripts/download.sh
@@ -32,6 +33,7 @@ echo  'installation finished'
 # edit files to add trust_remote_code
 cd ..
 
+# python3 edits.py $REPO_DIR
 python3 edits.py $REPO_DIR
 
 echo  'files adjusted'

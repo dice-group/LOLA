@@ -18,7 +18,18 @@ while(len(file_content_list) != 0):
     file_content += "trust_remote_code: Optional[bool] = True" + file_content_list[0]
     del file_content_list[0]
 
+file_content_list = file_content.split("""tokenizer = self.AUTO_TOKENIZER_CLASS.from_pretrained(
+            pretrained if tokenizer is None else tokenizer,
+            revision=revision + ("/" + subfolder if subfolder is not None else ""),
+        )""")
 
+addition = """tokenizer = self.AUTO_TOKENIZER_CLASS.from_pretrained(
+            pretrained if tokenizer is None else tokenizer,
+            revision=revision + ("/" + subfolder if subfolder is not None else ""),
+            trust_remote_code=True,
+        )"""
+
+file_content = file_content_list[0] + addition + file_content_list[1]
 
 file = open(path_to_file, "w")
 file.write(file_content)

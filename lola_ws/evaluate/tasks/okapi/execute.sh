@@ -57,4 +57,6 @@ cd $REPO_DIR
 # "/data/kshitij/LOLA-Megatron-DeepSpeed/lola_ws/evaluate/tasks/okapi/Results"
 bash scripts/run.sh $lang $model $json_path > "${result_path}/output_$(date +%s).txt"
 
+# -u -m debugpy --wait-for-client --listen 0.0.0.0:12121
+
 
