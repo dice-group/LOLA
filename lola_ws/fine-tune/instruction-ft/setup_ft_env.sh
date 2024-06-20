@@ -12,4 +12,6 @@ pip3 install torch torchvision torchaudio --index-url https://download.pytorch.o
 
 pip install transformers[torch]==4.41.2
 
-pip install deepspeed==0.14.3
+# Setting deepspeed as per: https://github.com/microsoft/DeepSpeed/issues/1846#issuecomment-1080226911
+DS_BUILD_OPS=0  pip install deepspeed==0.14.3
+python -c "import deepspeed; deepspeed.ops.op_builder.CPUAdamBuilder().load()"

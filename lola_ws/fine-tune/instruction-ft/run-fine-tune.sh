@@ -1,6 +1,7 @@
 #!/bin/bash
 
 source activate ./lola-ft-venv
+export LD_LIBRARY_PATH=./lola-ft-venv/lib/python3.10/site-packages/nvidia/nvjitlink/lib:$LD_LIBRARY_PATH
 
 # Uncomment the statement below to specify CUDA device
 export CUDA_VISIBLE_DEVICES=1
