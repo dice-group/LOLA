@@ -3,7 +3,8 @@
 Use [setup_slurm.sh](setup_slurm.sh)
 
 ### Virtual-environment setup on experiment server / VM
-```bash
+Use [install_dependencies.sh](install_dependencies.sh)
+<!-- ```bash
 python -m venv ./venv-lola
 source venv-lola/bin/activate
 pip3 install torch torchvision torchaudio # torch==2.1.0+cu121 torchvision==0.16.0+cu121
@@ -29,7 +30,7 @@ cd apex
 git checkout 4e1ae43
 # Note: Comment line 171 in setup.py to avoid legacy installation error.
 pip install -v --disable-pip-version-check --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" ./
-```
+``` -->
 
 #### To use the the python environment as a notebook kernel (optional)
 

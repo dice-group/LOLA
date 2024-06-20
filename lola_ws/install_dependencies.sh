@@ -1,3 +1,4 @@
+#!/bin/bash
 # Sample usage: sbatch setup_slurm.sh ~/virt-envs
 set -eu
 
@@ -17,7 +18,7 @@ source venv-lola/bin/activate
 pip3 install --upgrade pip
 
 pip3 install torch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 transformers "numpy<1.24" packaging datasets nltk tensorboard deepspeed==0.11.1 wheel pybind11 wandb
-# For evaluation
+# For evaluation of LOLA model using the lm-evaluation-harness script in the repository (without converting the original model)
 pip install best-download lm-eval==0.3.0 datasets==2.0.0 transformers==4.20.1 huggingface-hub==0.17.0
 
 mkdir -p temp_repos

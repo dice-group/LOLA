@@ -201,6 +201,7 @@ def train():
 
     model = transformers.AutoModelForCausalLM.from_pretrained(
         model_args.model_name_or_path,
+        use_safetensors=True,
         cache_dir=training_args.cache_dir,
         trust_remote_code=True
     )
@@ -246,7 +247,9 @@ def train():
     )
 
     data_module = make_supervised_data_module(tokenizer=tokenizer, data_args=data_args)
+    logging.info('Setting up trainer')
     trainer = Trainer(model=model, tokenizer=tokenizer, args=training_args, **data_module)
+    logging.info('Starting training..')
     trainer.train()
     trainer.save_state()
     trainer.save_model(output_dir=training_args.output_dir)
