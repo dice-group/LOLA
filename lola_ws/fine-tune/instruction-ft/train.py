@@ -25,7 +25,7 @@ from transformers import Trainer
 import json
 import io
 
-from modeling_lola_gpt2 import LOLALMHeadModel
+# from modeling_lola_gpt2 import LOLALMHeadModel
 
 def _make_r_io_base(f, mode: str):
     if not isinstance(f, io.IOBase):
