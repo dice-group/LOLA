@@ -12,8 +12,8 @@ source activate ./venv-lola-ft/
 
 pip3 install --upgrade pip
 
-pip3 install torch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 "numpy<1.24" packaging datasets wheel pybind11
-pip install transformers[torch]
+pip3 install torch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 "numpy<1.24" packaging==24.1 datasets==2.20.0 wheel pybind11==2.12.0
+pip install transformers[torch]==4.41.2
 pip install deepspeed==0.11.1
 ## Uncomment if wandb is needed
 # pip install wandb
