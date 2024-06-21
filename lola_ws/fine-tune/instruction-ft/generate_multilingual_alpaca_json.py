@@ -3,6 +3,11 @@ import requests
 from tqdm import tqdm
 from random import shuffle
 
+"""
+This code is designed to download JSON data from a list of URLs, combine the data into a single list, shuffle it, and then save the combined and shuffled data to a file.
+Sample usage: python generate_multilingual_alpaca_json.py
+"""
+
 # List of URLs containing JSON arrays
 urls = [
     "https://raw.githubusercontent.com/hplt-project/monolingual-multilingual-instruction-tuning/main/training-data/alpaca_data_cleaned.bg.json",
@@ -17,7 +22,7 @@ urls = [
     "https://raw.githubusercontent.com/hplt-project/monolingual-multilingual-instruction-tuning/main/training-data/alpaca_data_cleaned.zh.json"
 ]
 
-# Filename to write the combined JSON
+# Filename to write the combined JSON into
 filename = "alpaca_multilingual.json"
 #filename = "alpaca_multilingual_limited.json"
 

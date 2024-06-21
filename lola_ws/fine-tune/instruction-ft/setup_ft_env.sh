@@ -17,3 +17,5 @@ pip install transformers[torch]==4.41.2
 pip install deepspeed==0.11.1
 ## Uncomment if wandb is needed
 # pip install wandb
+## Uncomment if debugpy is needed
+# pip install debugpy

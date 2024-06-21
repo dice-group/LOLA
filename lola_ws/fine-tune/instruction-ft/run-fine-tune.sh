@@ -13,7 +13,7 @@ export LD_LIBRARY_PATH=$VENV_PATH/lib/python3.10/site-packages/nvidia/nvjitlink/
 
 ## Uncomment the statement below to specify CUDA device
 export CUDA_VISIBLE_DEVICES=0
-## Comment the statement below if wandb needs to be enabled
+## Comment the statement below if wandb needs to be configured
 #export WANDB_MODE=offline
 
 torchrun --nnodes=1 --nproc_per_node=1 --master_port=4550 train.py \
