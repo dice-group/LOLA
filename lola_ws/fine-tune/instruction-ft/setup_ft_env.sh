@@ -1,19 +1,19 @@
 #!/bin/bash
 set -eu
 
-conda create --prefix ./lola-ft-venv -y python=3.10
+## For Python based installation, uncomment below. We have tested it with python 3.10.8
+# python -m venv ./venv-lola-ft
+# source venv-lola-ft/bin/activate
 
-source activate ./lola-ft-venv/
+## For conda based installation, uncomment below.
+conda create --prefix ./venv-lola-ft -y python=3.10
+source activate ./venv-lola-ft/
 
-## Torch dependencies versions:
-## torch==2.3.1+cu121
-## torchaudio==2.3.1+cu121
-## torchvision==0.18.1+cu121
-pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 
-pip install transformers[torch]==4.41.2
+pip3 install --upgrade pip
 
-# Setting deepspeed as per: https://github.com/microsoft/DeepSpeed/issues/1846#issuecomment-1080226911
-DS_BUILD_OPS=0  pip install deepspeed==0.14.3
-export LD_LIBRARY_PATH=./lola-ft-venv/lib/python3.10/site-packages/nvidia/nvjitlink/lib:$LD_LIBRARY_PATH
-python -c "import deepspeed; deepspeed.ops.op_builder.CPUAdamBuilder().load()"
+pip3 install torch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 "numpy<1.24" packaging datasets wheel pybind11
+pip install transformers[torch]
+pip install deepspeed==0.11.1
+## Comment if wandb is not needed
+pip install wandb
