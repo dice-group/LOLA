@@ -46,7 +46,7 @@ device=cuda
 
 python main.py \\
     --tasks=${tasks} \\
-    --model_args pretrained=${model_path} \\
+    --model_args pretrained=${model_path},trust_remote_code=True \\
     --output_path=${output_path} \\
     --device=${device}"""
 
@@ -54,4 +54,3 @@ python main.py \\
 file = open(path_to_file, "w")
 file.write(file_content)
 file.close()
-
