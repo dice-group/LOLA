@@ -1,4 +1,7 @@
 #!/bin/bash
+
+set -eu
+
 . task.config
 
 # export CUDA_VISIBLE_DEVICES=1
@@ -30,9 +33,12 @@ while getopts ":m:s:l:r:" opt; do
   esac
 done
 
-
 # Activate the virtual environment
-source activate ./$TASK_NAME-eval
+CONDA_VENV_DIR=$(realpath ./$TASK_NAME-eval)
+# the statement below is required on slurm
+export LD_LIBRARY_PATH=$CONDA_VENV_DIR/lib/python3.12/site-packages/nvidia/nvjitlink/lib:$LD_LIBRARY_PATH
+source activate $CONDA_VENV_DIR
+
 
 make_dir() {
 	delimiter="/"

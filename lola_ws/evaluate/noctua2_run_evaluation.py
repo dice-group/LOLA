@@ -90,6 +90,7 @@ def main():
     models = args.models.split(',')
     languages = args.languages.split(',')
     results_dir = args.results_dir
+    results_dir = os.path.abspath(results_dir)
 
     task_subtask_map = parse_tasks(args.tasks)
 
@@ -120,7 +121,9 @@ def main():
                     print(f'Processing Task: "{task}" Subtask: "{subtask}" Language: "{language}" Model: "{model}" Huggingface ID: "{model_hf_id}"')
                     run_name = f"lola-eval-{model}-{task}-{subtask}-{language}"
                     # Create a job on the computing cluster
-                    subprocess.run(['sbatch', '--job-name', run_name, 'noctua2_execute_job.sh', task, subtask, model_hf_id, language, results_dir])
+                    sub_proc_arr = ['sbatch', '--job-name', run_name, 'noctua2_execute_job.sh', task, subtask, model_hf_id, language, results_dir]
+                    print("Subprocess called: ", sub_proc_arr)
+                    subprocess.run(sub_proc_arr)
 
 if __name__ == "__main__":
     main()
