@@ -5,13 +5,15 @@ set -eu
 . task.config
 
 # export CUDA_VISIBLE_DEVICES=1
+slurm=false
 
 # # Parse the commandline args into models, sub tasks and languages
-# Sample usage: bash execute.sh -m model_id -s subtask -l language -r absolute_path_result_dir
-# Example: bash execute.sh -m dice-research/lola_v1 -l de -r /data/kshitij/LOLA-Megatron-DeepSpeed/lola_ws/evaluate/tasks/okapi/Results
+# Sample usage: bash execute.sh -m model_id -s subtask -l language -r absolute_path_result_dir -c
+# Example: bash execute.sh -m dice-research/lola_v1 -l de -r /data/kshitij/LOLA-Megatron-DeepSpeed/lola_ws/evaluate/tasks/okapi/Results -c
 # Not using the flag will give an error if model_id, language and result_path are not specified
+# The 'c' is to set the slurm flag 
 # subtask flag is not necessary and will be ignored even if its provided
-while getopts ":m:s:l:r:" opt; do
+while getopts ":m:s:l:r:c:" opt; do
   case $opt in
     m) model="$OPTARG"
     ;;
@@ -20,6 +22,8 @@ while getopts ":m:s:l:r:" opt; do
     l) lang="$OPTARG"
     ;;
     r) result_path="$OPTARG"
+    ;;
+    c) slurm=true
     ;;
     \?) echo "Invalid option -$OPTARG" >&3
     exit 1
@@ -33,10 +37,14 @@ while getopts ":m:s:l:r:" opt; do
   esac
 done
 
+# the statement below is required on slurm
+if [[ "$slurm" == true ]]; then
+  echo "It worked"
+  export LD_LIBRARY_PATH=$CONDA_VENV_DIR/lib/python3.12/site-packages/nvidia/nvjitlink/lib:$LD_LIBRARY_PATH
+fi
+
 # Activate the virtual environment
 CONDA_VENV_DIR=$(realpath ./$TASK_NAME-eval)
-# the statement below is required on slurm
-export LD_LIBRARY_PATH=$CONDA_VENV_DIR/lib/python3.12/site-packages/nvidia/nvjitlink/lib:$LD_LIBRARY_PATH
 source activate $CONDA_VENV_DIR
 
 
