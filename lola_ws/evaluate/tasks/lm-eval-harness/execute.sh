@@ -42,7 +42,7 @@ make_dir() {
 	do
 		gen_path="$gen_path/$dir"
 		if [[ ! -d "$gen_path" ]]; then
-			mkdir $gen_path
+			mkdir -p $gen_path
 		fi
 	done
 	
