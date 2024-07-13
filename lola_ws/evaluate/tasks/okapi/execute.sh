@@ -62,6 +62,22 @@ make_dir() {
 	
 }
 
+# python -c “from huggingface_hub.hf_api import HfFolder; HfFolder.save_token(‘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’)”
+
+# Huggingface token from Kshitij's account
+huggingface_token="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"
+
+# Enter token
+expect <<EOF
+spawn huggingface-cli login
+expect "Enter your token (input will not be visible):"
+send "$huggingface_token\r"
+expect "Add token as git credential? (Y/n)"
+send "yes\r"
+expect eof
+EOF
+
+
 result_path="$result_path/okapi/$(cut -d'/' -f2 <<<$model)/$lang"
 make_dir $result_path
 json_path="$result_path/output_$(date +%s).json"

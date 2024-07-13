@@ -59,6 +59,20 @@ make_dir() {
 }
 
 
+# Huggingface token from Kshitij's account
+huggingface_token="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"
+
+# Enter token
+expect <<EOF
+spawn huggingface-cli login
+expect "Enter your token (input will not be visible):"
+send "$huggingface_token\r"
+expect "Add token as git credential? (Y/n)"
+send "yes\r"
+expect eof
+EOF
+
+
 # Ensuring existence/generating results directory in results/task/model/subtask/language support
 
 result_path="$result_path/lm-eval-harness/$sub_task/$(cut -d'/' -f2 <<<$model)/$lang"

@@ -20,6 +20,7 @@ git checkout $TASK_GIT_HASH
 # yes |
 
 # install librairies
+pip install huggingface_hub
 pip install -e .
 
 pip install tiktoken
