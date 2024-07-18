@@ -21,6 +21,11 @@ git checkout $TASK_GIT_HASH
 
 # install librairies
 pip install huggingface_hub
+
+pip install einops
+
+pip install sentencepiece
+
 pip install -e .
 
 pip install tiktoken

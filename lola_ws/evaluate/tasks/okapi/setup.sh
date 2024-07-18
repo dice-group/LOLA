@@ -19,6 +19,8 @@ cd $REPO_DIR
 git checkout $TASK_GIT_HASH
 
 pip install huggingface_hub
+pip install einops
+
 pip install  -e ".[multilingual]"
 
 # To handle conversion of slow to fast tokenizers
