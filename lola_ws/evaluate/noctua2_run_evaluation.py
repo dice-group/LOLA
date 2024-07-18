@@ -2,7 +2,7 @@
 This script is used to evaluate LLMs on various tasks. The script submits a job to a SLURM-based computing cluster for each unique and valid combination of the provided tasks, models, and languages. This allows for parallel execution and efficient utilization of cluster resources. Below is an example of how to run the evaluation with specific models, tasks, and languages.
 
 Command:
-    python noctua2_run_evaluation.py --models=xlmr,mbart --tasks="lm-eval-harness:lm-eval-harness_xcopa,lm-eval-harness_xnli;okapi" --languages=hi,bn --results-dir=./output
+    python3 noctua2_run_evaluation.py --models=xlmr,mbart --tasks="lm-eval-harness:lm-eval-harness_xcopa,lm-eval-harness_xnli;okapi" --languages=hi,bn --results-dir=./output
 
 Parameters:
     --models: Specifies the models to be used for evaluation. In this example, xlmr and mbart models are used.

@@ -34,15 +34,17 @@ while getopts ":m:s:l:r:" opt; do
   esac
 done
 
+
+# Activate the virtual environment
+CONDA_VENV_DIR=$(realpath ./$TASK_NAME-eval)
+source activate ./$TASK_NAME-eval
+
 # the statement below is required on slurm
 if [[ "$slurm" == true ]]; then
   echo "It worked"
   export LD_LIBRARY_PATH=$CONDA_VENV_DIR/lib/python3.12/site-packages/nvidia/nvjitlink/lib:$LD_LIBRARY_PATH
 fi
 
-# Activate the virtual environment
-CONDA_VENV_DIR=$(realpath ./$TASK_NAME-eval)
-source activate ./$TASK_NAME-eval
 
 make_dir() {
 	delimiter="/"
