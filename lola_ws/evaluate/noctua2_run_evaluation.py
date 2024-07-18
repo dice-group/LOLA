@@ -29,6 +29,17 @@ import os
 import json
 import subprocess
 
+# Creating directory for SLURM logs
+def create_directory_if_not_exists(directory_path):
+    if not os.path.exists(directory_path):
+        os.makedirs(directory_path)
+        print(f"Directory '{directory_path}' created.")
+    else:
+        print(f"Directory '{directory_path}' already exists.")
+
+slurm_log_path = 'noctua2_logs/'
+create_directory_if_not_exists(slurm_log_path)
+
 NONE_VAL = 'none'
 task_lang_map_file = "task_lang.json"
 model_lang_map_file = "llm_lang.json"
@@ -94,7 +105,8 @@ def main():
 
     task_subtask_map = parse_tasks(args.tasks)
 
-    os.makedirs(results_dir, exist_ok=True)
+    # os.makedirs(results_dir, exist_ok=True)
+    create_directory_if_not_exists(results_dir)
 
     for task, subtasks in task_subtask_map.items():
         if not subtasks:
@@ -121,7 +133,7 @@ def main():
                     print(f'Processing Task: "{task}" Subtask: "{subtask}" Language: "{language}" Model: "{model}" Huggingface ID: "{model_hf_id}"')
                     run_name = f"lola-eval-{model}-{task}-{subtask}-{language}"
                     # Create a job on the computing cluster
-                    sub_proc_arr = ['sbatch', '--job-name', run_name, 'noctua2_execute_job.sh', task, subtask, model_hf_id, language, results_dir]
+                    sub_proc_arr = ['sbatch', '--job-name', run_name, '--output', (slurm_log_path + '%x_slurm-%j.out'), 'noctua2_execute_job.sh', task, subtask, model_hf_id, language, results_dir]
                     print("Subprocess called: ", sub_proc_arr)
                     subprocess.run(sub_proc_arr)
 
