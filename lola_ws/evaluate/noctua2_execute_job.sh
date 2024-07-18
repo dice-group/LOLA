@@ -29,4 +29,4 @@ results_dir=$5
 cd tasks/$task
 
 # Call the execute script for task
-bash execute.sh -m $model_hf_id -s $subtask -l $language -r $results_dir
+bash execute.sh -m $model_hf_id -s $subtask -l $language -r $results_dir -c

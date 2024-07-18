@@ -856,9 +856,9 @@
             ]
         },
         {
-            "name": "MMedLM-7B",
+            "name": "MMedLM-1_8B",
             "id": "mmedlm",
-            "huggingface_model_id": "Henrychur/MMedLM",
+            "huggingface_model_id": "Henrychur/MMedLM2-1_8B",
             "languages": [
                 "en",
                 "es",
