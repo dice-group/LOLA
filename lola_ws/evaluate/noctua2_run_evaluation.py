@@ -28,6 +28,12 @@ import argparse
 import os
 import json
 import subprocess
+from datetime import datetime
+
+# Get today's date
+today = datetime.today()
+# Format the date as dd-mm-yyyy
+formatted_date = today.strftime('%d-%m-%Y')
 
 # Creating directory for SLURM logs
 def create_directory_if_not_exists(directory_path):
@@ -37,7 +43,7 @@ def create_directory_if_not_exists(directory_path):
     else:
         print(f"Directory '{directory_path}' already exists.")
 
-slurm_log_path = 'noctua2_logs/'
+slurm_log_path = 'noctua2_logs/' + formatted_date + '/'
 create_directory_if_not_exists(slurm_log_path)
 
 NONE_VAL = 'none'

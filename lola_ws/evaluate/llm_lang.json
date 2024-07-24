@@ -658,7 +658,7 @@
         {
             "name": "BLOOM-7B",
             "id": "bloom",
-            "huggingface_model_id": "meta-llama/Llama-2-7b",
+            "huggingface_model_id": "bigscience/bloom-7b1",
             "languages": [
                 "ak",
                 "ar",
@@ -871,7 +871,7 @@
         {
             "name": "MIXTRAL-7B",
             "id": "mixtral",
-            "huggingface_model_id": "mistralai/Mixtral-8x7B-Instruct-v0.1",
+            "huggingface_model_id": "mistralai/Mixtral-8x7B-v0.1",
             "languages": [
                 "de",
                 "en",
@@ -883,7 +883,7 @@
         {
             "name": "Falcon-7B",
             "id": "falcon",
-            "huggingface_model_id": "tiiuae/falcon-7b-instruct",
+            "huggingface_model_id": "tiiuae/falcon-7b",
             "languages": [
                 "en",
                 "fr"
@@ -892,7 +892,7 @@
         {
             "name": "Breeze-7B",
             "id": "breeze",
-            "huggingface_model_id": "MediaTek-Research/Breeze-7B-Instruct-v1_0",
+            "huggingface_model_id": "MediaTek-Research/Breeze-7B-Base-v1_0",
             "languages": [
                 "en",
                 "zh"
