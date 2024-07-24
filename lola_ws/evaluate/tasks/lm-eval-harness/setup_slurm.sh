@@ -3,7 +3,7 @@
 #SBATCH -N 1
 #SBATCH -n 1
 #SBATCH --mem 10G
-#SBATCH -J "Setting up evaluation environment for mlmm"
+#SBATCH -J "Setting up evaluation environment for lm-eval-harness"
 #SBATCH --gres=gpu:a100:1
 #SBATCH --cpus-per-task=16
 set -eu

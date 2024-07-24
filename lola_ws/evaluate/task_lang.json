@@ -488,7 +488,7 @@
             "subtasks": [
                 {
                     "name": "XCOPA",
-                    "id": "lm-eval-harness_xcopa",
+                    "id": "xcopa",
                     "languages": [
                         "et",
                         "ht",
@@ -505,7 +505,7 @@
                 },
                 {
                     "name": "XNLI",
-                    "id": "lm-eval-harness_xnli",
+                    "id": "xnli",
                     "languages": [
                         "ar",
                         "bg",
@@ -526,7 +526,7 @@
                 },
                 {
                     "name": "XWinograd",
-                    "id": "lm-eval-harness_xwinograd",
+                    "id": "xwinograd",
                     "languages": [
                         "en",
                         "fr",
@@ -538,7 +538,7 @@
                 },
                 {
                     "name": "XStoryCloze",
-                    "id": "lm-eval-harness_xstorycloze",
+                    "id": "xstorycloze",
                     "languages": [
                         "ar",
                         "en",

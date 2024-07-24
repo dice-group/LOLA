@@ -10,7 +10,7 @@ slurm=false
 # Not using the flag will give an error if model_id, subtask, language and result_path are not specified
 # The 'c' is to set the slurm flag 
 
-while getopts ":m:s:l:r:" opt; do
+while getopts ":m:s:l:r:c" opt; do
   case $opt in
     m) model="$OPTARG"
     ;;
@@ -27,11 +27,10 @@ while getopts ":m:s:l:r:" opt; do
     ;;
   esac
 
-  case $OPTARG in
-    -*) echo "Option $opt needs a valid argument"
+  if [[ $opt != c && -z $OPTARG ]]; then
+    echo "Option -$opt requires an argument" >&2
     exit 1
-    ;;
-  esac
+  fi
 done
 
 
@@ -41,7 +40,7 @@ source activate ./$TASK_NAME-eval
 
 # the statement below is required on slurm
 if [[ "$slurm" == true ]]; then
-  echo "It worked"
+  echo "Setting LD_LIBRARY_PATH for noctua2."
   export LD_LIBRARY_PATH=$CONDA_VENV_DIR/lib/python3.12/site-packages/nvidia/nvjitlink/lib:$LD_LIBRARY_PATH
 fi
 
@@ -61,18 +60,8 @@ make_dir() {
 }
 
 
-# Huggingface token from Kshitij's account
-huggingface_token="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"
-
-# Enter token
-expect <<EOF
-spawn huggingface-cli login
-expect "Enter your token (input will not be visible):"
-send "$huggingface_token\r"
-expect "Add token as git credential? (Y/n)"
-send "yes\r"
-expect eof
-EOF
+# export this variable to your environment before running this script: export HF_LOLA_EVAL_AT=<your-access-token-here>
+huggingface-cli login --token $HF_LOLA_EVAL_AT
 
 
 # Ensuring existence/generating results directory in results/task/model/subtask/language support
