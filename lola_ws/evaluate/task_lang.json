@@ -665,6 +665,102 @@
                         "vi",
                         "zh"
                     ]
+                },
+                {
+                    "name": "Okapi Multilingual TruthfulQA MC1",
+                    "id": "truthfulqa_mc1",
+                    "formatted_id": "truthfulqa_<lang>_mc1", 
+                    "languages": [
+                        "ar",
+                        "bn",
+                        "ca",
+                        "da",
+                        "de",
+                        "es",
+                        "eu",
+                        "fr",
+                        "gu",
+                        "hi",
+                        "hr",
+                        "hu",
+                        "hy",
+                        "id",
+                        "it",
+                        "kn",
+                        "ml",
+                        "mr",
+                        "ne",
+                        "nl",
+                        "pt",
+                        "ro",
+                        "ru",
+                        "sk",
+                        "sr",
+                        "sv",
+                        "ta",
+                        "te",
+                        "uk",
+                        "vi",
+                        "zh"
+                    ]
+                },
+                {
+                    "name": "LAMBADA Multilingual",
+                    "id": "lambada_openai_mt_stablelm",
+                    "languages": [
+                        "en",
+                        "fr",
+                        "es",
+                        "de",
+                        "it"
+                    ]
+                },
+                {
+                    "name": "MGSM Direct",
+                    "id": "mgsm_direct",
+                    "languages": [
+                        "bn",
+                        "de",
+                        "en",
+                        "es",
+                        "fr",
+                        "ja",
+                        "ru",
+                        "sw",
+                        "te",
+                        "th",
+                        "zh"
+                    ]
+                },
+                {
+                    "name": "MGSM CoT",
+                    "id": "mgsm_native_cot",
+                    "languages": [
+                        "bn",
+                        "de",
+                        "en",
+                        "es",
+                        "fr",
+                        "ja",
+                        "ru",
+                        "sw",
+                        "te",
+                        "th",
+                        "zh"
+                    ]
+                },
+                {
+                    "name": "PAWS-X",
+                    "id": "paws",
+                    "languages": [
+                        "de",
+                        "en",
+                        "es",
+                        "fr",
+                        "ja",
+                        "ko",
+                        "zh"
+                    ]
                 }
             ]
         },

@@ -63,16 +63,25 @@ make_dir() {
 # export this variable to your environment before running this script: export HF_LOLA_EVAL_AT=<your-access-token-here>
 huggingface-cli login --token $HF_LOLA_EVAL_AT
 
+final_task_id=""
+# check if the ID needs interpolation
+if [[ "$sub_task" == *"<lang>"* ]]; then
+  final_task_id="${sub_task//<lang>/$lang}"
+else
+  final_task_id="${sub_task}_$lang"
+fi
+
 
 # Ensuring existence/generating results directory in results/task/model/subtask/language support
 
-result_path="$result_path/lm-eval-harness/$sub_task/$(cut -d'/' -f2 <<<$model)/$lang"
+# result_path="$result_path/lm-eval-harness/$sub_task/$(cut -d'/' -f2 <<<$model)/$lang"
+result_path="$result_path/lm-eval-harness/$final_task_id/$(cut -d'/' -f2 <<<$model)"
 make_dir $result_path
 
 
 lm_eval --model hf \
     --model_args pretrained="${model}" \
-    --tasks "${sub_task}_$lang" \
+    --tasks $final_task_id \
     --device cuda:0 \
     --batch_size 8 \
     --log_samples \

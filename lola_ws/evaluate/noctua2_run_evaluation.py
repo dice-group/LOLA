@@ -93,6 +93,16 @@ def get_subtasks_for_task(task_id):
             return [subtask['id'] for subtask in task.get('subtasks', [])] or [NONE_VAL]
     return [NONE_VAL]
 
+def get_subtask_info(task_id, subtask_id):
+    data = task_lang_map
+
+    for task in data['tasks']:
+        if task['id'] == task_id:
+            for subtask in task['subtasks']:
+                if subtask['id'] == subtask_id:
+                    return subtask
+    return None
+
 def get_model_information(model_id):
     data = model_lang_map
 
@@ -135,11 +145,14 @@ def main():
                     if language not in supported_model_languages:
                         print(f"Skipping: \"{language}\" is not supported for model \"{model}\"")
                         continue
-
+                    # check if subtask has formatted id
+                    formatted_id = None
+                    subtask_info = get_subtask_info(task, subtask)
+                    formatted_id = subtask_info.get('formatted_id', None)
                     print(f'Processing Task: "{task}" Subtask: "{subtask}" Language: "{language}" Model: "{model}" Huggingface ID: "{model_hf_id}"')
                     run_name = f"lola-eval-{model}-{task}-{subtask}-{language}"
                     # Create a job on the computing cluster
-                    sub_proc_arr = ['sbatch', '--job-name', run_name, '--output', (slurm_log_path + '%x_slurm-%j.out'), 'noctua2_execute_job.sh', task, subtask, model_hf_id, language, results_dir]
+                    sub_proc_arr = ['sbatch', '--job-name', run_name, '--output', (slurm_log_path + '%x_slurm-%j.out'), 'noctua2_execute_job.sh', task, subtask if formatted_id is None else formatted_id, model_hf_id, language, results_dir]
                     print("Subprocess called: ", sub_proc_arr)
                     subprocess.run(sub_proc_arr)
 
