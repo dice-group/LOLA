@@ -1,7 +1,7 @@
 #!/bin/bash
 . task.config
 
- export CUDA_VISIBLE_DEVICES=1
+# export CUDA_VISIBLE_DEVICES=1
 slurm=false
 
 # # Parse the commandline args into models, sub tasks and languages
