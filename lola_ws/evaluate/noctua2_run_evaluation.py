@@ -145,14 +145,17 @@ def main():
                     if language not in supported_model_languages:
                         print(f"Skipping: \"{language}\" is not supported for model \"{model}\"")
                         continue
-                    # check if subtask has formatted id
-                    formatted_id = None
+                    
+                    # check if subtask has formatted id, if not then use subtask id
                     subtask_info = get_subtask_info(task, subtask)
-                    formatted_id = subtask_info.get('formatted_id', None)
+                    formatted_id = subtask_info.get('formatted_id', subtask)
+                    # check if an alternate language label is provided, if not then use normal language label
+                    alt_lang_label = subtask_info.get('alt_language_labels', {}).get(language, language)
+                    
                     print(f'Processing Task: "{task}" Subtask: "{subtask}" Language: "{language}" Model: "{model}" Huggingface ID: "{model_hf_id}"')
                     run_name = f"lola-eval-{model}-{task}-{subtask}-{language}"
                     # Create a job on the computing cluster
-                    sub_proc_arr = ['sbatch', '--job-name', run_name, '--output', (slurm_log_path + '%x_slurm-%j.out'), 'noctua2_execute_job.sh', task, subtask if formatted_id is None else formatted_id, model_hf_id, language, results_dir]
+                    sub_proc_arr = ['sbatch', '--job-name', run_name, '--output', (slurm_log_path + '%x_slurm-%j.out'), 'noctua2_execute_job.sh', task, formatted_id, model_hf_id, language, alt_lang_label, results_dir]
                     print("Subprocess called: ", sub_proc_arr)
                     subprocess.run(sub_proc_arr)
 

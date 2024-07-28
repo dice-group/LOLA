@@ -534,7 +534,10 @@
                         "pt",
                         "ru",
                         "zh"
-                    ]
+                    ],
+                    "alt_language_labels": {
+                        "ja": "jp"
+                    }
                 },
                 {
                     "name": "XStoryCloze",

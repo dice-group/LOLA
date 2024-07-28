@@ -23,10 +23,11 @@ task=$1
 subtask=$2
 model_hf_id=$3
 language=$4
-results_dir=$5
+alt_lang=$5
+results_dir=$6
 
 # Change directory to the specified task
 cd tasks/$task
 
 # Call the execute script for task
-bash execute.sh -m $model_hf_id -s $subtask -l $language -r $results_dir -c
+bash execute.sh -m $model_hf_id -s $subtask -l $language -a $alt_lang -r $results_dir -c
