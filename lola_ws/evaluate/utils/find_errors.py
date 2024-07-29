@@ -6,7 +6,9 @@ from tqdm import tqdm
 def parse_args():
     parser = argparse.ArgumentParser(description="Find the combination of model and language for which a task failed to execute.")
     parser.add_argument('--main_task_id', required=True, help="Id of the main task.")
-    parser.add_argument('--results-dir', default="./results", help="Directory where the experiment results can be found (default: ./results)")
+    parser.add_argument('--root-results-dir', default="../output", help="Root directory of the experiment results (default: ../output).")
+    parser.add_argument('--root-logs-dir', default="../noctua2_logs", help="Root directory of the experiment logs (default: ../noctua2_logs).")
+    parser.add_argument('--logs-sub-dirs', default="all", help="Comma separated list of subdirectories, put \"all\" if all sub directories are to be used.")
 
     return parser.parse_args()
 
@@ -47,8 +49,8 @@ def main():
         raise ValueError(f"No information found for the provided task id: {main_task_id}")
     
     # Process results directory
-    results_dir = os.path.abspath(args.results_dir)
-    main_task_res_dir = os.path.join(results_dir, main_task_id)
+    root_results_dir = os.path.abspath(args.root_results_dir)
+    main_task_res_dir = os.path.join(root_results_dir, main_task_id)
     
     # Check if the results path exists
     if not os.path.isdir(main_task_res_dir):
@@ -75,6 +77,10 @@ def main():
         print(f" Total {len(missing_combinations)}  missing results:")
         for subtask, model in missing_combinations:
             print(f"Subtask: {subtask}, Model: {model}")
+            # TODO: Find the associated log file(s) -- can be multiple files due to multiple executions of the same experiment
+            # TODO: For each log file 
+                # TODO: Find the exception/error
+                # TODO: Group by exception/error map to each task and a list of models
     else:
         print("No missing combinations found.")
     
