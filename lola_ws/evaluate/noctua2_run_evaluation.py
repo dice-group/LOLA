@@ -155,7 +155,7 @@ def main():
                     print(f'Processing Task: "{task}" Subtask: "{subtask}" Language: "{language}" Model: "{model}" Huggingface ID: "{model_hf_id}"')
                     #run_name = f"lola-eval-{model}-{task}-{subtask}-{language}"
                     updated_model_id = model_hf_id.replace("/", "__")
-                    run_name = f"lm-eval-harness_{subtask}-{language}_{updated_model_id}"
+                    run_name = f"{task}_{subtask}-{language}_{updated_model_id}"
                     # Create a job on the computing cluster
                     sub_proc_arr = ['sbatch', '--job-name', run_name, '--output', (slurm_log_path + '%x_slurm-%j.out'), 'noctua2_execute_job.sh', task, formatted_id, model_hf_id, language, alt_lang_label, results_dir]
                     print("Subprocess called: ", sub_proc_arr)

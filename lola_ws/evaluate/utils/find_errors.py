@@ -1,14 +1,15 @@
 import json
 import argparse
 import os
+import re
 from tqdm import tqdm
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Find the combination of model and language for which a task failed to execute.")
     parser.add_argument('--main_task_id', required=True, help="Id of the main task.")
-    parser.add_argument('--root-results-dir', default="../output", help="Root directory of the experiment results (default: ../output).")
-    parser.add_argument('--root-logs-dir', default="../noctua2_logs", help="Root directory of the experiment logs (default: ../noctua2_logs).")
-    parser.add_argument('--logs-sub-dirs', default="all", help="Comma separated list of subdirectories, put \"all\" if all sub directories are to be used.")
+    parser.add_argument('--root_results_dir', default="../output", help="Root directory of the experiment results (default: ../output).")
+    parser.add_argument('--root_logs_dir', default="../noctua2_logs", help="Root directory of the experiment logs (default: ../noctua2_logs).")
+    parser.add_argument('--logs_sub_dirs', default="all", help="Comma separated list of subdirectories, put \"all\" if all sub directories are to be used.")
 
     return parser.parse_args()
 
@@ -20,7 +21,7 @@ def load_json_file(file_path):
         raise FileNotFoundError(f"File not found: {file_path}")
     except json.JSONDecodeError:
         raise ValueError(f"Error decoding JSON from the file: {file_path}")
-    
+
 def find_results_json(directory):
     """Recursively search for results_*.json files within the given directory."""
     for root, _, files in os.walk(directory):
@@ -28,6 +29,29 @@ def find_results_json(directory):
             if file.startswith('results_') and file.endswith('.json'):
                 return True
     return False
+
+def extract_error_from_log(log_file_path):
+    """Extract error/exception messages from the log file."""
+    # TODO: requires refinement to extract all types of errors and exceptions
+    error_patterns = [
+        re.compile(r'.*Exception: (.+)'),
+        re.compile(r'.*Error: (.+)')
+    ]
+    errors = []
+    try:
+        with open(log_file_path, 'r') as log_file:
+            for line in log_file:
+                for pattern in error_patterns:
+                    match = pattern.search(line)
+                    if match:
+                        errors.append(match.group(1))
+    except FileNotFoundError:
+        raise FileNotFoundError(f"Log file not found: {log_file_path}")
+    
+    return errors
+
+def replace_last(string, old, new):
+    return new.join(string.rsplit(old, 1))
 
 def main():
     # Parse command-line arguments
@@ -59,6 +83,7 @@ def main():
     print(f'Scanning the subtasks for errors: {main_task_res_dir}')
 
     missing_combinations = []
+    error_summary = {}
 
     # Iterate over subtasks
     for subtask in tqdm(os.listdir(main_task_res_dir)):
@@ -74,13 +99,43 @@ def main():
                         missing_combinations.append((subtask, model))
     
     if missing_combinations:
-        print(f" Total {len(missing_combinations)}  missing results:")
+        print(f" Total {len(missing_combinations)} missing results:")
         for subtask, model in missing_combinations:
             print(f"Subtask: {subtask}, Model: {model}")
-            # TODO: Find the associated log file(s) -- can be multiple files due to multiple executions of the same experiment
-            # TODO: For each log file 
-                # TODO: Find the exception/error
-                # TODO: Group by exception/error map to each task and a list of models
+            
+            # Locate the log files for the specific subtask and model
+            root_logs_dir = os.path.abspath(args.root_logs_dir)
+            logs_sub_dirs = args.logs_sub_dirs.split(",")
+            
+            if "all" in logs_sub_dirs:
+                logs_sub_dirs = os.listdir(root_logs_dir)
+            
+            log_files = []
+            for log_sub_dir in logs_sub_dirs:
+                sub_dir_path = os.path.join(root_logs_dir, log_sub_dir)
+                if os.path.isdir(sub_dir_path):
+                    for root, _, files in os.walk(sub_dir_path):
+                        for file in files:
+                            # File should match the pattern combining main_task_id, subtask & model
+                            run_name = f"{main_task_id}_{replace_last(subtask, '_', '-')}_{model}"
+                            log_file_pattern = run_name + r'_slurm-\d+\.out'
+                            if re.match(log_file_pattern, file):
+                                log_files.append(os.path.join(root, file))
+            print(log_files)
+            # Extract errors from log files
+            for log_file in log_files:
+                errors = extract_error_from_log(log_file)
+                for error in errors:
+                    if error not in error_summary:
+                        error_summary[error] = []
+                    error_summary[error].append((subtask, model))
+        
+        # Print the error summary
+        print("\nError Summary:")
+        for error, tasks_models in error_summary.items():
+            print(f"\nError: {error}")
+            for subtask, model in tasks_models:
+                print(f"  Subtask: {subtask}, Model: {model}")
     else:
         print("No missing combinations found.")
     
