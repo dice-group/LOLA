@@ -83,9 +83,8 @@ fi
 # path to cache the lm-eval-harness predictions
 # cache_path="$result_path/lm-eval-harness/cache"
 # path to save results
-result_path="$result_path/lm-eval-harness/$task_dir_name/$(cut -d'/' -f2 <<<$model)"
+result_path="$result_path/lm-eval-harness/$task_dir_name/"
 make_dir $result_path
-
 
 lm_eval --model hf \
     --model_args pretrained="${model}" \
@@ -93,6 +92,6 @@ lm_eval --model hf \
     --device cuda:0 \
     --batch_size auto:4 \
     --log_samples \
-    --output_path "${result_path}/results" \
-    --trust_remote_code > "${result_path}/output_$(date +%s).txt"
+    --output_path "${result_path}" \
+    --trust_remote_code
 

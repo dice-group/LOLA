@@ -56,7 +56,7 @@ with open(task_lang_map_file) as f1, open(model_lang_map_file) as f2:
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Process some models, tasks, and languages.")
+    parser = argparse.ArgumentParser(description="Evaluate LLMs on various tasks. The script submits a job to a SLURM-based computing cluster for each unique and valid combination of the provided tasks, models, and languages. This allows for parallel execution and efficient utilization of cluster resources.")
     parser.add_argument('--models', required=True, help="Comma-separated list of models (e.g., 'model1,model2')")
     parser.add_argument('--tasks', required=True, help="Tasks with optional subtasks formatted as 'task1:sub1,sub2;task2'")
     parser.add_argument('--languages', required=True, help="Comma-separated list of languages (e.g., 'en,es')")
@@ -153,7 +153,9 @@ def main():
                     alt_lang_label = subtask_info.get('alt_language_labels', {}).get(language, language)
                     
                     print(f'Processing Task: "{task}" Subtask: "{subtask}" Language: "{language}" Model: "{model}" Huggingface ID: "{model_hf_id}"')
-                    run_name = f"lola-eval-{model}-{task}-{subtask}-{language}"
+                    #run_name = f"lola-eval-{model}-{task}-{subtask}-{language}"
+                    updated_model_id = model_hf_id.replace("/", "__")
+                    run_name = f"lm-eval-harness_{subtask}-{language}_{updated_model_id}"
                     # Create a job on the computing cluster
                     sub_proc_arr = ['sbatch', '--job-name', run_name, '--output', (slurm_log_path + '%x_slurm-%j.out'), 'noctua2_execute_job.sh', task, formatted_id, model_hf_id, language, alt_lang_label, results_dir]
                     print("Subprocess called: ", sub_proc_arr)
