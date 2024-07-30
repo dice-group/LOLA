@@ -672,7 +672,7 @@
                 {
                     "name": "Okapi Multilingual TruthfulQA MC1",
                     "id": "truthfulqa_mc1",
-                    "formatted_id": "truthfulqa_<lang>_mc1", 
+                    "formatted_id": "truthfulqa_%s_mc1", 
                     "languages": [
                         "ar",
                         "bn",

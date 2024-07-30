@@ -10,15 +10,11 @@ slurm=false
 # Not using the flag will give an error if model_id, subtask, language and result_path are not specified
 # The 'c' is to set the slurm flag 
 
-while getopts ":m:s:l:a:r:c" opt; do
+while getopts ":m:f:r:c" opt; do
   case $opt in
     m) model="$OPTARG"
     ;;
-    s) sub_task="$OPTARG"
-    ;;
-    l) lang="$OPTARG"
-    ;;
-    a) alt_lang="$OPTARG"
+    f) final_task_id="$OPTARG"
     ;;
     r) result_path="$OPTARG"
     ;;
@@ -47,44 +43,9 @@ if [[ "$slurm" == true ]]; then
 fi
 
 
-make_dir() {
-	delimiter="/"
-	gen_path="/"
-	declare -a path_array=($(echo $1 | tr "$delimiter" " "))
-	for dir in "${path_array[@]}"
-	do
-		gen_path="$gen_path/$dir"
-		if [[ ! -d "$gen_path" ]]; then
-			mkdir -p $gen_path
-		fi
-	done
-	
-}
-
-
 # export this variable to your environment before running this script: export HF_LOLA_EVAL_AT=<your-access-token-here>
 huggingface-cli login --token $HF_LOLA_EVAL_AT
 
-final_task_id=""
-task_dir_name=""
-# check if the ID needs interpolation
-if [[ "$sub_task" == *"<lang>"* ]]; then
-  final_task_id="${sub_task//<lang>/$alt_lang}"
-  task_dir_name="${sub_task//<lang>/$lang}"
-else
-  final_task_id="${sub_task}_$alt_lang"
-  task_dir_name="${sub_task}_$lang"
-fi
-
-
-# Ensuring existence/generating results directory in results/task/model/subtask/language support
-
-# result_path="$result_path/lm-eval-harness/$sub_task/$(cut -d'/' -f2 <<<$model)/$lang"
-# path to cache the lm-eval-harness predictions
-# cache_path="$result_path/lm-eval-harness/cache"
-# path to save results
-result_path="$result_path/lm-eval-harness/$task_dir_name/"
-make_dir $result_path
 
 lm_eval --model hf \
     --model_args pretrained="${model}" \

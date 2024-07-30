@@ -148,16 +148,30 @@ def main():
                     
                     # check if subtask has formatted id, if not then use subtask id
                     subtask_info = get_subtask_info(task, subtask)
-                    formatted_id = subtask_info.get('formatted_id', subtask)
+                    formatted_id = subtask_info.get('formatted_id', None)
                     # check if an alternate language label is provided, if not then use normal language label
                     alt_lang_label = subtask_info.get('alt_language_labels', {}).get(language, language)
-                    
+                    # Process all the required arguments
+                    # to be passed to evaluation framework
+                    final_task_id = None
+                    # to be used to group results into a directory
+                    task_dir_name = None
+                    if formatted_id:
+                        final_task_id = formatted_id % alt_lang_label
+                        task_dir_name = formatted_id % language
+                    else:
+                        final_task_id = subtask + '_' + alt_lang_label
+                        task_dir_name = subtask + '_' + language
+                    # result path
+                    result_path = os.path.join(results_dir, task, task_dir_name)
+                    create_directory_if_not_exists(result_path)
+
                     print(f'Processing Task: "{task}" Subtask: "{subtask}" Language: "{language}" Model: "{model}" Huggingface ID: "{model_hf_id}"')
                     #run_name = f"lola-eval-{model}-{task}-{subtask}-{language}"
                     updated_model_id = model_hf_id.replace("/", "__")
-                    run_name = f"{task}_{subtask}-{language}_{updated_model_id}"
+                    run_name = f"{task}_{task_dir_name}_{updated_model_id}"
                     # Create a job on the computing cluster
-                    sub_proc_arr = ['sbatch', '--job-name', run_name, '--output', (slurm_log_path + '%x_slurm-%j.out'), 'noctua2_execute_job.sh', task, formatted_id, model_hf_id, language, alt_lang_label, results_dir]
+                    sub_proc_arr = ['sbatch', '--job-name', run_name, '--output', (slurm_log_path + '%x_slurm-%j.out'), 'noctua2_execute_job.sh', task, model_hf_id, final_task_id, result_path]
                     print("Subprocess called: ", sub_proc_arr)
                     subprocess.run(sub_proc_arr)
 

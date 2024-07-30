@@ -20,14 +20,12 @@ export HF_DATASETS_CACHE=/scratch/hpc-prf-lola/nikit/.cache/huggingface
 
 # Read the input arguments into variables
 task=$1
-subtask=$2
-model_hf_id=$3
-language=$4
-alt_lang=$5
-results_dir=$6
+model_hf_id=$2
+final_task_id=$3
+result_path=$4
 
 # Change directory to the specified task
 cd tasks/$task
 
 # Call the execute script for task
-bash execute.sh -m $model_hf_id -s $subtask -l $language -a $alt_lang -r $results_dir -c
+bash execute.sh -m $model_hf_id -f $final_task_id -r $result_path -c

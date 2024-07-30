@@ -10,6 +10,7 @@ def parse_args():
     parser.add_argument('--root_results_dir', default="../output", help="Root directory of the experiment results (default: ../output).")
     parser.add_argument('--root_logs_dir', default="../noctua2_logs", help="Root directory of the experiment logs (default: ../noctua2_logs).")
     parser.add_argument('--logs_sub_dirs', default="all", help="Comma separated list of subdirectories, put \"all\" if all sub directories are to be used.")
+    parser.add_argument('--output_summary_file', default="./error_summary.txt", help="Filepath to write error summary into.")
 
     return parser.parse_args()
 
@@ -32,10 +33,11 @@ def find_results_json(directory):
 
 def extract_error_from_log(log_file_path):
     """Extract error/exception messages from the log file."""
-    # TODO: requires refinement to extract all types of errors and exceptions
+    # The patterns below should be extended if required
     error_patterns = [
-        re.compile(r'.*Exception: (.+)'),
-        re.compile(r'.*Error: (.+)')
+        re.compile(r'(.*AssertionError.*)'),
+        re.compile(r'(.*Exception: .+)'),
+        re.compile(r'(.*Error: .+)')
     ]
     errors = []
     try:
@@ -99,17 +101,16 @@ def main():
                         missing_combinations.append((subtask, model))
     
     if missing_combinations:
-        print(f" Total {len(missing_combinations)} missing results:")
-        for subtask, model in missing_combinations:
-            print(f"Subtask: {subtask}, Model: {model}")
-            
-            # Locate the log files for the specific subtask and model
-            root_logs_dir = os.path.abspath(args.root_logs_dir)
-            logs_sub_dirs = args.logs_sub_dirs.split(",")
-            
-            if "all" in logs_sub_dirs:
-                logs_sub_dirs = os.listdir(root_logs_dir)
-            
+        print(f" Total {len(missing_combinations)} missing results.")
+        # Locate the log files for the specific subtask and model
+        root_logs_dir = os.path.abspath(args.root_logs_dir)
+        logs_sub_dirs = args.logs_sub_dirs.split(",")
+        
+        if "all" in logs_sub_dirs:
+            logs_sub_dirs = os.listdir(root_logs_dir)
+        print(f'Extracting errors from the log files: {root_logs_dir}')
+        for subtask, model in tqdm(missing_combinations):
+            #print(f"Subtask: {subtask}, Model: {model}")
             log_files = []
             for log_sub_dir in logs_sub_dirs:
                 sub_dir_path = os.path.join(root_logs_dir, log_sub_dir)
@@ -117,25 +118,32 @@ def main():
                     for root, _, files in os.walk(sub_dir_path):
                         for file in files:
                             # File should match the pattern combining main_task_id, subtask & model
-                            run_name = f"{main_task_id}_{replace_last(subtask, '_', '-')}_{model}"
+                            run_name = f"{main_task_id}_{subtask}_{model}"
                             log_file_pattern = run_name + r'_slurm-\d+\.out'
                             if re.match(log_file_pattern, file):
                                 log_files.append(os.path.join(root, file))
-            print(log_files)
+            #print(log_files)
+            if not log_files:
+                print(f"Couldn't find log files for: Subtask: {subtask}, Model: {model}")
             # Extract errors from log files
             for log_file in log_files:
                 errors = extract_error_from_log(log_file)
+                if not errors:
+                    print(f"Couldn't extract errors from: {log_file}")
                 for error in errors:
                     if error not in error_summary:
                         error_summary[error] = []
                     error_summary[error].append((subtask, model))
         
-        # Print the error summary
-        print("\nError Summary:")
-        for error, tasks_models in error_summary.items():
-            print(f"\nError: {error}")
-            for subtask, model in tasks_models:
-                print(f"  Subtask: {subtask}, Model: {model}")
+        # Write the error summary
+        output_summary_file = args.output_summary_file
+        with open(output_summary_file, 'w') as sum_out:
+            sum_out.write("\nError Summary:")
+            for error, tasks_models in error_summary.items():
+                sum_out.write(f"\nError: {error}")
+                for subtask, model in tasks_models:
+                    sum_out.write(f"  Subtask: {subtask}, Model: {model}")
+            print(f"Error summary exported to: {output_summary_file}")
     else:
         print("No missing combinations found.")
     

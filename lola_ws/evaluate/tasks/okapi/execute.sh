@@ -1,4 +1,5 @@
 #!/bin/bash
+# TODO: This script is obsolete and needs to be removed.
 
 set -eu
 
