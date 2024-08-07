@@ -22,10 +22,11 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--dataset-name', required=True, help='(example: en)')
 parser.add_argument('--rows-limit', type=int, required=True)
 parser.add_argument('--output-dir', type=pathlib.Path, required=True)
+parser.add_argument('--device', default='cuda:0')
 args = parser.parse_args()
 
 tokenizer = transformers.AutoTokenizer.from_pretrained('dice-research/lola_v1')
-model = LOLALMHeadModel.from_pretrained('dice-research/lola_v1').to('cuda:0')
+model = LOLALMHeadModel.from_pretrained('dice-research/lola_v1').to(args.device)
 
 dataset = datasets.load_dataset('uonlp/CulturaX', args.dataset_name, split='train', streaming=True)
 
