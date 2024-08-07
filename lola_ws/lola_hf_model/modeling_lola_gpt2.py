@@ -32,6 +32,8 @@ from transformers.models.gpt2.modeling_gpt2 import GPT2LMHeadModel, GPT2DoubleHe
 
 logger = logging.get_logger(__name__)
 
+expert_analysis_callback = lambda _: None
+
 # LOLA
 class LOLAModel(GPT2PreTrainedModel):
     
@@ -447,6 +449,7 @@ class LOLAMOE(nn.Module):
             # the `top_x` tensor here.
             final_hidden_states.index_add_(0, top_x, current_hidden_states.to(hidden_states.dtype))
         final_hidden_states = final_hidden_states.reshape(batch_size, sequence_length, hidden_dim)
+        expert_analysis_callback(selected_experts)
         return final_hidden_states, router_logits
 
 class LOLAAttention(GPT2Attention):
