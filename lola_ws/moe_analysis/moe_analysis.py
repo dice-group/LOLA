@@ -48,7 +48,7 @@ def tokenize(text):
     return torch.nn.functional.pad(ids, (0, tokenizer.model_max_length - ids.shape[1]), value=tokenizer.pad_token_id), min(ids.shape[1], tokenizer.model_max_length)
 
 args.output_dir.mkdir(parents=True, exist_ok=True)
-with open(args.output_dir / f'row_data.{args.lang}.data', 'w') as datafile, open(args.output_dir / f'token_experts.{args.lang}.dat', 'w', newline='') as csvfile:
+with open(args.output_dir / f'row_data.{args.lang}.jsonl', 'w') as datafile, open(args.output_dir / f'token_experts.{args.lang}.dat', 'w', newline='') as csvfile:
     writer = csv.writer(csvfile, delimiter='\t', quoting=csv.QUOTE_NONE)
     for batch in itertools.batched(enumerate(tqdm.tqdm(itertools.islice(dataset, args.rows_limit), desc=args.lang, total=args.rows_limit)), args.batch_size):
         batch = list(batch)
