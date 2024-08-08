@@ -1,9 +1,9 @@
 #!/bin/sh
 #SBATCH -J "LOLA - MoE analysis"
-#SBATCH -t 30:00
+#SBATCH -t 5:00:00
 #SBATCH -N 1
 #SBATCH -n 1
-#SBATCH --mem 10G
+#SBATCH --mem 32G
 #SBATCH --gres=gpu:a100:1
 #SBATCH --cpus-per-task=16
 
@@ -17,6 +17,7 @@ module load lib/NCCL/2.16.2-GCCcore-12.2.0-CUDA-12.0.0
 module load compiler/GCC/10.3.0
 
 export HF_HOME=/scratch/hpc-prf-lola/nikit/.cache/huggingface
-CONDA_P=/scratch/hpc-prf-lola/nikit/repos/LOLA-Megatron-DeepSpeed/lola_ws/fine-tune/instruction-ft/venv-lola-ft
+export HF_DATASETS_CACHE=/scratch/hpc-prf-lola/nikit/.cache/huggingface
+export CONDA_P=/scratch/hpc-prf-lola/nikit/repos/LOLA-Megatron-DeepSpeed/lola_ws/fine-tune/instruction-ft/venv-lola-ft
 
-conda run --no-capture-output -p "$CONDA_P" ./moe_analysis.py --rows-limit 10000 --batch-size 1 --output-dir moe-noctua2-output --lang "$1"
+"$CONDA_P"/bin/python ./moe_analysis.py --rows-limit 10000 --batch-size 1 --output-dir moe-noctua2-output --lang "$1"
