@@ -29,7 +29,6 @@ def create_directory_if_not_exists(directory_path):
     else:
         print(f"Directory '{directory_path}' already exists.")
 
-
 def find_results_file(directory):
     # Ensure the directory exists
     if not os.path.isdir(directory):
@@ -49,7 +48,6 @@ def fetch_result_dict(results_dir):
     results_dict = None
     if results_file:
         results_info = load_json_file(os.path.join(results_dir, results_file))
-        #print(results_info.get("results", {}).items())
         # fetching the first json object mapped inside the "results" key to the key of the task
         for res_obj in results_info.get("results", {}).items():
             results_dict = res_obj[1]
@@ -62,14 +60,33 @@ def export_tsv_results(results_dict, output_dir):
         # Create an empty dataframe
         df = pd.DataFrame()
 
+        # Initialize headers
+        headers_model = []
+        headers_metric = []
+
         for lang, models_info in langs_info.items():
             row_data = {}
             for model, metrics in models_info.items():
                 for metric, value in metrics.items():
                     column_name = f"{model}_{metric}"
+                    # alias is not needed
+                    if metric == 'alias':
+                        continue
                     row_data[column_name] = value
-            df = df.append(pd.DataFrame(row_data, index=[lang]))
 
+                    # Add headers for the first time only
+                    if not headers_model:
+                        headers_model.append(model)
+                        headers_metric.append(metric)
+                    else:
+                        if column_name not in df.columns:
+                            headers_model.append(model)
+                            headers_metric.append(metric)
+                            
+            df = pd.concat([df, pd.DataFrame(row_data, index=[lang])])
+
+        # Add headers to dataframe
+        df.columns = pd.MultiIndex.from_arrays([headers_model, headers_metric])
         # Save to TSV
         df.to_csv(f"{output_dir}/{subtask}.tsv", sep='\t')
     
@@ -93,7 +110,6 @@ def main():
     export_result_map = {}
     # Iterate through all the subtasks
     for subtask_info in tqdm(main_task_list['subtasks']):
-        #print(subtask_info)
         # generate directory names, based on formatted_id for all supported langauges
         formatted_id = subtask_info.get('formatted_id', None)
         subtask_id = subtask_info.get('id', None)
