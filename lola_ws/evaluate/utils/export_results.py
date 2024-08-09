@@ -81,50 +81,61 @@ def generate_group_map():
 
 def export_tsv_results(results_dict, output_dir):
     create_directory_if_not_exists(output_dir)
-    STDERR_PATTERN = re.compile("^.*stderr.*$")
-    # Map to divide the tables based on different metrics
-    metrics_group_map = {}
-    
-    # Divide the tables based on the grouping provided e.g. group all the models smaller than 2B parameters together 
     model_group_map = generate_group_map()
-    for subtask, langs_info in results_dict.items():
-        # Create an empty dataframe
-        df = pd.DataFrame()
-
-        # Initialize headers
-        headers_model = []
-        headers_metric = []
-
-        for lang, models_info in langs_info.items():
-            row_data = {}
-            for model, metrics in models_info.items():
-                for metric, value in metrics.items():
-                    # alias and stderr are not needed
-                    if metric == 'alias' or STDERR_PATTERN.match(value):
-                        continue
-                    # Fetch metric group
-                    # TODO: Fix this mess
-                    if metric not in metrics_group_map:
-                        metrics_group_map[metric] = metric
-                    column_name = f"{model}_{metric}"
-                    row_data[column_name] = value
-
-                    # Add headers for the first time only
-                    if not headers_model:
-                        headers_model.append(model)
-                        headers_metric.append(metric)
-                    else:
-                        if column_name not in df.columns:
-                            headers_model.append(model)
-                            headers_metric.append(metric)
-                            
-            df = pd.concat([df, pd.DataFrame(row_data, index=[lang])])
-
-        # Add headers to dataframe
-        df.columns = pd.MultiIndex.from_arrays([headers_model, headers_metric])
-        # Save to TSV
-        df.to_csv(f"{output_dir}/{subtask}.tsv", sep='\t')
     
+    # Initialize an array of regex patterns to filter out certain metrics
+    metric_filter_patterns = [
+        r".*_stderr.*",  # filter out all metrics with "_stderr"
+        r".*alias.*",  # Example: filter out metrics with "alias"
+    ]
+    
+    # Compile regex patterns for efficiency
+    compiled_patterns = [re.compile(pattern) for pattern in metric_filter_patterns]
+    
+    # Iterate over each subtask in the results dictionary
+    for subtask, langs_info in results_dict.items():
+        # Create separate DataFrames for each metric and group
+        metric_grouped_table_data = {
+            'lt-2b-params': {},
+            'gt-2b-params': {}
+        }
+        
+        for lang, models_info in langs_info.items():
+            for model, metrics in models_info.items():
+                # Determine the groups of the current model (a model can belong to multiple groups)
+                model_groups = []
+                for group, models in model_group_map.items():
+                    if model in models:
+                        model_groups.append(group)
+                
+                if not model_groups:
+                    continue  # Skip models that do not belong to any group
+                
+                # Populate metric_grouped_table_data with data grouped by metrics and model groups
+                for metric, value in metrics.items():
+                    # Filter out metrics based on the regex patterns
+                    if any(pattern.match(metric) for pattern in compiled_patterns):
+                        continue  # Skip this metric if it matches any pattern
+
+                    for model_group in model_groups:
+                        if metric not in metric_grouped_table_data[model_group]:
+                            metric_grouped_table_data[model_group][metric] = pd.DataFrame()
+
+                        # Add the data to the appropriate DataFrame for each group the model belongs to
+                        metric_grouped_table_data[model_group][metric].loc[lang, model] = value
+        
+        # Export the tables to TSV files, divided by model group
+        for group, metrics_data in metric_grouped_table_data.items():
+            for metric, df in metrics_data.items():
+                # Generate the file name based on subtask, metric, and group
+                file_name = f"{subtask}_{metric}_{group}.tsv"
+                file_path = os.path.join(output_dir, file_name)
+                
+                # Save the DataFrame to a TSV file
+                df.to_csv(file_path, sep='\t')
+                print(f"Exported {file_name} to {output_dir}")
+                
+
 def main():
      # parse input arguments
     args = parse_args()
