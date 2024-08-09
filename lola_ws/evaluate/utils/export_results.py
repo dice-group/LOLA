@@ -4,6 +4,7 @@ import os
 from tqdm import tqdm
 import fnmatch
 import pandas as pd
+import re
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Compile all the evaluation results and export them to tsv files.")
@@ -54,8 +55,38 @@ def fetch_result_dict(results_dir):
             break
     return results_dict
 
+def generate_group_map():
+    model_info_file_path = "../llm_lang.json"
+    model_info_map = load_json_file(model_info_file_path)
+
+    default_models = {'dice-research__lola_v1'}
+
+    model_group_map = {
+        'lt-2b-params': set(default_models),
+        'gt-2b-params': set(default_models)
+    }
+
+    for model_info in model_info_map['llms']:
+        model_hf_id = model_info['huggingface_model_id']
+        model_params_in_billions = model_info['params_in_billions']
+        updated_model_id = model_hf_id.replace("/", "__")
+        group_key = None
+        if model_params_in_billions <= 2:
+            group_key = 'lt-2b-params'
+        else:
+            group_key = 'gt-2b-params'
+        model_group_map[group_key].add(updated_model_id)
+    
+    return model_group_map
+
 def export_tsv_results(results_dict, output_dir):
     create_directory_if_not_exists(output_dir)
+    STDERR_PATTERN = re.compile("^.*stderr.*$")
+    # Map to divide the tables based on different metrics
+    metrics_group_map = {}
+    
+    # Divide the tables based on the grouping provided e.g. group all the models smaller than 2B parameters together 
+    model_group_map = generate_group_map()
     for subtask, langs_info in results_dict.items():
         # Create an empty dataframe
         df = pd.DataFrame()
@@ -68,10 +99,14 @@ def export_tsv_results(results_dict, output_dir):
             row_data = {}
             for model, metrics in models_info.items():
                 for metric, value in metrics.items():
-                    column_name = f"{model}_{metric}"
-                    # alias is not needed
-                    if metric == 'alias':
+                    # alias and stderr are not needed
+                    if metric == 'alias' or STDERR_PATTERN.match(value):
                         continue
+                    # Fetch metric group
+                    # TODO: Fix this mess
+                    if metric not in metrics_group_map:
+                        metrics_group_map[metric] = metric
+                    column_name = f"{model}_{metric}"
                     row_data[column_name] = value
 
                     # Add headers for the first time only
