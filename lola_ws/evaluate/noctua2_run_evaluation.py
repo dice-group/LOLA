@@ -2,7 +2,7 @@
 This script is used to evaluate LLMs on various tasks. The script submits a job to a SLURM-based computing cluster for each unique and valid combination of the provided tasks, models, and languages. This allows for parallel execution and efficient utilization of cluster resources. Below is an example of how to run the evaluation with specific models, tasks, and languages.
 
 Command:
-    python3 noctua2_run_evaluation.py --models=xlmr,mbart --tasks="lm-eval-harness:lm-eval-harness_xcopa,lm-eval-harness_xnli;okapi" --languages=hi,bn --results-dir=./output
+    python3 noctua2_run_evaluation.py --models=xlmr,mbart --tasks="lm-eval-harness:lm-eval-harness_xcopa,lm-eval-harness_xnli;okapi" --languages=hi,bn --results_dir=./output
 
 Parameters:
     --models: Specifies the models to be used for evaluation. In this example, xlmr and mbart models are used.
@@ -60,7 +60,8 @@ def parse_args():
     parser.add_argument('--models', required=True, help="Comma-separated list of models (e.g., 'model1,model2')")
     parser.add_argument('--tasks', required=True, help="Tasks with optional subtasks formatted as 'task1:sub1,sub2;task2'")
     parser.add_argument('--languages', required=True, help="Comma-separated list of languages (e.g., 'en,es')")
-    parser.add_argument('--results-dir', default="./results", help="Optional directory for saving results (default: ./results)")
+    parser.add_argument('--results_dir', default="./results", help="Optional directory for saving results (default: ./results)")
+    parser.add_argument('--lang_check', default=False, action='store_true', help="Only evaluate models on their supported languages (as per llm_lang.json)")
 
     return parser.parse_args()
 
@@ -142,8 +143,8 @@ def main():
                 for model in models:
                     model_hf_id, supported_model_languages = get_model_information(model)
 
-                    if language not in supported_model_languages:
-                        print(f"Skipping: \"{language}\" is not supported for model \"{model}\"")
+                    if args.lang_check and language not in supported_model_languages:
+                        print(f"\"{language}\" is not supported for model \"{model}\", skipping this combination as language check is enabled.")
                         continue
                     
                     # check if subtask has formatted id, if not then use subtask id

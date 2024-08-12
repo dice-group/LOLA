@@ -6,6 +6,10 @@ import fnmatch
 import pandas as pd
 import re
 
+# Note: the model ids in the sets below are made by conjoining huggingface organization and model name together with __ (similar to how lm-eval-harness does it)
+DEFAULT_MODELS = {'dice-research__lola_v1'}
+EXCLUDED_MODELS = {'SeaLLMs__SeaLLMs-v3-1.5B-Chat', 'facebook__m2m100_1.2B'}
+
 def parse_args():
     parser = argparse.ArgumentParser(description="Compile all the evaluation results and export them to tsv files.")
     parser.add_argument('--main_task_id', required=True, help="Id of the main task.")
@@ -59,11 +63,9 @@ def generate_group_map():
     model_info_file_path = "../llm_lang.json"
     model_info_map = load_json_file(model_info_file_path)
 
-    default_models = {'dice-research__lola_v1'}
-
     model_group_map = {
-        'lt-2b-params': set(default_models),
-        'gt-2b-params': set(default_models)
+        'lt-2b-params': set(DEFAULT_MODELS),
+        'gt-2b-params': set(DEFAULT_MODELS)
     }
 
     for model_info in model_info_map['llms']:
@@ -79,19 +81,20 @@ def generate_group_map():
     
     return model_group_map
 
+
 def export_tsv_results(results_dict, output_dir):
     create_directory_if_not_exists(output_dir)
     model_group_map = generate_group_map()
-    
+
     # Initialize an array of regex patterns to filter out certain metrics
     metric_filter_patterns = [
         r".*_stderr.*",  # filter out all metrics with "_stderr"
         r".*alias.*",  # Example: filter out metrics with "alias"
     ]
-    
+
     # Compile regex patterns for efficiency
     compiled_patterns = [re.compile(pattern) for pattern in metric_filter_patterns]
-    
+
     # Iterate over each subtask in the results dictionary
     for subtask, langs_info in results_dict.items():
         # Create separate DataFrames for each metric and group
@@ -99,18 +102,22 @@ def export_tsv_results(results_dict, output_dir):
             'lt-2b-params': {},
             'gt-2b-params': {}
         }
-        
+
         for lang, models_info in langs_info.items():
             for model, metrics in models_info.items():
+                # Skip models that are in the EXCLUDED_MODELS set
+                if model in EXCLUDED_MODELS:
+                    continue
+
                 # Determine the groups of the current model (a model can belong to multiple groups)
                 model_groups = []
                 for group, models in model_group_map.items():
                     if model in models:
                         model_groups.append(group)
-                
+
                 if not model_groups:
                     continue  # Skip models that do not belong to any group
-                
+
                 # Populate metric_grouped_table_data with data grouped by metrics and model groups
                 for metric, value in metrics.items():
                     # Filter out metrics based on the regex patterns
@@ -123,18 +130,22 @@ def export_tsv_results(results_dict, output_dir):
 
                         # Add the data to the appropriate DataFrame for each group the model belongs to
                         metric_grouped_table_data[model_group][metric].loc[lang, model] = value
-        
+
         # Export the tables to TSV files, divided by model group
         for group, metrics_data in metric_grouped_table_data.items():
             for metric, df in metrics_data.items():
+                # Sort the columns to ensure default models appear first
+                sorted_columns = sorted(df.columns, key=lambda x: (x not in DEFAULT_MODELS, x))
+                df = df[sorted_columns]
+
                 # Generate the file name based on subtask, metric, and group
                 file_name = f"{subtask}_{metric}_{group}.tsv"
                 file_path = os.path.join(output_dir, file_name)
-                
+
                 # Save the DataFrame to a TSV file
                 df.to_csv(file_path, sep='\t')
                 print(f"Exported {file_name} to {output_dir}")
-                
+ 
 
 def main():
      # parse input arguments
