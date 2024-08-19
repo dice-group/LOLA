@@ -1,0 +1,5 @@
+#!/bin/sh
+set -eu
+
+<"$1/experts.tsne.dat" perl -ane '$l = join(".", $F[0] =~ /(\d+)_(\d+)/); $c = ($F[0] =~ /(\d+)/)[0]; print "set label \"$l\" at $F[1],$F[2] center textcolor palette cb $c\n" if $F[1]' >"$1/experts.tsne.labels.gnuplot"
+gnuplot -e "set cbrange [0:11]; set palette rgbformulae 3,11,6; load '$1/experts.tsne.labels.gnuplot'; set term pngcairo size 1200, 1200 font ', 8'; set output '$1/experts.tsne.png'; set title 'TSNE'; set style fill transparent solid 0 noborder; unset key; unset tics; unset border; unset colorbox; plot '$1/experts.tsne.dat' using 2:3 with circles"

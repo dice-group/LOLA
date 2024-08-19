@@ -36,13 +36,13 @@ with open(args.dir / 'lang_experts.dat', 'w', newline='') as out_f:
 
 with open(args.dir / 'lang_experts.image', 'w', newline='') as out_f:
     writer = csv.writer(out_f, delimiter='\t', quoting=csv.QUOTE_NONE)
-    writer.writerow([''] + fieldnames)
+    writer.writerow(['lang'] + fieldnames)
     for lang, fields in data.items():
         writer.writerow([lang] + [fields[key] for key in fieldnames])
 
 with open(args.dir / 'lang_experts.norm.image', 'w', newline='') as out_f:
     writer = csv.writer(out_f, delimiter='\t', quoting=csv.QUOTE_NONE)
-    writer.writerow([''] + fieldnames)
+    writer.writerow(['lang'] + fieldnames)
     for lang, fields in data.items():
         values = [fields[key] for key in fieldnames]
         total = sum(values)

@@ -1,0 +1,7 @@
+#!/bin/sh
+set -eu
+
+perl -ane 'if ($F[1] ne "") { if (exists $A{$F[1]}) { $c = $A{$F[1]} } else { $c = 1 + scalar %A; $A{$F[1]} = $c }  } else { $c = 0 } ; print "$F[0]\t$c\n"' lang_families.dat >lang_families.index.dat
+
+join "$1/langs.tsne.dat" lang_families.index.dat |perl -ane 'print "set label \"$F[0]\" at $F[1],$F[2] center textcolor palette cb $F[3]\n" if $F[1]' >"$1/langs.tsne.labels.gnuplot"
+gnuplot -e "set cbrange [0:20]; set palette rgbformulae 3,11,6; load '$1/langs.tsne.labels.gnuplot'; set term pngcairo size 1200, 1200 font ', 8'; set output '$1/langs.tsne.png'; set title 'TSNE'; set style fill transparent solid 0 noborder; unset key; unset tics; unset border; unset colorbox; plot '$1/langs.tsne.dat' using 2:3 with circles"
