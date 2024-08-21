@@ -13,7 +13,7 @@ jq --raw-output '.[] | select(.documents | tonumber | .>=10000) | .code' ../gpt/
 # sort experts inside layers and also generate expert specificity table
 ./sort_image --dir=datadir
 # plot the expert specificity figure
-./plot_stdev datadir/lang_experts.stdev.dat datadir/lang_experts.stddev.png "title"
+./plot_expert_metric datadir/lang_experts.max.dat datadir/lang_experts.max.png
 # language classification
 ./run_lang_tsne --dir=datadir
 ./plot_lang_tsne datadir

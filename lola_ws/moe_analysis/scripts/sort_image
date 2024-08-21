@@ -22,16 +22,17 @@ out_rows = [{axis_key: row[axis_key]} for row in rows]
 layers = sorted({int(re.search('\d+', key)[0]) for key in keys if key.startswith('expert_layer_')})
 n_experts = len(keys) // len(layers)
 
-all_stdevs = []
+METRIC = max
+all_metrics = []
 
 for layer in layers:
-    stdevs = [(expert, statistics.pstdev(float(row[key]) for row in rows)) for expert, key in ((expert, f'expert_layer_{layer}_{expert}') for expert in range(n_experts))]
-    stdevs = sorted(stdevs, key=operator.itemgetter(1))
+    metrics = [(expert, METRIC(float(row[key]) for row in rows)) for expert, key in ((expert, f'expert_layer_{layer}_{expert}') for expert in range(n_experts))]
+    metrics = sorted(metrics, key=operator.itemgetter(1))
     for i, row in enumerate(rows):
-        for expert, _ in stdevs:
+        for expert, _ in metrics:
             key = f'expert_layer_{layer}_{expert}'
             out_rows[i][key] = row[key]
-    all_stdevs.append(stdevs)
+    all_metrics.append(metrics)
 
 with open(args.dir / 'lang_experts.norm.sorted.image', 'w', newline='') as out_f:
     writer = csv.DictWriter(out_f, fieldnames=out_rows[0].keys(), delimiter='\t', quoting=csv.QUOTE_NONE)
@@ -39,8 +40,8 @@ with open(args.dir / 'lang_experts.norm.sorted.image', 'w', newline='') as out_f
     for row in rows:
         writer.writerow(row)
 
-with open(args.dir / 'lang_experts.stdev.dat', 'w', newline='') as out_f:
+with open(args.dir / 'lang_experts.max.dat', 'w', newline='') as out_f:
     writer = csv.writer(out_f, delimiter='\t', quoting=csv.QUOTE_NONE)
     writer.writerow(f'Layer{layer}' for layer in layers)
     for expert in range(n_experts):
-        writer.writerow(all_stdevs[layer][expert][1] for layer in layers)
+        writer.writerow(all_metrics[layer][expert][1] for layer in layers)
