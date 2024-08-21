@@ -1,0 +1,49 @@
+#!/usr/bin/env python3
+import argparse
+import collections
+import csv
+import pathlib
+
+import tqdm
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--dir', type=pathlib.Path, required=True)
+args = parser.parse_args()
+
+data = collections.defaultdict(lambda: collections.defaultdict(int))
+fieldnames = set()
+layers = set()
+
+paths = [path for path in args.dir.iterdir() if path.name.startswith('token_experts.')]
+for path in tqdm.tqdm(paths):
+    with open(path) as in_f:
+        reader = csv.DictReader(in_f, delimiter='\t', quoting=csv.QUOTE_NONE)
+        for row in tqdm.tqdm(reader, desc=str(path)):
+            for key in (key for key in row.keys() if key.startswith('expert_layer_')):
+                layers.add(key)
+                field = f'{key}_{row[key]}'
+                data[row['lang']][field] += 1
+                fieldnames.add(field)
+
+data = dict(sorted(data.items()))
+fieldnames = sorted(fieldnames, key=lambda x: list(map(int, x.split('_')[-2:])))
+
+with open(args.dir / 'lang_experts.dat', 'w', newline='') as out_f:
+    writer = csv.DictWriter(out_f, fieldnames=['lang'] + fieldnames, delimiter='\t', quoting=csv.QUOTE_NONE)
+    writer.writeheader()
+    for lang, fields in data.items():
+        writer.writerow({'lang': lang} | fields)
+
+with open(args.dir / 'lang_experts.image', 'w', newline='') as out_f:
+    writer = csv.writer(out_f, delimiter='\t', quoting=csv.QUOTE_NONE)
+    writer.writerow(['lang'] + fieldnames)
+    for lang, fields in data.items():
+        writer.writerow([lang] + [fields[key] for key in fieldnames])
+
+with open(args.dir / 'lang_experts.norm.image', 'w', newline='') as out_f:
+    writer = csv.writer(out_f, delimiter='\t', quoting=csv.QUOTE_NONE)
+    writer.writerow(['lang'] + fieldnames)
+    for lang, fields in data.items():
+        values = [fields[key] for key in fieldnames]
+        total = sum(values)
+        writer.writerow([lang] + [value / (total / len(layers)) for value in values])

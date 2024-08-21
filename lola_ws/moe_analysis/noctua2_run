@@ -1,0 +1,6 @@
+#!/bin/sh
+LOGS=noctua2_logs
+mkdir "$LOGS"
+<languages.txt \
+    xargs -I{} \
+    sbatch --job-name "{}" --output "$LOGS"/%x_slurm-%j.out noctua2_job "{}"

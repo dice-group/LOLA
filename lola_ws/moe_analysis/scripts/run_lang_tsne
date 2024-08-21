@@ -1,0 +1,30 @@
+#!/usr/bin/env python3
+import argparse
+import logging
+import pathlib
+import subprocess
+import tempfile
+
+import numpy as np
+import sklearn.manifold
+
+logging.basicConfig(level=logging.DEBUG)
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--dir', type=pathlib.Path, required=True)
+args = parser.parse_args()
+
+delimiter = '\t'
+dtype = np.float32
+
+X = np.genfromtxt(args.dir / 'lang_experts.dat', delimiter=delimiter, skip_header=1, dtype=dtype, converters={0: lambda lang: dtype(0)})
+logging.debug(f'{X.shape = }')
+
+X_embedded = sklearn.manifold.TSNE(n_components=2, learning_rate=250.0, init='pca', perplexity=30.0).fit_transform(X)
+
+logging.debug(f'{X_embedded.shape = }')
+out = tempfile.NamedTemporaryFile()
+np.savetxt(out, X_embedded, delimiter=delimiter, fmt='%5f')
+out.flush()
+
+subprocess.run(f'cut -f 1 "{args.dir / "lang_experts.dat"}" |tail -n +2 |paste - "{out.name}" >"{args.dir / "langs.tsne.dat"}"', shell=True)
