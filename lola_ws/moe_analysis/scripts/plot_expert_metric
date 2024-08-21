@@ -7,6 +7,7 @@ set ylabel "Maximum ratio of tokens in the layer across all languages"
 set key top left
 set palette defined (0 'blue', 15 'red')
 unset colorbox
-set xrange [0:15]
+set xrange [0:15+1]
 set yrange [0:0.75]
-plot for [col=1:12] ARG1 using 0:col:(col) with linespoints title columnheader dashtype ' . ' linecolor palette, 0.0625 with lines linecolor 0 title "1/16"
+unset xtics
+plot for [col=1:12] ARG1 using ($0 + 0.0625*0.9*col):col:(col) with linespoints title columnheader dashtype ' . ' linecolor palette, 0.0625 with lines linecolor 0 title "1/16"
