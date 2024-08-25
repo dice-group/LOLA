@@ -63,19 +63,22 @@ def create_commands_csv(csvfile_name):
     df.to_csv(csvfile_name) 
 
 
+def update_google_sheets():
+    pass
+
+
+
 def execute_commands():
     os.chdir(os.getcwd().rsplit("/",1)[0])
     temp_command = ""
     for command in commands:
-        # print(command)
-        temp_command = command
-    sub_proc_arr = temp_command.replace('''"''','').split(" ")
-    subprocess.run(sub_proc_arr)
+        sub_proc_arr = command.replace('''"''','').split(" ")
+        subprocess.run(sub_proc_arr)
 
 
 
 preprocess_txt_to_dict("error_summary_new.txt")
-# create_commands_csv('Commands.csv')
+create_commands_csv('Commands.csv')
 execute_commands()
 
 
