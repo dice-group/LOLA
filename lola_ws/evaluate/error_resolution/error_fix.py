@@ -31,6 +31,9 @@ def preprocess_txt_to_dict(textfile_name):
                 if('truth' in key2):
                     task = "truthfulqa_mc1"
                     lang = key2.split("_")[1]
+                elif('bele' in key2):
+                    task = "belebele"
+                    lang = key2.split("_",1)[1]
                 else:
                     task = key2.rsplit("_",1)[0]
                     lang = key2.rsplit("_",1)[1]
