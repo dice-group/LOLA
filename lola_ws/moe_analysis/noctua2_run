@@ -1,6 +1,9 @@
 #!/bin/sh
-LOGS=noctua2_logs
+set -eu
+NAME=$1
+MODEL=$2
+LOGS=moe-analysis-logs-$NAME
 mkdir "$LOGS"
 <languages.txt \
     xargs -I{} \
-    sbatch --job-name "{}" --output "$LOGS"/%x_slurm-%j.out noctua2_job "{}"
+    sbatch --job-name "{}" --output "$LOGS"/%x_slurm-%j.out noctua2_job "{}" "$NAME" "$MODEL"

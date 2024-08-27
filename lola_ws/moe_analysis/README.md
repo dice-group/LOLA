@@ -4,7 +4,7 @@
 # prepare
 jq --raw-output '.[] | select(.documents | tonumber | .>=10000) | .code' ../gpt/culturax/culturax-v1-0-0_data_stats.json >languages.txt
 # submit the slurm job
-./noctua2_run
+./noctua2_run <unique batch name> <path to the model checkpoint>
 # ...
 # prepare the token summary table
 ./make_lang_experts --dir=datadir

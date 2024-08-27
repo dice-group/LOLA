@@ -19,5 +19,6 @@ module load compiler/GCC/10.3.0
 export HF_HOME=/scratch/hpc-prf-lola/nikit/.cache/huggingface
 export HF_DATASETS_CACHE=/scratch/hpc-prf-lola/nikit/.cache/huggingface
 export CONDA_P=/scratch/hpc-prf-lola/nikit/repos/LOLA-Megatron-DeepSpeed/lola_ws/fine-tune/instruction-ft/venv-lola-ft
+export LD_LIBRARY_PATH=$CONDA_P/lib/python3.10/site-packages/nvidia/nvjitlink/lib:$LD_LIBRARY_PATH
 
-"$CONDA_P"/bin/python ./moe_analysis.py --rows-limit 10000 --batch-size 1 --output-dir moe-noctua2-output --lang "$1"
+"$CONDA_P"/bin/python ./moe_analysis.py --model "$3" --rows-limit 10000 --batch-size 1 --output-dir "moe-analysis-output-$2" --lang "$1"

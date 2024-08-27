@@ -26,6 +26,7 @@ def batched(iterable, n):
 itertools.batched = batched
 
 parser = argparse.ArgumentParser()
+parser.add_argument('--model', required=True, help='(example: dice-research/lola_v1')
 parser.add_argument('--lang', required=True, help='(example: en)')
 parser.add_argument('--rows-limit', type=int, required=True)
 parser.add_argument('--output-dir', type=pathlib.Path, required=True)
@@ -33,8 +34,9 @@ parser.add_argument('--device', default='cuda:0')
 parser.add_argument('--batch-size', type=int, default=1)
 args = parser.parse_args()
 
-tokenizer = transformers.AutoTokenizer.from_pretrained('dice-research/lola_v1')
-model = LOLALMHeadModel.from_pretrained('dice-research/lola_v1').to(args.device)
+logging.info('Args: {}', args)
+tokenizer = transformers.AutoTokenizer.from_pretrained(args.model)
+model = LOLALMHeadModel.from_pretrained(args.model).to(args.device)
 
 dataset = datasets.load_dataset('uonlp/CulturaX', args.lang, split='train', streaming=True)
 
