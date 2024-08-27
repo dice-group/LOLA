@@ -5,6 +5,7 @@ from functools import reduce
 from logging import logMultiprocessing
 import os
 import sys
+import gc
 from checkpoint_reshaping_and_interoperability import convert_checkpoint_from_megatron_to_transformers
 from transformers import GPT2Tokenizer, AutoTokenizer, AutoModelForCausalLM
 import types
@@ -316,14 +317,27 @@ def main():
     _save_checkpoint(checkpoint_paths[0][0], sd)
     
     # Sending the loaded weights to garbage collection
-    sd = None
-    model = None
+    del model, sd
+    gc.collect()
+    torch.cuda.empty_cache()
 
     ### Step 2: Convert from Megatron to Huggingface
 
+    # Find megatron path
+    current_file_path = os.path.abspath(__file__)
+    megatron_path = os.path.abspath(os.path.join(current_file_path, "../../../.."))
+    # Find load path
+    load_path = output_dir + '/iter_0296000'
+    for root, dirs, files in os.walk(output_dir):
+        for dir_name in dirs:
+            if dir_name.endswith(str(iteration)):
+                load_path = os.path.join(root, dir_name)
+                break
+
     conversion_args_dict = {
-        'megatron_path': '/data/nikit_ws/LOLA-Megatron-DeepSpeed',
-        'load_path': output_dir + '/iter_0296000',
+        #'megatron_path': '/data/nikit_ws/LOLA-Megatron-DeepSpeed',
+        'megatron_path': megatron_path,
+        'load_path': load_path,
         'save_path': output_dir + '/lola_hf_model',
         'tokenizer_name': 'ai-forever/mGPT',
         'max_shard_size': '10GB',
@@ -336,21 +350,22 @@ def main():
     
     print('LOLA: model conversion finished, model saved successfully.')
 
+
     ### Step 3: Test the converted model
 
     # Load the model and tokenizer
-    model = LOLALMHeadModel.from_pretrained(conversion_args_dict['save_path']).to("cuda:0")
-    # saving model
-    # model.save_pretrained("/data/nikit_ws/lola_converted_model/lola_v1_huggingface", from_pt=True)
-    #tokenizer = AutoTokenizer.from_pretrained('ai-forever/mGPT')
-    tokenizer = AutoTokenizer.from_pretrained(conversion_args_dict['save_path'])
+    # model = LOLALMHeadModel.from_pretrained(conversion_args_dict['save_path']).to("cuda:0")
+    # # saving model
+    # # model.save_pretrained("/data/nikit_ws/lola_converted_model/lola_v1_huggingface", from_pt=True)
+    # #tokenizer = AutoTokenizer.from_pretrained('ai-forever/mGPT')
+    # tokenizer = AutoTokenizer.from_pretrained(conversion_args_dict['save_path'])
     
-    input_text = "The quick brown fox"
+    # input_text = "The quick brown fox"
 
-    generated_text = generate_hf_model_text(input_text, 100, tokenizer, model)
+    # generated_text = generate_hf_model_text(input_text, 100, tokenizer, model)
 
-    print('Input text:', input_text)
-    print('Generated text:', generated_text)
+    # print('Input text:', input_text)
+    # print('Generated text:', generated_text)
 
 if __name__ == '__main__':
     main()

@@ -23,7 +23,7 @@ import torch
 
 from transformers import AutoTokenizer
 # Add LOLA module to pythonpath "lola_ws/lola_hf_model/"
-sys.path.append("../lola_hf_model")
+sys.path.append("../../lola_hf_model")
 from configuration_lola_gpt2 import LOLAConfig
 from transformers.modeling_utils import WEIGHTS_INDEX_NAME, WEIGHTS_NAME, shard_checkpoint
 

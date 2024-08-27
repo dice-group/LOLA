@@ -7,7 +7,11 @@
 import warnings
 from typing import Optional, Tuple, Union
 
-from .configuration_lola_gpt2 import LOLAConfig
+import sys
+sys.path.append(".")
+from configuration_lola_gpt2 import LOLAConfig
+
+#from .configuration_lola_gpt2 import LOLAConfig
 import torch
 import torch.utils.checkpoint
 from torch import nn
