@@ -7,11 +7,12 @@
 import warnings
 from typing import Optional, Tuple, Union
 
-import sys
-sys.path.append(".")
-from configuration_lola_gpt2 import LOLAConfig
+## Uncomment the below three and comment the other import for model conversion
+#import sys
+# sys.path.append(".")
+# from configuration_lola_gpt2 import LOLAConfig
 
-#from .configuration_lola_gpt2 import LOLAConfig
+from .configuration_lola_gpt2 import LOLAConfig
 import torch
 import torch.utils.checkpoint
 from torch import nn
