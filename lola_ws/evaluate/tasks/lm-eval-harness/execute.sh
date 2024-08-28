@@ -46,13 +46,12 @@ fi
 # export this variable to your environment before running this script: export HF_LOLA_EVAL_AT=<your-access-token-here>
 huggingface-cli login --token $HF_LOLA_EVAL_AT
 
-
+# change batch_size to auto:4 to optimize GPU usage. Leave it at 1 for safe/debug mode.
 lm_eval --model hf \
     --model_args pretrained="${model}" \
     --tasks $final_task_id \
     --device cuda:0 \
-    --batch_size auto:4 \
+    --batch_size 1 \
     --log_samples \
     --output_path "${result_path}" \
     --trust_remote_code
-
