@@ -34,7 +34,7 @@ parser.add_argument('--device', default='cuda:0')
 parser.add_argument('--batch-size', type=int, default=1)
 args = parser.parse_args()
 
-logging.info('Args: {}', args)
+logging.info('Args: %s', args)
 tokenizer = transformers.AutoTokenizer.from_pretrained(args.model)
 model = LOLALMHeadModel.from_pretrained(args.model).to(args.device)
 
