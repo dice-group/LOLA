@@ -171,7 +171,8 @@ def main():
     log_file_pattern = re.compile(
         rf'{re.escape(main_task_id)}_(.+?)_([A-Za-z0-9-]+__.+?)_slurm-\d+\.out'
     )
-
+    # Maintaining this set to check for duplicates
+    subtask_model_set = set()
     for log_sub_dir in logs_sub_dirs:
         sub_dir_path = os.path.join(root_logs_dir, log_sub_dir)
         if os.path.isdir(sub_dir_path):
@@ -185,6 +186,12 @@ def main():
                         result_subdir = os.path.join(main_task_res_dir, subtask, model)
                         
                         if not os.path.exists(result_subdir) or not find_results_json(result_subdir):
+                            # check if this combination has already been found before
+                            subtask_model_comb = subtask + '+' + model
+                            if subtask_model_comb in subtask_model_set:
+                                # skip the duplicate error
+                                continue
+                            subtask_model_set.add(subtask_model_comb)
                             total_missing_results += 1
                             # Generate the experiment rerun command
                             gen_cmd = gen_rerun_command(model, main_task_id, subtask, root_results_dir)
