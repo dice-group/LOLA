@@ -4,7 +4,7 @@ from concurrent.futures import ThreadPoolExecutor
 from tqdm import tqdm
 
 # directories to take new outputs from
-source_directories = ['../output-test', '../output']
+source_directories = ['../output-test']
 # directory to merge into
 target_dir = '../output-merge'
 
