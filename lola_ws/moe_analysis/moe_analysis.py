@@ -47,6 +47,12 @@ def tokenize(text):
         truncation=True,
         return_tensors='pt',
     )['input_ids']
+
+    expected_type = torch.int64
+    if ids.dtype is not expected_type:
+        logging.warning(f'Tokenizer returned a tensor {ids.shape} with incorrect dtype {ids.dtype} (expected {expected_type})')
+        ids = ids.to(expected_type)
+
     return torch.nn.functional.pad(ids, (0, tokenizer.model_max_length - ids.shape[1]), value=tokenizer.pad_token_id), min(ids.shape[1], tokenizer.model_max_length)
 
 args.output_dir.mkdir(parents=True, exist_ok=True)
