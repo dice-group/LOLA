@@ -4,6 +4,7 @@ import os
 import re
 from tqdm import tqdm
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from export_results import EXCLUDED_MODELS
 
 # experiment command template
 EXP_CMD_TMPLT= 'python3 noctua2_run_evaluation.py --models="%s" --tasks="%s" --languages="%s" --results_dir="%s"'
@@ -175,7 +176,8 @@ def main():
         rf'{re.escape(main_task_id)}_(.+?)_([A-Za-z0-9-]+__.+?)_slurm-\d+\.out'
     )
     # Maintaining this set to check for duplicates
-    subtask_model_set = set()
+    failed_subtask_model_set = set()
+    all_subtask_model_set = set()
     for log_sub_dir in logs_sub_dirs:
         sub_dir_path = os.path.join(root_logs_dir, log_sub_dir)
         if os.path.isdir(sub_dir_path):
@@ -188,13 +190,18 @@ def main():
                         model = match.group(2)
                         result_subdir = os.path.join(main_task_res_dir, subtask, model)
                         
+                        # Ignore if the model is excluded
+                        if model in EXCLUDED_MODELS:
+                            continue
+                        # Record the combination
+                        subtask_model_comb = subtask + '+' + model
+                        all_subtask_model_set.add(subtask_model_comb)
                         if not os.path.exists(result_subdir) or not find_results_json(result_subdir):
                             # check if this combination has already been found before
-                            subtask_model_comb = subtask + '+' + model
-                            if subtask_model_comb in subtask_model_set:
+                            if subtask_model_comb in failed_subtask_model_set:
                                 # skip the duplicate error
                                 continue
-                            subtask_model_set.add(subtask_model_comb)
+                            failed_subtask_model_set.add(subtask_model_comb)
                             total_missing_results += 1
                             # Generate the experiment rerun command
                             gen_cmd = gen_rerun_command(model, main_task_id, subtask, root_results_dir)
@@ -203,6 +210,7 @@ def main():
 
     error_summary = {}
     total_extracted_errors = 0
+    total_unique_experiments = len(all_subtask_model_set)
     # extract errors
     print('Extracting errors')
     with ThreadPoolExecutor() as executor:
@@ -224,15 +232,17 @@ def main():
     # Write the error summary
     output_summary_file = args.output_summary_file
     with open(output_summary_file, 'w') as sum_out:
-        sum_out.write(f"Total {total_extracted_errors}/{total_missing_results} errors found.")
+        first_line = f"Total {total_extracted_errors}/{total_missing_results} errors found for {total_unique_experiments} unique experiments."
+        print(first_line)
+        sum_out.write(first_line)
         for error, tasks_models in error_summary.items():
             local_error_count = 0
             for subtask, models in tasks_models.items():
                 local_error_count += len(models)
             sum_out.write(f"\nError encountered {local_error_count} time(s): {error}")
             sum_out.write(f"\t{tasks_models}")
-            
-        print(f"Error summary exported to: {output_summary_file}")
+     
+    print(f"Error summary exported to: {output_summary_file}")
     
     export_rerun_commands(commands_to_rerun, args.output_rerun_file)
     
