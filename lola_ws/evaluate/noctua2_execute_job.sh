@@ -18,6 +18,10 @@ module load compiler/GCC/10.3.0
 
 export HF_DATASETS_CACHE=/scratch/hpc-prf-lola/nikit/.cache/huggingface
 
+# Uncomment for Offline mode
+export HF_DATASETS_OFFLINE=1
+export HF_HUB_OFFLINE=1
+
 # Read the input arguments into variables
 task=$1
 model_hf_id=$2

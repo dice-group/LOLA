@@ -42,6 +42,9 @@ models=(
     "tiiuae/falcon-7b"
     "facebook/xlm-roberta-xl"
     "google/mt5-xl"
+    "Salesforce/xgen-7b-8k-base"
+    "mistralai/Mistral-7B-v0.1"
+    "google/umt5-xl"
 )
 
 for model in "${models[@]}"; do

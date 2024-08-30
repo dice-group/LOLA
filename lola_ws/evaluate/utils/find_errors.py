@@ -64,6 +64,9 @@ def extract_error_from_log(log_file_path):
                         errors.append(match.group(1))
                         # break at the first error
                         break
+                else:
+                    continue  # only executed if the inner loop did NOT break
+                break  # only executed if the inner loop DID break
     except FileNotFoundError:
         raise FileNotFoundError(f"Log file not found: {log_file_path}")
     
