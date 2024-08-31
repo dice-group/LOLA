@@ -170,6 +170,13 @@ def main():
                     print(f'Processing Task: "{task}" Subtask: "{subtask}" Language: "{language}" Model: "{model}" Huggingface ID: "{model_hf_id}"')
                     #run_name = f"lola-eval-{model}-{task}-{subtask}-{language}"
                     updated_model_id = model_hf_id.replace("/", "__")
+                    
+                    ## Below logic is disabled as the error finding logic is able to these failed experiments as well.
+                    # To make sure that error finding logic can detect failed evaluations, the results directory should be there atleast.
+                    #model_result_path = os.path.join(result_path, updated_model_id)
+                    #create_directory_if_not_exists(model_result_path)
+                    
+                    # This variable makes sure that our slurm log files follow the same naming convention as the lm-eval-harness results
                     run_name = f"{task}_{task_dir_name}_{updated_model_id}"
                     # Create a job on the computing cluster
                     sub_proc_arr = ['sbatch', '--job-name', run_name, '--output', (slurm_log_path + '%x_slurm-%j.out'), 'noctua2_execute_job.sh', task, model_hf_id, final_task_id, result_path]
