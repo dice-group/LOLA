@@ -21,4 +21,7 @@ export HF_DATASETS_CACHE=/scratch/hpc-prf-lola/nikit/.cache/huggingface
 export CONDA_P=/scratch/hpc-prf-lola/nikit/repos/LOLA-Megatron-DeepSpeed/lola_ws/fine-tune/instruction-ft/venv-lola-ft
 export LD_LIBRARY_PATH=$CONDA_P/lib/python3.10/site-packages/nvidia/nvjitlink/lib:$LD_LIBRARY_PATH
 
+# https://huggingface.co/docs/datasets/loading#offline
+export HF_HUB_OFFLINE=1
+
 "$CONDA_P"/bin/python ./moe_analysis.py --model "$3" --rows-limit 10000 --batch-size 1 --output-dir "moe-analysis-output-$2" --dataset-path "/scratch/hpc-prf-lola/share/CulturaX" --lang "$1"
