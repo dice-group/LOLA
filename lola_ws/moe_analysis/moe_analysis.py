@@ -27,6 +27,7 @@ itertools.batched = batched
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--model', required=True, help='(example: dice-research/lola_v1')
+parser.add_argument('--dataset-path', required=True, help='(example: ~/.local/share/datasets/CulturaX)')
 parser.add_argument('--lang', required=True, help='(example: en)')
 parser.add_argument('--rows-limit', type=int, required=True)
 parser.add_argument('--output-dir', type=pathlib.Path, required=True)
@@ -38,7 +39,7 @@ logging.info('Args: %s', args)
 tokenizer = transformers.AutoTokenizer.from_pretrained(args.model)
 model = LOLALMHeadModel.from_pretrained(args.model).to(args.device)
 
-dataset = datasets.load_dataset('uonlp/CulturaX', args.lang, split='train', streaming=True)
+dataset = datasets.load_from_disk(args.dataset_path + '/' + args.lang)
 
 def tokenize(text):
     'Returns a tuple: fixed-length tensor with token IDs and the actual (possibly truncated) length in tokens'
