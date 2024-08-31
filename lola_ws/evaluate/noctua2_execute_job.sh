@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH -J "LOLA - Tasks Evaluation"
-#SBATCH -t 05:00:00
+#SBATCH -t 03:00:00
 #SBATCH -N 1
 #SBATCH -n 1
 #SBATCH --mem 100G
@@ -18,9 +18,9 @@ module load compiler/GCC/10.3.0
 
 export HF_DATASETS_CACHE=/scratch/hpc-prf-lola/nikit/.cache/huggingface
 
-# Uncomment for Offline mode
-export HF_DATASETS_OFFLINE=1
-export HF_HUB_OFFLINE=1
+# Uncomment for Offline mode (doesn't work for MGSM dataset)
+#export HF_DATASETS_OFFLINE=1
+#export HF_HUB_OFFLINE=1
 
 # Read the input arguments into variables
 task=$1
