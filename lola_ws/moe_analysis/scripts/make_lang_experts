@@ -32,7 +32,9 @@ with open(args.dir / 'lang_experts.dat', 'w', newline='') as out_f:
     writer = csv.DictWriter(out_f, fieldnames=['lang'] + fieldnames, delimiter='\t', quoting=csv.QUOTE_NONE)
     writer.writeheader()
     for lang, fields in data.items():
-        writer.writerow({'lang': lang} | fields)
+        row = {'lang': lang}
+        row.update(fields)
+        writer.writerow(row)
 
 with open(args.dir / 'lang_experts.image', 'w', newline='') as out_f:
     writer = csv.writer(out_f, delimiter='\t', quoting=csv.QUOTE_NONE)
