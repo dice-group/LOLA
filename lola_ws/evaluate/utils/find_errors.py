@@ -4,7 +4,7 @@ import os
 import re
 from tqdm import tqdm
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from export_results import EXCLUDED_MODELS
+from consts import *
 
 # experiment command template
 EXP_CMD_TMPLT= 'python3 noctua2_run_evaluation.py --models="%s" --tasks="%s" --languages="%s" --results_dir="%s"'
