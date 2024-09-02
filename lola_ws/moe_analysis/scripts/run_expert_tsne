@@ -15,11 +15,11 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--dir', type=pathlib.Path, required=True)
 args = parser.parse_args()
 
-X = pd.read_csv(args.dir / 'lang_experts.dat', sep=sep)
+X = pd.read_csv(args.dir / 'lang_experts.dat', sep=sep).fillna(0)
 X = X.swapaxes(0, 1)[1:]
 logging.debug(f'{X.shape = }')
 
-X_embedded = pd.DataFrame(sklearn.manifold.TSNE(n_components=2, learning_rate=250.0, init='pca', perplexity=30.0).fit_transform(X), index=X.index)
+X_embedded = pd.DataFrame(sklearn.manifold.TSNE(n_components=2, learning_rate=200.0, init='pca', perplexity=30.0).fit_transform(X), index=X.index)
 logging.debug(f'{X_embedded.shape = }')
 
 X_embedded.to_csv(args.dir / 'experts.tsne.dat', sep=sep, header=False)

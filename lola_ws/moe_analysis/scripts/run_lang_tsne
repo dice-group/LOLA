@@ -18,6 +18,7 @@ delimiter = '\t'
 dtype = np.float32
 
 X = np.genfromtxt(args.dir / 'lang_experts.dat', delimiter=delimiter, skip_header=1, dtype=dtype, converters={0: lambda lang: dtype(0)})
+X = np.nan_to_num(X)
 logging.debug(f'{X.shape = }')
 
 X_embedded = sklearn.manifold.TSNE(n_components=2, learning_rate=250.0, init='pca', perplexity=30.0).fit_transform(X)
