@@ -10,9 +10,10 @@ set ytics font ", 8"
 layers = 12
 experts = 16
 
+set cbrange [0:1]
 set cbtics ("0" 0, "1/".experts 1.0/experts, "2/".experts 2*1.0/experts, "1/2" 0.5)
 
-set palette defined (0 "blue", 1.0/experts "white", 2*1.0/experts "yellow", 0.6 "red")
+set palette defined (0 "blue", 1.0/experts "white", 2*1.0/experts "yellow", 0.75 "red", 1.0 "red")
 
 set for [layer=0:layers-2] arrow from experts - 0.5 + experts * layer, -0.5 to experts - 0.5 + experts * layer, 105.5 nohead front
 
