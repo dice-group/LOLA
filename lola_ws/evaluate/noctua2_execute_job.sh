@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH -J "LOLA - Tasks Evaluation"
-#SBATCH -t 03:00:00
+#SBATCH -t 10:00:00
 #SBATCH -N 1
 #SBATCH -n 1
 #SBATCH --mem 100G

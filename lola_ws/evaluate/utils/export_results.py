@@ -5,11 +5,34 @@ from tqdm import tqdm
 import fnmatch
 import pandas as pd
 import re
+from consts import *
 
-# Note: the model ids in the sets below are made by conjoining huggingface organization and model name together with __ (similar to how lm-eval-harness does it)
-DEFAULT_MODELS = {'dice-research__lola_v1'}
-# Note: this set is also used by find_errors.py
-EXCLUDED_MODELS = {'SeaLLMs__SeaLLMs-v3-1.5B-Chat', 'facebook__m2m100_1.2B'}
+with open('data/model_categories.json', 'r') as category_file:
+    model_category_map = json.load(category_file)
+
+# Initialize GROUP_CONSTRAINTS
+GROUP_CONSTRAINTS = {}
+
+# Adding KMeans based group contraints
+for category_id in set(model_category_map.values()):
+    GROUP_CONSTRAINTS[f'category-{category_id}'] = lambda model_info, cid=category_id: model_category_map.get(model_info['id']) == cid
+
+# Adding other group contraints
+GROUP_CONSTRAINTS.update({
+    'all': lambda model_info: True  # combined group with all models
+})
+
+# Adding other group contraints
+GROUP_CONSTRAINTS.update({
+    'lt-4b-params': lambda model_info: model_info['params_in_billions'] <= 2,  # based on Kmeans KVal 2
+    'gt-4b-params': lambda model_info: model_info['params_in_billions'] > 2,   # based on Kmeans KVal 2
+})
+
+# Adding other group contraints
+GROUP_CONSTRAINTS.update({
+    'lt-2b-params': lambda model_info: model_info['params_in_billions'] <= 2,  # Old category
+    'gt-2b-params': lambda model_info: model_info['params_in_billions'] > 2,   # Old category
+})
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Compile all the evaluation results and export them to tsv files.")
@@ -63,22 +86,17 @@ def fetch_result_dict(results_dir):
 def generate_group_map():
     model_info_file_path = "../llm_lang.json"
     model_info_map = load_json_file(model_info_file_path)
-
-    model_group_map = {
-        'lt-2b-params': set(DEFAULT_MODELS),
-        'gt-2b-params': set(DEFAULT_MODELS)
-    }
+    
+    model_group_map = { key : set(DEFAULT_MODELS) for key in GROUP_CONSTRAINTS }
 
     for model_info in model_info_map['llms']:
         model_hf_id = model_info['huggingface_model_id']
         model_params_in_billions = model_info['params_in_billions']
         updated_model_id = model_hf_id.replace("/", "__")
-        group_key = None
-        if model_params_in_billions <= 2:
-            group_key = 'lt-2b-params'
-        else:
-            group_key = 'gt-2b-params'
-        model_group_map[group_key].add(updated_model_id)
+        # find all the groups that this model belongs to
+        for group_name, constraint in GROUP_CONSTRAINTS.items():
+            if constraint(model_info):
+                model_group_map[group_name].add(updated_model_id)
     
     return model_group_map
 
@@ -89,6 +107,7 @@ def export_tsv_results(results_dict, output_dir):
 
     # Initialize an array of regex patterns to filter out certain metrics
     metric_filter_patterns = [
+        r".*_norm,none.*",  # filter out all normalized metrics
         r".*_stderr.*",  # filter out all metrics with "_stderr"
         r".*alias.*",  # Example: filter out metrics with "alias"
     ]
@@ -99,15 +118,12 @@ def export_tsv_results(results_dict, output_dir):
     # Iterate over each subtask in the results dictionary
     for subtask, langs_info in results_dict.items():
         # Create separate DataFrames for each metric and group
-        metric_grouped_table_data = {
-            'lt-2b-params': {},
-            'gt-2b-params': {}
-        }
+        metric_grouped_table_data = { key : {} for key in GROUP_CONSTRAINTS }
 
         for lang, models_info in langs_info.items():
             for model, metrics in models_info.items():
-                # Skip models that are in the EXCLUDED_MODELS set
-                if model in EXCLUDED_MODELS:
+                # Skip models/subtasks combination that are not valid
+                if model in EXCLUDED_MODELS or (subtask, model) in INCOMPATIBLE_SUBTASKS_MODELS:
                     continue
 
                 # Determine the groups of the current model (a model can belong to multiple groups)
@@ -134,14 +150,17 @@ def export_tsv_results(results_dict, output_dir):
 
         # Export the tables to TSV files, divided by model group
         for group, metrics_data in metric_grouped_table_data.items():
+            # Create group directory
+            output_group_dir = os.path.join(output_dir, group)
+            create_directory_if_not_exists(output_group_dir)
             for metric, df in metrics_data.items():
                 # Sort the columns to ensure default models appear first
                 sorted_columns = sorted(df.columns, key=lambda x: (x not in DEFAULT_MODELS, x))
                 df = df[sorted_columns]
 
                 # Generate the file name based on subtask, metric, and group
-                file_name = f"{subtask}_{metric}_{group}.tsv"
-                file_path = os.path.join(output_dir, file_name)
+                file_name = f"{subtask}_{metric}.tsv"
+                file_path = os.path.join(output_group_dir, file_name)
 
                 # Save the DataFrame to a TSV file
                 df.to_csv(file_path, sep='\t')

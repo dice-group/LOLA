@@ -1,2 +1,5 @@
-noctua2_logs/
-output*/
+*noctua2_logs/
+*output*/
+*evaluation_tables*/
+tasks/lm-eval-harness/EleutherAI-eval/
+tasks/lm-eval-harness/lm-evaluation-harness/

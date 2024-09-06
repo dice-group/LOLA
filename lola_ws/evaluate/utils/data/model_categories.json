@@ -1,0 +1,21 @@
+{
+    "glot500": 1,
+    "xlmr-l": 1,
+    "mbart": 1,
+    "bloom1b1": 1,
+    "mt5-l": 1,
+    "lola": 1,
+    "mgpt": 1,
+    "bloom1b7": 1,
+    "xlmr-xl": 2,
+    "mt5-xl": 2,
+    "umt5-xl": 2,
+    "towerbase": 3,
+    "mistral": 3,
+    "falcon": 3,
+    "bloom7b1": 3,
+    "zephyr": 3,
+    "seallm-7b-v2": 3,
+    "seallm-7b-v2_5": 3,
+    "breeze": 3
+}
