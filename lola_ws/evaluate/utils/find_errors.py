@@ -48,6 +48,7 @@ def extract_error_from_log(log_file_path):
     """Extract error/exception messages from the log file."""
     # The patterns below should be extended if required. The order of the patterns in the list is important. More patterns will make the processing slower.
     error_patterns = [
+        re.compile(r'.*(slurmstepd: error:.*\*\*\*.+\*\*\*)'),
         re.compile(r'.*(torch\.OutOfMemoryError: CUDA out of memory\.).*'),
         re.compile(r'.*(RuntimeError: CUDA error: CUBLAS_STATUS_EXECUTION_FAILED).*'),
         re.compile(r'.*(FileNotFoundError: No such file or directory).*'),

@@ -35,6 +35,14 @@ today = datetime.today()
 # Format the date as dd-mm-yyyy
 formatted_date = today.strftime('%d-%m-%Y')
 
+def find_results_json(directory):
+    """Recursively search for results_*.json files within the given directory."""
+    for root, _, files in os.walk(directory):
+        for file in files:
+            if file.startswith('results_') and file.endswith('.json'):
+                return True
+    return False
+
 # Creating directory for SLURM logs
 def create_directory_if_not_exists(directory_path):
     if not os.path.exists(directory_path):
@@ -62,6 +70,7 @@ def parse_args():
     parser.add_argument('--languages', required=True, help="Comma-separated list of languages (e.g., 'en,es')")
     parser.add_argument('--results_dir', default="./results", help="Optional directory for saving results (default: ./results)")
     parser.add_argument('--lang_check', default=False, action='store_true', help="Only evaluate models on their supported languages (as per llm_lang.json)")
+    parser.add_argument('--no_rerun', default=False, action='store_true', help="Do not run the experiment if it already successfuly completed before. (searches for results file in the output directory)")
 
     return parser.parse_args()
 
@@ -171,10 +180,13 @@ def main():
                     #run_name = f"lola-eval-{model}-{task}-{subtask}-{language}"
                     updated_model_id = model_hf_id.replace("/", "__")
                     
-                    ## Below logic is disabled as the error finding logic is able to these failed experiments as well.
-                    # To make sure that error finding logic can detect failed evaluations, the results directory should be there atleast.
-                    #model_result_path = os.path.join(result_path, updated_model_id)
-                    #create_directory_if_not_exists(model_result_path)
+                    # Find if the experiment successfuly finished before
+                    if args.no_rerun:
+                        model_result_path = os.path.join(result_path, updated_model_id)
+                        result_exists = find_results_json(model_result_path)
+                        if result_exists:
+                            print(f'Skipping Rerun Task: "{task}" Subtask: "{subtask}" Language: "{language}" Model: "{model}" Huggingface ID: "{model_hf_id}"')
+                            continue # skipping this combination as it already finished earlier
                     
                     # This variable makes sure that our slurm log files follow the same naming convention as the lm-eval-harness results
                     run_name = f"{task}_{task_dir_name}_{updated_model_id}"

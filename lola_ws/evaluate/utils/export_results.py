@@ -19,6 +19,17 @@ for category_id in set(model_category_map.values()):
 
 # Adding other group contraints
 GROUP_CONSTRAINTS.update({
+    'all': lambda model_info: True  # combined group with all models
+})
+
+# Adding other group contraints
+GROUP_CONSTRAINTS.update({
+    'lt-4b-params': lambda model_info: model_info['params_in_billions'] <= 2,  # based on Kmeans KVal 2
+    'gt-4b-params': lambda model_info: model_info['params_in_billions'] > 2,   # based on Kmeans KVal 2
+})
+
+# Adding other group contraints
+GROUP_CONSTRAINTS.update({
     'lt-2b-params': lambda model_info: model_info['params_in_billions'] <= 2,  # Old category
     'gt-2b-params': lambda model_info: model_info['params_in_billions'] > 2,   # Old category
 })
