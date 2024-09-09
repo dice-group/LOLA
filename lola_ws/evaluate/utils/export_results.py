@@ -23,16 +23,16 @@ GROUP_CONSTRAINTS.update({
 })
 
 # Adding other group contraints
-GROUP_CONSTRAINTS.update({
-    'lt-4b-params': lambda model_info: model_info['params_in_billions'] <= 2,  # based on Kmeans KVal 2
-    'gt-4b-params': lambda model_info: model_info['params_in_billions'] > 2,   # based on Kmeans KVal 2
-})
+# GROUP_CONSTRAINTS.update({
+#     'lt-4b-params': lambda model_info: model_info['params_in_billions'] <= 2,  # based on Kmeans KVal 2
+#     'gt-4b-params': lambda model_info: model_info['params_in_billions'] > 2,   # based on Kmeans KVal 2
+# })
 
 # Adding other group contraints
-GROUP_CONSTRAINTS.update({
-    'lt-2b-params': lambda model_info: model_info['params_in_billions'] <= 2,  # Old category
-    'gt-2b-params': lambda model_info: model_info['params_in_billions'] > 2,   # Old category
-})
+# GROUP_CONSTRAINTS.update({
+#     'lt-2b-params': lambda model_info: model_info['params_in_billions'] <= 2,  # Old category
+#     'gt-2b-params': lambda model_info: model_info['params_in_billions'] > 2,   # Old category
+# })
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Compile all the evaluation results and export them to tsv files.")
@@ -110,8 +110,12 @@ def export_tsv_results(results_dict, output_dir):
         r".*_norm,none.*",  # filter out all normalized metrics
         r".*_stderr.*",  # filter out all metrics with "_stderr"
         r".*alias.*",  # Example: filter out metrics with "alias"
+        r".*exact_match,remove_whitespace.*",  # Example: filter out mgsm remove whitespace metric
+        r".*exact_match,strict-match.*",  # Example: filter out mgsm strict match metric
+        r".*perplexity,none.*",  # Example: filter out lambada perplexity
     ]
-
+    # Unique valid entries count of model, lang & subtask
+    unique_val_entries_count = 0
     # Compile regex patterns for efficiency
     compiled_patterns = [re.compile(pattern) for pattern in metric_filter_patterns]
 
@@ -134,7 +138,8 @@ def export_tsv_results(results_dict, output_dir):
 
                 if not model_groups:
                     continue  # Skip models that do not belong to any group
-
+                # Counting total valid unique entries of model, lang & subtask
+                unique_val_entries_count += 1
                 # Populate metric_grouped_table_data with data grouped by metrics and model groups
                 for metric, value in metrics.items():
                     # Filter out metrics based on the regex patterns
@@ -165,6 +170,8 @@ def export_tsv_results(results_dict, output_dir):
                 # Save the DataFrame to a TSV file
                 df.to_csv(file_path, sep='\t')
                 print(f"Exported {file_name} to {output_dir}")
+    
+    print(f'Exported total {unique_val_entries_count} unique entries.')
  
 
 def main():
