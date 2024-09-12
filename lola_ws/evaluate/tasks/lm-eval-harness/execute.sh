@@ -10,11 +10,13 @@ slurm=false
 # Not using the flag will give an error if model_id, subtask, language and result_path are not specified
 # The 'c' is to set the slurm flag 
 
-while getopts ":m:f:r:c" opt; do
+while getopts ":m:f:n:r:c" opt; do
   case $opt in
     m) model="$OPTARG"
     ;;
     f) final_task_id="$OPTARG"
+    ;;
+    n) num_few_shot="$OPTARG"
     ;;
     r) result_path="$OPTARG"
     ;;
@@ -50,6 +52,7 @@ huggingface-cli login --token $HF_LOLA_EVAL_AT
 lm_eval --model hf \
     --model_args pretrained="${model}" \
     --tasks $final_task_id \
+    --num_fewshot $num_few_shot \
     --device cuda:0 \
     --batch_size 1 \
     --log_samples \

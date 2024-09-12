@@ -30,11 +30,6 @@ import json
 import subprocess
 from datetime import datetime
 
-# Get today's date
-today = datetime.today()
-# Format the date as dd-mm-yyyy
-formatted_date = today.strftime('%d-%m-%Y')
-
 def find_results_json(directory):
     """Recursively search for results_*.json files within the given directory."""
     for root, _, files in os.walk(directory):
@@ -51,9 +46,6 @@ def create_directory_if_not_exists(directory_path):
     else:
         print(f"Directory '{directory_path}' already exists.")
 
-slurm_log_path = 'noctua2_logs/' + formatted_date + '/'
-create_directory_if_not_exists(slurm_log_path)
-
 NONE_VAL = 'none'
 task_lang_map_file = "task_lang.json"
 model_lang_map_file = "llm_lang.json"
@@ -68,9 +60,10 @@ def parse_args():
     parser.add_argument('--models', required=True, help="Comma-separated list of models (e.g., 'model1,model2')")
     parser.add_argument('--tasks', required=True, help="Tasks with optional subtasks formatted as 'task1:sub1,sub2;task2'")
     parser.add_argument('--languages', required=True, help="Comma-separated list of languages (e.g., 'en,es')")
-    parser.add_argument('--results_dir', default="./results", help="Optional directory for saving results (default: ./results)")
+    parser.add_argument('--results_dir', required=False, help="Optional directory for saving results (default: ./output_<num_shot>shot)")
     parser.add_argument('--lang_check', default=False, action='store_true', help="Only evaluate models on their supported languages (as per llm_lang.json)")
-    parser.add_argument('--no_rerun', default=False, action='store_true', help="Do not run the experiment if it already successfuly completed before. (searches for results file in the output directory)")
+    parser.add_argument('--allow_rerun', default=False, action='store_true', help="Allow rerunning the experiment even if it already successfuly completed before. Previously failed experiments do not get affected by the value of this flag.")
+    parser.add_argument('--num_shot', default=0, help="Number of shots/examples to include in the evaluation input for models to learn from. (defaults to 0 for zero-shot)")
 
     return parser.parse_args()
 
@@ -123,10 +116,21 @@ def get_model_information(model_id):
 
 def main():
     args = parse_args()
+    
+    # Get today's date
+    today = datetime.today()
+    # Format the date as dd-mm-yyyy
+    formatted_date = today.strftime('%d-%m-%Y')
+    slurm_log_path = f'noctua2_logs_{args.num_shot}shot/' + formatted_date + '/'
+    create_directory_if_not_exists(slurm_log_path)
 
     models = args.models.split(',')
     languages = args.languages.split(',')
-    results_dir = args.results_dir
+    if not args.results_dir:
+        results_dir = f'./output_{args.num_shot}shot'
+    else:
+        results_dir = args.results_dir
+    
     results_dir = os.path.abspath(results_dir)
 
     task_subtask_map = parse_tasks(args.tasks)
@@ -181,7 +185,7 @@ def main():
                     updated_model_id = model_hf_id.replace("/", "__")
                     
                     # Find if the experiment successfuly finished before
-                    if args.no_rerun:
+                    if not args.allow_rerun:
                         model_result_path = os.path.join(result_path, updated_model_id)
                         result_exists = find_results_json(model_result_path)
                         if result_exists:
@@ -191,7 +195,7 @@ def main():
                     # This variable makes sure that our slurm log files follow the same naming convention as the lm-eval-harness results
                     run_name = f"{task}_{task_dir_name}_{updated_model_id}"
                     # Create a job on the computing cluster
-                    sub_proc_arr = ['sbatch', '--job-name', run_name, '--output', (slurm_log_path + '%x_slurm-%j.out'), 'noctua2_execute_job.sh', task, model_hf_id, final_task_id, result_path]
+                    sub_proc_arr = ['sbatch', '--job-name', run_name, '--output', (slurm_log_path + '%x_slurm-%j.out'), 'noctua2_execute_job.sh', task, model_hf_id, final_task_id, result_path, args.num_shot]
                     print("Subprocess called: ", sub_proc_arr)
                     subprocess.run(sub_proc_arr)
 

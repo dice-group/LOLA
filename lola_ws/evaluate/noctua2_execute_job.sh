@@ -27,9 +27,10 @@ task=$1
 model_hf_id=$2
 final_task_id=$3
 result_path=$4
+num_few_shot=$5
 
 # Change directory to the specified task
 cd tasks/$task
 
 # Call the execute script for task
-bash execute.sh -m $model_hf_id -f $final_task_id -r $result_path -c
+bash execute.sh -m $model_hf_id -f $final_task_id -n $num_few_shot -r $result_path -c
