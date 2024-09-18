@@ -9,3 +9,18 @@ More details about the model alongside it's weights can be found at the link bel
 **Note**: This repository is a detached fork of [https://github.com/microsoft/Megatron-DeepSpeed](https://github.com/microsoft/Megatron-DeepSpeed). It contains the training source code for LOLA, which can be mainly found in [lola_ws/](./lola_ws). Some of the implementations from the original source have been modified within this fork for our use-case.
 
 The original README.md can be found here: [archive/README.md](./archive/README.md)
+
+
+## Citation
+If you use this code or data in your research, please cite our work:
+```bibtex
+@misc{srivastava2024lolaopensourcemassively,
+      title={LOLA -- An Open-Source Massively Multilingual Large Language Model}, 
+      author={Nikit Srivastava and Denis Kuchelev and Tatiana Moteu and Kshitij Shetty and Michael Roeder and Diego Moussallem and Hamada Zahera and Axel-Cyrille Ngonga Ngomo},
+      year={2024},
+      eprint={2409.11272},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2409.11272}, 
+}
+```
