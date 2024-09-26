@@ -4,8 +4,10 @@
 #CONFIG_PATH=/scratch/hpc-prf-lola/nikit/repos/LOLA-Megatron-DeepSpeed/lola_ws/gpt/gpt-normal-16moe-output/eval_demo_config.json
 #RESULT_PATH=/scratch/hpc-prf-lola/nikit/repos/LOLA-Megatron-DeepSpeed/lola_ws/gpt/converted_model
 
-CHECKPOINT_PATH=/data/lola-model/large/global_step296000
-CONFIG_PATH=/data/lola-model/misc/eval_demo_config.json
+source venv-lola/bin/activate
+
+CHECKPOINT_PATH=/data/lola-model/global_step296000
+CONFIG_PATH=/data/lola-model/inference_config.json
 
 PP_SIZE=1
 TP_SIZE=1
@@ -66,6 +68,6 @@ export PYTHONPATH="../:../tools/convert_checkpoint:${PYTHONPATH}"
 
 # LAUNCHER="deepspeed --num_nodes $NUM_NODE --num_gpus $NUM_GPU_PER_NODE"
 LAUNCHER="python -m torch.distributed.run --master_port 2335 "
-# LAUNCHER="python -u -m debugpy --wait-for-client --listen 0.0.0.0:12121 -m torch.distributed.run "
+#LAUNCHER="python -u -m debugpy --wait-for-client --listen 0.0.0.0:12121 -m torch.distributed.run --master_port 2335 "
 
 $LAUNCHER $CMD

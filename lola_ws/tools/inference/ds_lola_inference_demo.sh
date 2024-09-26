@@ -3,9 +3,11 @@
 #CHECKPOINT_PATH=/scratch/hpc-prf-lola/nikit/repos/LOLA-Megatron-DeepSpeed/lola_ws/gpt/gpt-normal-16moe-output/checkpoint/noctua2-gpt-normal-16moe_ms-1.3B_bs-768_gpus-96_lr-2.0e-4_minlr-2.0e-5_ep-16_mlc-0.01_cap-1.0_drop-true/global_step296000
 #CONFIG_PATH=/scratch/hpc-prf-lola/nikit/repos/LOLA-Megatron-DeepSpeed/lola_ws/gpt/gpt-normal-16moe-output/eval_demo_config.json
 #RESULT_PATH=/scratch/hpc-prf-lola/nikit/repos/LOLA-Megatron-DeepSpeed/lola_ws/gpt/converted_model
+source ../../venv-lola/bin/activate
+export PYTHONPATH="../../../:${PYTHONPATH}"
 
-CHECKPOINT_PATH=/data/lola-model/large/global_step296000
-CONFIG_PATH=/data/lola-model/misc/eval_demo_config.json
+CHECKPOINT_PATH=/data/lola-model/global_step296000
+CONFIG_PATH=/data/lola-model/inference_config.json
 
 PP_SIZE=1
 TP_SIZE=1

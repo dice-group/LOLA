@@ -6,7 +6,8 @@ import torch
 from collections import OrderedDict
 # imports
 import sys
-sys.path.append('/scratch/hpc-prf-lola/nikit/repos/LOLA-Megatron-DeepSpeed/tools/convert_checkpoint')
+#sys.path.append('/scratch/hpc-prf-lola/nikit/repos/LOLA-Megatron-DeepSpeed/tools/convert_checkpoint')
+sys.path.append('/data/nikit_ws/LOLA-Megatron-DeepSpeed/tools/convert_checkpoint')
 from deepspeed_checkpoint import ARGS_KEY, DeepSpeedCheckpoint
 
 MODEL_KEY = 'model'

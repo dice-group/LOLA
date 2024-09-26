@@ -19,7 +19,7 @@ set colorbox user origin graph 1.01, graph 0 size cbwidth, graph 1
 set rmargin at screen rightmargin
 
 set cbrange [0:1]
-set cbtics ("0" 0, "1/".experts 1.0/experts, "2/".experts 2*1.0/experts, 4*1.0/experts, "1/2" 0.5)
+set cbtics ("0" 0, "1/".experts 1.0/experts, "2/".experts 2*1.0/experts, "4/".experts 4*1.0/experts, "1/2" 0.5)
 
 # set palette defined (0 "blue", 1.0/experts "white", 2*1.0/experts "yellow", 0.75 "red", 1.0 "red")
 set palette defined (0 "white", 1.0/experts "light-green", 2*1.0/experts "yellow", 4*1.0/experts "light-red", 0.75 "red", 1.0 "red")

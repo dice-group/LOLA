@@ -244,8 +244,12 @@ def main():
     #input_text = "Привет, меня зовут Иван"
     # input_text = "Question: To make Belgian waffles\nAnswer:"
     
-    output_text = generate_output(input_text, 2, infer_tool, temperature=1.0, top_k=50, top_p=0.95)
+    # with sampling on
+    #output_text = generate_output(input_text, 2, infer_tool, temperature=1.0, top_k=50, top_p=0.95)
 
+    # with sampling off
+    output_text = generate_output(input_text, 2, infer_tool, temperature=1.0, top_k=1, top_p=0)
+    
     embeddings_1 = infer_tool.get_token_embeddings(input_text)
 
     embeddings_2 = infer_tool.get_token_embeddings(input_text, True)
