@@ -53,6 +53,7 @@ class LOLAModel(GPT2PreTrainedModel):
         self.wpe = nn.Embedding(config.max_position_embeddings, self.embed_dim)
 
         self.drop = nn.Dropout(config.embd_pdrop)
+        # TODO: We make all blocks as LOLABlocks, pass is_moe value as per their configuration
         self.h = nn.ModuleList([
             GPT2Block(config, layer_idx=i) if i % 2 == 0 else LOLABlock(config, layer_idx=i) for i in range(config.num_hidden_layers)
         ])
@@ -235,6 +236,7 @@ class LOLAModel(GPT2PreTrainedModel):
         all_cross_attentions = () if output_attentions and self.config.add_cross_attention else None
         all_hidden_states = () if output_hidden_states else None
         for i, (block, layer_past) in enumerate(zip(self.h, past_key_values)):
+            # TODO: Write logic to expect MoE loss from the layers output
             # Model parallel
             if self.model_parallel:
                 torch.cuda.set_device(hidden_states.device)
@@ -294,7 +296,7 @@ class LOLAModel(GPT2PreTrainedModel):
         # Add last hidden state
         if output_hidden_states:
             all_hidden_states = all_hidden_states + (hidden_states,)
-
+        # TODO: Pass MoE loss alongside other outputs
         if not return_dict:
             return tuple(
                 v
@@ -319,7 +321,7 @@ class LOLABlock(nn.Module):
         self.ln_1 = nn.LayerNorm(hidden_size, eps=config.layer_norm_epsilon)
         self.attn = GPT2Attention(config, layer_idx=layer_idx)
         self.ln_2 = nn.LayerNorm(hidden_size, eps=config.layer_norm_epsilon)
-
+        # TODO: if its not a MoE block, then init mlp.
         self.moe = LOLAMOE(
             hidden_size,
             inner_dim,
@@ -383,6 +385,7 @@ class LOLABlock(nn.Module):
 
         residual = hidden_states
         hidden_states = self.ln_2(hidden_states)
+        # TODO: Check if MoE or MLP and deal accordingly.
         feed_forward_hidden_states, _ = self.moe(hidden_states)
         # residual connection
         hidden_states = residual + feed_forward_hidden_states
@@ -432,6 +435,7 @@ class LOLAMOE(nn.Module):
         final_hidden_states = torch.zeros(
             (batch_size * sequence_length, hidden_dim), dtype=hidden_states.dtype, device=hidden_states.device
         )
+        # TODO: Compute auxiliary loss and pass it on. Make use of the capacity values from LOLA pretraining.
         expert_mask = torch.nn.functional.one_hot(selected_experts, num_classes=self.num_experts).permute(2, 1, 0)
         for expert_idx in range(self.num_experts):
             expert_layer = self.experts[expert_idx]
@@ -506,7 +510,7 @@ class LOLAAttention(GPT2Attention):
 
 class LOLALMHeadModel(GPT2LMHeadModel):
     
-    config_class = LOLAConfig
+    config_class = LOLAConfig# TODO: Need to write the forward function here that takes the MoE loss into account
 
     def __init__(self, config):
         # preventing initiation of GPT2LMHeadModel directly
