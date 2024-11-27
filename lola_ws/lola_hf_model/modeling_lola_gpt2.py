@@ -21,6 +21,7 @@ from torch.nn import CrossEntropyLoss
 
 from transformers.modeling_outputs import (
     BaseModelOutputWithPastAndCrossAttentions,
+    MoeCausalLMOutputWithPast,
     SequenceClassifierOutputWithPast,
     QuestionAnsweringModelOutput
 )
@@ -32,12 +33,67 @@ from transformers.utils import (
 from transformers.utils.model_parallel_utils import assert_device_map, get_device_map
 
 from transformers.models.gpt2.modeling_gpt2 import GPT2Attention, GPT2MLP, GPT2Block, GPT2PreTrainedModel
-from transformers.models.gpt2.modeling_gpt2 import GPT2LMHeadModel, GPT2DoubleHeadsModel, GPT2ForSequenceClassification, GPT2ForTokenClassification
+from transformers.models.gpt2.modeling_gpt2 import GPT2LMHeadModel
+from dataclasses import dataclass
+from typing import Optional, Tuple
+
+import torch
+from transformers.modeling_outputs import ModelOutput
+import transformers
+import importlib.util
 
 
 logger = logging.get_logger(__name__)
 
 expert_analysis_callback = lambda _: None
+
+class LOLADependencyChecker:
+    def __init__(self):
+        self.expected_versions = {
+            "transformers": "4.38.2"
+        }
+        self.check_dependencies()
+
+    def check_dependencies(self):
+        # Check transformers version
+        self._check_version("transformers", transformers.__version__)
+
+    def _check_version(self, package_name, installed_version):
+        expected_version = self.expected_versions.get(package_name)
+        if installed_version != expected_version:
+            warnings.warn(
+                f"Warning: The installed {package_name} version ({installed_version}) "
+                f"differs from the expected version ({expected_version}). "
+                "This may lead to unexpected behavior.",
+                category=UserWarning
+            )
+
+@dataclass
+class MoeModelOutputWithPast(ModelOutput):
+    """
+    Base class for model's outputs with potential hidden states and attentions, and includes auxiliary loss.
+
+    Args:
+        last_hidden_state (`torch.FloatTensor` of shape `(batch_size, sequence_length, hidden_size)`):
+            Sequence of hidden-states at the output of the last layer of the model.
+        past_key_values (`tuple(tuple(torch.FloatTensor))`, *optional*, returned when `use_cache=True` is passed or when `config.use_cache=True`):
+            Contains pre-computed hidden-states (key and values in the self-attention blocks) that can be used (see `past_key_values` input) to speed up sequential decoding.
+        hidden_states (`tuple(torch.FloatTensor)`, *optional*, returned when `output_hidden_states=True` is passed):
+            Hidden-states of the model at the output of each layer plus the initial embedding outputs.
+        attentions (`tuple(torch.FloatTensor)`, *optional*, returned when `output_attentions=True` is passed):
+            Attentions weights after the attention softmax, used to compute the weighted average in the self-attention heads.
+        router_logits (`tuple(torch.FloatTensor)`, *optional*, returned when `output_router_logits=True` is passed):
+            Router logits computed by MoE routers, used to compute the auxiliary loss for Mixture of Experts models.
+        aux_loss (`torch.FloatTensor`, *optional*):
+            The auxiliary loss computed from the MoE layers, used to encourage balanced expert utilization.
+    """
+
+    last_hidden_state: torch.FloatTensor = None
+    past_key_values: Optional[Tuple[Tuple[torch.FloatTensor, ...]]] = None
+    hidden_states: Optional[Tuple[torch.FloatTensor, ...]] = None
+    attentions: Optional[Tuple[torch.FloatTensor, ...]] = None
+    router_logits: Optional[Tuple[torch.FloatTensor, ...]] = None
+    aux_loss: Optional[torch.FloatTensor] = None
 
 # LOLA
 class LOLAModel(GPT2PreTrainedModel):
@@ -46,14 +102,15 @@ class LOLAModel(GPT2PreTrainedModel):
     
     def __init__(self, config):
         super().__init__(config)
-
+        # Checking dependencies version
+        LOLADependencyChecker()
+        
         self.embed_dim = config.hidden_size
 
         self.wte = nn.Embedding(config.vocab_size, self.embed_dim)
         self.wpe = nn.Embedding(config.max_position_embeddings, self.embed_dim)
 
         self.drop = nn.Dropout(config.embd_pdrop)
-        # TODO: We make all blocks as LOLABlocks, pass is_moe value as per their configuration
         self.h = nn.ModuleList([
             GPT2Block(config, layer_idx=i) if i % 2 == 0 else LOLABlock(config, layer_idx=i) for i in range(config.num_hidden_layers)
         ])
@@ -71,9 +128,9 @@ class LOLAModel(GPT2PreTrainedModel):
     def parallelize(self, device_map=None):
         # Check validity of device_map
         warnings.warn(
-            "`GPT2Model.parallelize` is deprecated and will be removed in v5 of Transformers, you should load your"
-            " model with `device_map='balanced'` in the call to `from_pretrained`. You can also provide your own"
-            " `device_map` but it needs to be a dictionary module_name to device, so for instance {'h.0': 0, 'h.1': 1,"
+            "GPT2Model.parallelize is deprecated and will be removed in v5 of Transformers, you should load your"
+            " model with device_map='balanced' in the call to from_pretrained. You can also provide your own"
+            " device_map but it needs to be a dictionary module_name to device, so for instance {'h.0': 0, 'h.1': 1,"
             " ...}",
             FutureWarning,
         )
@@ -97,7 +154,7 @@ class LOLAModel(GPT2PreTrainedModel):
     
     def deparallelize(self):
         warnings.warn(
-            "Like `parallelize`, `deparallelize` is deprecated and will be removed in v5 of Transformers.",
+            "Like parallelize, deparallelize is deprecated and will be removed in v5 of Transformers.",
             FutureWarning,
         )
         self.model_parallel = False
@@ -227,7 +284,7 @@ class LOLAModel(GPT2PreTrainedModel):
         if self.gradient_checkpointing and self.training:
             if use_cache:
                 logger.warning_once(
-                    "`use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`..."
+                    "use_cache=True is incompatible with gradient checkpointing. Setting use_cache=False..."
                 )
                 use_cache = False
 
@@ -235,8 +292,8 @@ class LOLAModel(GPT2PreTrainedModel):
         all_self_attentions = () if output_attentions else None
         all_cross_attentions = () if output_attentions and self.config.add_cross_attention else None
         all_hidden_states = () if output_hidden_states else None
+        aux_losses = []
         for i, (block, layer_past) in enumerate(zip(self.h, past_key_values)):
-            # TODO: Write logic to expect MoE loss from the layers output
             # Model parallel
             if self.model_parallel:
                 torch.cuda.set_device(hidden_states.device)
@@ -278,11 +335,14 @@ class LOLAModel(GPT2PreTrainedModel):
             hidden_states = outputs[0]
             if use_cache is True:
                 presents = presents + (outputs[1],)
+            
+            if isinstance(block, LOLABlock):
+                # Collect auxiliary loss
+                aux_loss = outputs[-1]
+                aux_losses.append(aux_loss)
 
             if output_attentions:
                 all_self_attentions = all_self_attentions + (outputs[2 if use_cache else 1],)
-                if self.config.add_cross_attention:
-                    all_cross_attentions = all_cross_attentions + (outputs[3 if use_cache else 2],)
 
             # Model Parallel: If it's the last layer for that device, put things on the next device
             if self.model_parallel:
@@ -293,23 +353,27 @@ class LOLAModel(GPT2PreTrainedModel):
         hidden_states = self.ln_f(hidden_states)
 
         hidden_states = hidden_states.view(output_shape)
+        # Aggregate auxiliary losses
+        if aux_losses:
+            total_aux_loss = torch.stack(aux_losses).sum()
+        else:
+            total_aux_loss = None
         # Add last hidden state
         if output_hidden_states:
             all_hidden_states = all_hidden_states + (hidden_states,)
-        # TODO: Pass MoE loss alongside other outputs
         if not return_dict:
-            return tuple(
-                v
-                for v in [hidden_states, presents, all_hidden_states, all_self_attentions, all_cross_attentions]
-                if v is not None
-            )
+            output = (hidden_states, presents, all_hidden_states, all_self_attentions)
+            if total_aux_loss is not None:
+                output += (total_aux_loss,)
+            return tuple(v for v in output if v is not None)
 
-        return BaseModelOutputWithPastAndCrossAttentions(
+        return MoeModelOutputWithPast(
             last_hidden_state=hidden_states,
             past_key_values=presents,
             hidden_states=all_hidden_states,
             attentions=all_self_attentions,
-            cross_attentions=all_cross_attentions,
+            router_logits=None,  # Include if router_logits are needed
+            aux_loss=total_aux_loss,
         )
 
 class LOLABlock(nn.Module):
@@ -321,7 +385,6 @@ class LOLABlock(nn.Module):
         self.ln_1 = nn.LayerNorm(hidden_size, eps=config.layer_norm_epsilon)
         self.attn = GPT2Attention(config, layer_idx=layer_idx)
         self.ln_2 = nn.LayerNorm(hidden_size, eps=config.layer_norm_epsilon)
-        # TODO: if its not a MoE block, then init mlp.
         self.moe = LOLAMOE(
             hidden_size,
             inner_dim,
@@ -345,7 +408,7 @@ class LOLABlock(nn.Module):
         encoder_attention_mask: Optional[torch.FloatTensor] = None,
         use_cache: Optional[bool] = False,
         output_attentions: Optional[bool] = False,
-    ) -> Union[Tuple[torch.Tensor], Optional[Tuple[torch.Tensor, Tuple[torch.FloatTensor, ...]]]]:
+    ) -> Tuple[torch.Tensor, Optional[torch.Tensor], Optional[torch.Tensor]]:
         residual = hidden_states
         hidden_states = self.ln_1(hidden_states)
         attn_outputs = self.attn(
@@ -356,46 +419,21 @@ class LOLABlock(nn.Module):
             use_cache=use_cache,
             output_attentions=output_attentions,
         )
-        attn_output = attn_outputs[0]  # output_attn: a, present, (attentions)
+        attn_output = attn_outputs[0]
         outputs = attn_outputs[1:]
-        # residual connection
         hidden_states = attn_output + residual
-
-        if encoder_hidden_states is not None:
-            # add one self-attention block for cross-attention
-            if not hasattr(self, "crossattention"):
-                raise ValueError(
-                    f"If `encoder_hidden_states` are passed, {self} has to be instantiated with "
-                    "cross-attention layers by setting `config.add_cross_attention=True`"
-                )
-            residual = hidden_states
-            hidden_states = self.ln_cross_attn(hidden_states)
-            cross_attn_outputs = self.crossattention(
-                hidden_states,
-                attention_mask=attention_mask,
-                head_mask=head_mask,
-                encoder_hidden_states=encoder_hidden_states,
-                encoder_attention_mask=encoder_attention_mask,
-                output_attentions=output_attentions,
-            )
-            attn_output = cross_attn_outputs[0]
-            # residual connection
-            hidden_states = residual + attn_output
-            outputs = outputs + cross_attn_outputs[2:]  # add cross attentions if we output attention weights
 
         residual = hidden_states
         hidden_states = self.ln_2(hidden_states)
-        # TODO: Check if MoE or MLP and deal accordingly.
-        feed_forward_hidden_states, _ = self.moe(hidden_states)
-        # residual connection
+        feed_forward_hidden_states, router_logits, aux_loss = self.moe(hidden_states)
         hidden_states = residual + feed_forward_hidden_states
 
         if use_cache:
-            outputs = (hidden_states,) + outputs
+            outputs = (hidden_states,) + outputs + (aux_loss,)
         else:
-            outputs = (hidden_states,) + outputs[1:]
+            outputs = (hidden_states,) + outputs + (aux_loss,)
 
-        return outputs  # hidden_states, present, (attentions, cross_attentions)
+        return outputs  # hidden_states, present, (attentions), aux_loss
 
 class LOLAMOE(nn.Module):
     def __init__(self,
@@ -414,52 +452,41 @@ class LOLAMOE(nn.Module):
         self.experts = nn.ModuleList([GPT2MLP(inner_dim, config) for _ in range(self.num_experts)])
 
     def forward(self, hidden_states):
-        # https://github.com/huggingface/transformers/blob/main/src/transformers/models/mixtral/modeling_mixtral.py#L816
-        # FIXME do it as in top1gating
-        # https://github.com/microsoft/DeepSpeed/blob/master/deepspeed/moe/sharded_moe.py
-
         batch_size, sequence_length, hidden_dim = hidden_states.shape
         hidden_states = hidden_states.view(-1, hidden_dim)
 
         router_logits = self.gate(hidden_states)
-        # router_logits = router_logits.squeeze(dim=0)
+        routing_probabilities = F.softmax(router_logits, dim=1)
+        routing_weights, selected_experts = torch.topk(routing_probabilities, self.top_k, dim=-1)
+        # Compute Expert Mask
+        expert_mask = torch.nn.functional.one_hot(selected_experts, num_classes=self.num_experts)
+        expert_mask = expert_mask.sum(dim=1)  # Shape: [batch_size * seq_length, num_experts]
 
-        # TODO: fix the weights logic to be the same as Megatron
-        routing_weights = F.softmax(router_logits, dim=1)
-        routing_weights, selected_experts = torch.topk(routing_weights, self.top_k, dim=-1)
-        # routing_weights /= routing_weights.sum(dim=-1, keepdim=True)
-        # commenting the statement above for LOLA and removing the "/" operator to avoid getting weights as 1
-        routing_weights = routing_weights.sum(dim=-1, keepdim=True)
-        routing_weights = routing_weights.to(hidden_states.dtype)
+        # Compute Tokens per Expert and Router Probabilities
+        token_fraction_per_expert = expert_mask.float().sum(dim=0) / expert_mask.float().sum()
+        mean_router_prob_per_expert = routing_probabilities.mean(dim=0)
 
+        # Calculate Auxiliary Loss
+        aux_loss = torch.sum(token_fraction_per_expert * mean_router_prob_per_expert) * self.num_experts
+
+        # Proceed with MoE computation as before
         final_hidden_states = torch.zeros(
             (batch_size * sequence_length, hidden_dim), dtype=hidden_states.dtype, device=hidden_states.device
         )
-        # TODO: Compute auxiliary loss and pass it on. Make use of the capacity values from LOLA pretraining.
-        expert_mask = torch.nn.functional.one_hot(selected_experts, num_classes=self.num_experts).permute(2, 1, 0)
+
+        # Process tokens for each expert
         for expert_idx in range(self.num_experts):
-            expert_layer = self.experts[expert_idx]
-            idx, top_x = torch.where(expert_mask[expert_idx])
-
-            if top_x.shape[0] == 0:
+            indices = (selected_experts == expert_idx).nonzero(as_tuple=True)[0]
+            if indices.numel() == 0:
                 continue
+            current_states = hidden_states[indices]
+            current_output = self.experts[expert_idx](current_states)
+            current_weights = routing_weights[indices, (selected_experts[indices] == expert_idx).nonzero(as_tuple=True)[1]]
+            final_hidden_states.index_add_(0, indices, current_output * current_weights.unsqueeze(-1))
 
-            # in torch it is faster to index using lists than torch tensors
-            top_x_list = top_x.tolist()
-            idx_list = idx.tolist()
-
-            # Index the correct hidden states and compute the expert hidden state for
-            # the current expert. We need to make sure to multiply the output hidden
-            # states by `routing_weights` on the corresponding tokens (top-1 and top-2)
-            current_state = hidden_states[None, top_x_list].reshape(-1, hidden_dim)
-            current_hidden_states = expert_layer(current_state) * routing_weights[top_x_list, idx_list, None]
-
-            # However `index_add_` only support torch tensors for indexing so we'll use
-            # the `top_x` tensor here.
-            final_hidden_states.index_add_(0, top_x, current_hidden_states.to(hidden_states.dtype))
-        final_hidden_states = final_hidden_states.reshape(batch_size, sequence_length, hidden_dim)
+        final_hidden_states = final_hidden_states.view(batch_size, sequence_length, hidden_dim)
         expert_analysis_callback(selected_experts)
-        return final_hidden_states, router_logits
+        return final_hidden_states, router_logits, aux_loss
 
 class LOLAAttention(GPT2Attention):
     def __init__(self, config, is_cross_attention=False, layer_idx=None):
@@ -483,7 +510,7 @@ class LOLAAttention(GPT2Attention):
         self.split_size = self.embed_dim
         if self.head_dim * self.num_heads != self.embed_dim:
             raise ValueError(
-                f"`embed_dim` must be divisible by num_heads (got `embed_dim`: {self.embed_dim} and `num_heads`:"
+                f"embed_dim must be divisible by num_heads (got embed_dim: {self.embed_dim} and num_heads:"
                 f" {self.num_heads})."
             )
 
@@ -510,7 +537,7 @@ class LOLAAttention(GPT2Attention):
 
 class LOLALMHeadModel(GPT2LMHeadModel):
     
-    config_class = LOLAConfig# TODO: Need to write the forward function here that takes the MoE loss into account
+    config_class = LOLAConfig
 
     def __init__(self, config):
         # preventing initiation of GPT2LMHeadModel directly
@@ -524,156 +551,63 @@ class LOLALMHeadModel(GPT2LMHeadModel):
 
         # Initialize weights and apply final processing
         self.post_init()
-
-
-class LOLADoubleHeadsModel(GPT2DoubleHeadsModel):
     
-    config_class = LOLAConfig
-
-    def __init__(self, config):
-        super(GPT2DoubleHeadsModel, self).__init__(config)
-        config.num_labels = 1
-        self.transformer = LOLAModel(config)
-        self.lm_head = nn.Linear(config.n_embd, config.vocab_size, bias=False)
-        self.multiple_choice_head = SequenceSummary(config)
-
-        # Model parallel
-        self.model_parallel = False
-        self.device_map = None
-
-        # Initialize weights and apply final processing
-        self.post_init()
-
-      
-class LOLAForSequenceClassification(GPT2ForSequenceClassification):
-    
-    config_class = LOLAConfig
-    
-    def __init__(self, config):
-        super(GPT2ForSequenceClassification, self).__init__(config)
-        self.num_labels = config.num_labels
-        self.transformer = LOLAModel(config)
-        self.score = nn.Linear(config.n_embd, self.num_labels, bias=False)
-
-        # Model parallel
-        self.model_parallel = False
-        self.device_map = None
-
-        # Initialize weights and apply final processing
-        self.post_init()
-
-class LOLAForTokenClassification(GPT2ForTokenClassification):
-    
-    config_class = LOLAConfig
-    
-    def __init__(self, config):
-        super(GPT2ForTokenClassification, self).__init__(config)
-        self.num_labels = config.num_labels
-
-        self.transformer = LOLAModel(config)
-        if hasattr(config, "classifier_dropout") and config.classifier_dropout is not None:
-            classifier_dropout = config.classifier_dropout
-        elif hasattr(config, "hidden_dropout") and config.hidden_dropout is not None:
-            classifier_dropout = config.hidden_dropout
-        else:
-            classifier_dropout = 0.1
-        self.dropout = nn.Dropout(classifier_dropout)
-        self.classifier = nn.Linear(config.hidden_size, config.num_labels)
-
-        # Model parallel
-        self.model_parallel = False
-        self.device_map = None
-
-        # Initialize weights and apply final processing
-        self.post_init()
-
-class LOLAForQuestionAnswering(GPT2PreTrainedModel):
-    
-    config_class = LOLAConfig
-    
-    def __init__(self, config):
-        super().__init__(config)
-        self.num_labels = config.num_labels
-        self.transformer = LOLAModel(config)
-        self.qa_outputs = nn.Linear(config.hidden_size, 2)
-
-        # Model parallel
-        self.model_parallel = False
-        self.device_map = None
-
-        # Initialize weights and apply final processing
-        self.post_init()
-
     def forward(
         self,
-        input_ids: Optional[torch.LongTensor] = None,
-        attention_mask: Optional[torch.FloatTensor] = None,
-        token_type_ids: Optional[torch.LongTensor] = None,
-        position_ids: Optional[torch.LongTensor] = None,
-        head_mask: Optional[torch.FloatTensor] = None,
-        inputs_embeds: Optional[torch.FloatTensor] = None,
-        start_positions: Optional[torch.LongTensor] = None,
-        end_positions: Optional[torch.LongTensor] = None,
-        output_attentions: Optional[bool] = None,
-        output_hidden_states: Optional[bool] = None,
-        return_dict: Optional[bool] = None,
-    ) -> Union[Tuple, QuestionAnsweringModelOutput]:
-        r"""
-        start_positions (`torch.LongTensor` of shape `(batch_size,)`, *optional*):
-            Labels for position (index) of the start of the labelled span for computing the token classification loss.
-            Positions are clamped to the length of the sequence (`sequence_length`). Position outside of the sequence
-            are not taken into account for computing the loss.
-        end_positions (`torch.LongTensor` of shape `(batch_size,)`, *optional*):
-            Labels for position (index) of the end of the labelled span for computing the token classification loss.
-            Positions are clamped to the length of the sequence (`sequence_length`). Position outside of the sequence
-            are not taken into account for computing the loss.
-        """
+        input_ids=None,
+        past_key_values=None,
+        attention_mask=None,
+        token_type_ids=None,
+        position_ids=None,
+        head_mask=None,
+        inputs_embeds=None,
+        labels=None,
+        use_cache=None,
+        output_attentions=None,
+        output_hidden_states=None,
+        return_dict=None,
+    ) -> Union[Tuple, MoeCausalLMOutputWithPast]:
         return_dict = return_dict if return_dict is not None else self.config.use_return_dict
 
-        outputs = self.transformer(
+        transformer_outputs = self.transformer(
             input_ids,
+            past_key_values=past_key_values,
             attention_mask=attention_mask,
             token_type_ids=token_type_ids,
             position_ids=position_ids,
             head_mask=head_mask,
             inputs_embeds=inputs_embeds,
+            use_cache=use_cache,
             output_attentions=output_attentions,
             output_hidden_states=output_hidden_states,
-            return_dict=return_dict,
+            return_dict=True,  # Ensure we get a MoeModelOutputWithPast
         )
+        hidden_states = transformer_outputs.last_hidden_state
+        lm_logits = self.lm_head(hidden_states)
 
-        sequence_output = outputs[0]
+        aux_loss = transformer_outputs.aux_loss if hasattr(transformer_outputs, 'aux_loss') else None
 
-        logits = self.qa_outputs(sequence_output)
-        start_logits, end_logits = logits.split(1, dim=-1)
-        start_logits = start_logits.squeeze(-1).contiguous()
-        end_logits = end_logits.squeeze(-1).contiguous()
-
-        total_loss = None
-        if start_positions is not None and end_positions is not None:
-            # If we are on multi-GPU, split add a dimension
-            if len(start_positions.size()) > 1:
-                start_positions = start_positions.squeeze(-1).to(start_logits.device)
-            if len(end_positions.size()) > 1:
-                end_positions = end_positions.squeeze(-1).to(end_logits.device)
-            # sometimes the start/end positions are outside our model inputs, we ignore these terms
-            ignored_index = start_logits.size(1)
-            start_positions = start_positions.clamp(0, ignored_index)
-            end_positions = end_positions.clamp(0, ignored_index)
-
-            loss_fct = CrossEntropyLoss(ignore_index=ignored_index)
-            start_loss = loss_fct(start_logits, start_positions)
-            end_loss = loss_fct(end_logits, end_positions)
-            total_loss = (start_loss + end_loss) / 2
+        loss = None
+        if labels is not None:
+            # Shift so that tokens < n predict n
+            shift_logits = lm_logits[..., :-1, :].contiguous()
+            shift_labels = labels[..., 1:].contiguous()
+            # Flatten the tokens
+            loss_fct = CrossEntropyLoss()
+            loss = loss_fct(shift_logits.view(-1, shift_logits.size(-1)), shift_labels.view(-1))
+            if aux_loss is not None:
+                loss += self.config.router_aux_loss_coef * aux_loss
 
         if not return_dict:
-            output = (start_logits, end_logits) + outputs[2:]
-            return ((total_loss,) + output) if total_loss is not None else output
+            output = (lm_logits,) + transformer_outputs[1:]
+            return ((loss,) + output) if loss is not None else output
 
-        return QuestionAnsweringModelOutput(
-            loss=total_loss,
-            start_logits=start_logits,
-            end_logits=end_logits,
-            hidden_states=outputs.hidden_states,
-            attentions=outputs.attentions,
+        return MoeCausalLMOutputWithPast(
+            loss=loss,
+            aux_loss=aux_loss,
+            logits=lm_logits,
+            past_key_values=transformer_outputs.past_key_values,
+            hidden_states=transformer_outputs.hidden_states,
+            attentions=transformer_outputs.attentions,
+            router_logits=transformer_outputs.router_logits,
         )
