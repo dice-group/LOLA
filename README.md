@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="lola_ws/lola-logo.png" style="max-height: 250px; max-width: 250px;" />
+  <img src="lola_ws/lola-logo.png"/>
 </p>
 
 # LOLA &mdash; An Open-Source Massively Multilingual Large Language Model
