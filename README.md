@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="lola_ws/lola-logo.png" style="max-height: 250px; max-width: 250px;" />
+</p>
+
 # LOLA &mdash; An Open-Source Massively Multilingual Large Language Model
 
 LOLA is a massively multilingual large language model trained on more than 160 languages using a sparse Mixture-of-Experts Transformer architecture. Evaluation results shows competitive performance in natural language generation and understanding tasks. As an open-source model, LOLA promotes reproducibility and serves as a robust foundation for future research.
