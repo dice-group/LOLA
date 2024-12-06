@@ -18,18 +18,20 @@ export CUDA_VISIBLE_DEVICES=0
 
 torchrun --nnodes=1 --nproc_per_node=1 --master_port=4550 train.py \
     --model_name_or_path dice-research/lola_v1 \
-    --data_path ./alpaca_data.json \
+    --data_path ./alpaca_multilingual.json \
     --bf16 True \
-    --output_dir ./lola_alpaca_test \
-    --num_train_epochs 3 \
-    --per_device_train_batch_size 8 \
+    --output_dir ./lola_alpaca_multilingual_new \
+    --num_train_epochs 1 \
+    --per_device_train_batch_size 16 \
     --per_device_eval_batch_size 8 \
     --gradient_accumulation_steps 8 \
     --evaluation_strategy "no" \
     --save_strategy "steps" \
-    --save_steps 2000 \
+    --save_steps 500 \
     --save_total_limit 1 \
+    --logging_steps 10 \
     --learning_rate 2e-5 \
+    --max_grad_norm 1 \
     --weight_decay 0. \
     --warmup_ratio 0.03 \
     --deepspeed default_offload_opt_param.json \

@@ -205,9 +205,10 @@ def train():
     )
 
     ## loading /scratch/hpc-prf-lola/nikit/repos/LOLA-Megatron-DeepSpeed/lola_ws/converted_model
+    ## or /data/nikit_ws/lola_weights/converted_model
 
     # model = LOLALMHeadModel.from_pretrained(
-    #         "/scratch/hpc-prf-lola/nikit/repos/LOLA-Megatron-DeepSpeed/lola_ws/converted_model",
+    #         "/data/nikit_ws/lola_weights/converted_model",
     #         cache_dir=training_args.cache_dir,
     #     )
 
