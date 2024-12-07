@@ -428,8 +428,8 @@ def convert_checkpoint_from_megatron_to_transformers(args):
         summary_first_dropout=0.1,
         scale_attn_weights=True,
         use_cache=True,
-        bos_token_id=vocab_size - 1,
-        eos_token_id=vocab_size - 1,
+        bos_token_id=0,
+        eos_token_id=5,
         architectures=["LOLALMHeadModel"],
         num_experts=16,
         topk=1

@@ -22,7 +22,7 @@ class LOLAConfig(PretrainedConfig):
 
     def __init__(
         self,
-        vocab_size=100096,
+        vocab_size=100096, # Padded vocab size, actual size is 100000
         n_positions=2048,
         n_embd=2048,
         n_layer=24,
@@ -41,8 +41,8 @@ class LOLAConfig(PretrainedConfig):
         summary_first_dropout=0.1,
         scale_attn_weights=True,
         use_cache=True,
-        bos_token_id=100095,
-        eos_token_id=100095,
+        bos_token_id=0,
+        eos_token_id=5,
         scale_attn_by_inverse_layer_idx=False,
         reorder_and_upcast_attn=False,
         num_experts=16,
