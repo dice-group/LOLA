@@ -1,0 +1,5 @@
+venv-lola-langfamily/
+virtuoso-lang-family/
+*.html
+*.json
+*.ttl

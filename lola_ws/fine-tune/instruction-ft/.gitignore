@@ -1,0 +1,6 @@
+*.log
+*.json
+lola_alpaca_multilingual*/
+lola_hf_model_auxloss/
+venv-lola-ft/
+wandb/
