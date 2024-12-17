@@ -8,7 +8,7 @@ LOLA is a massively multilingual large language model trained on more than 160 l
 
 The final model weights, trained using the Deepspeed-Megatron framework, are available at: [https://files.dice-research.org/projects/LOLA/large/global_step296000/](https://files.dice-research.org/projects/LOLA/large/global_step296000/) <br>
 
-Additional information about the model, along with its HuggingFace implementation, can be found at: [https://huggingface.co/dice-research/lola_v1](https://huggingface.co/dice-research/lola_v1) <br>
+Additional information about the model, along with its HuggingFace 🤗 implementation, can be found at: [https://huggingface.co/dice-research/lola_v1](https://huggingface.co/dice-research/lola_v1) <br>
 
 **<ins>Note</ins>**: This repository is a detached fork of [https://github.com/microsoft/Megatron-DeepSpeed](https://github.com/microsoft/Megatron-DeepSpeed). It contains the training source code for LOLA, which can be mainly found in [lola_ws/](./lola_ws). Some of the implementations from the original source have been modified within this fork for our use-case.
 
