@@ -23,3 +23,6 @@ Modify the training arguments to suit your setup, and then run the script:
 ```bash
 bash run-lora-peft-train.sh
 ```
+
+### 5. Inference
+To test your model's output in inference mode, you can use the following python notebook: [lora-inference.ipynb](lora-inference.ipynb).
