@@ -23,6 +23,6 @@ pip install ipykernel
 ipython kernel install --user --name=$LOLA_FT_ENV_NAME
 
 ## Uncomment if wandb is needed
-# pip install wandb
+pip install wandb
 ## Uncomment if debugpy is needed
 # pip install debugpy
