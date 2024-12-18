@@ -1,6 +1,7 @@
 venv-lola-peft/
 wandb/
 alpaca-peft-model*/
-lola_alpaca_multilingual_peft/
+lola_alpaca_multilingual_peft*/
 alpaca_*.json
 *.out
+sample.json

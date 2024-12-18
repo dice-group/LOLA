@@ -203,7 +203,7 @@ def train():
         r=8,
         lora_alpha=32,
         lora_dropout=0.1,
-        target_modules=['c_attn', 'c_proj']  # Adjusted to match model's attention modules and FFNs
+        target_modules=['attn.c_attn', 'attn.c_proj']  # Adjusted to match model's attention modules
     )
 
     # Apply LoRA to the model

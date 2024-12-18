@@ -18,7 +18,7 @@ torchrun --nnodes=1 --nproc_per_node=1 --master_port=4550 lora-peft-train.py \
     --model_name_or_path dice-research/lola_v1 \
     --data_path ./alpaca_multilingual.json \
     --fp16 True \
-    --output_dir ./lola_alpaca_multilingual_peft \
+    --output_dir ./lola_alpaca_multilingual_peft__attn \
     --num_train_epochs 1 \
     --per_device_train_batch_size 8 \
     --save_strategy "steps" \
