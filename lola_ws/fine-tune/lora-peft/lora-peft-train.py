@@ -200,7 +200,7 @@ def train():
     peft_config = LoraConfig(
         task_type=TaskType.CAUSAL_LM,
         inference_mode=False,
-        r=8,
+        r=32,
         lora_alpha=32,
         lora_dropout=0.1,
         target_modules=['attn.c_attn', 'attn.c_proj']  # Adjusted to match model's attention modules
