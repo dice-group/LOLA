@@ -1,7 +1,5 @@
 ## Steps to Train Alpaca-Based Instruction LoRAs on the LOLA Model
 
-Follow the steps below to train Alpaca-based instruction LoRAs on top of the LOLA model:
-
 ### 1. Install Dependencies
 Modify the [setup script](setup_peft_env.sh) as needed, and then run:
 ```bash
