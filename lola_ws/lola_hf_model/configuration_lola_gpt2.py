@@ -48,6 +48,7 @@ class LOLAConfig(PretrainedConfig):
         num_experts=16,
         topk=1,
         router_aux_loss_coef=0.01,
+        consider_aux_loss=True,
         **kwargs,
     ):
         self.vocab_size = vocab_size
@@ -77,6 +78,7 @@ class LOLAConfig(PretrainedConfig):
         self.bos_token_id = bos_token_id
         self.eos_token_id = eos_token_id
         self.router_aux_loss_coef = router_aux_loss_coef
+        self.consider_aux_loss = consider_aux_loss
 
         super().__init__(bos_token_id=bos_token_id, eos_token_id=eos_token_id, **kwargs)
 

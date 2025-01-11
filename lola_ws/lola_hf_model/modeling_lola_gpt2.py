@@ -21,12 +21,8 @@ from torch.nn import CrossEntropyLoss
 
 from transformers.modeling_outputs import (
     BaseModelOutputWithPastAndCrossAttentions,
-    MoeCausalLMOutputWithPast,
-    SequenceClassifierOutputWithPast,
-    QuestionAnsweringModelOutput
+    MoeCausalLMOutputWithPast
 )
-from transformers.modeling_utils import SequenceSummary
-from transformers.pytorch_utils import Conv1D
 from transformers.utils import (
     logging
 )
@@ -40,7 +36,6 @@ from typing import Optional, Tuple
 import torch
 from transformers.modeling_outputs import ModelOutput
 import transformers
-import importlib.util
 
 
 logger = logging.get_logger(__name__)
@@ -50,7 +45,7 @@ expert_analysis_callback = lambda _: None
 class LOLADependencyChecker:
     def __init__(self):
         self.expected_versions = {
-            "transformers": "4.38.2"
+            "transformers": "4.47.0"
         }
         self.check_dependencies()
 
@@ -111,6 +106,8 @@ class LOLAModel(GPT2PreTrainedModel):
         self.wpe = nn.Embedding(config.max_position_embeddings, self.embed_dim)
 
         self.drop = nn.Dropout(config.embd_pdrop)
+        # To make sure the GPTBlock selects the right attention
+        config._attn_implementation='eager'
         self.h = nn.ModuleList([
             GPT2Block(config, layer_idx=i) if i % 2 == 0 else LOLABlock(config, layer_idx=i) for i in range(config.num_hidden_layers)
         ])
@@ -384,6 +381,7 @@ class LOLABlock(nn.Module):
 
         self.ln_1 = nn.LayerNorm(hidden_size, eps=config.layer_norm_epsilon)
         self.attn = GPT2Attention(config, layer_idx=layer_idx)
+        #self.attn = GPT2SdpaAttention(config, layer_idx=layer_idx)
         self.ln_2 = nn.LayerNorm(hidden_size, eps=config.layer_norm_epsilon)
         self.moe = LOLAMOE(
             hidden_size,
@@ -488,53 +486,6 @@ class LOLAMOE(nn.Module):
         expert_analysis_callback(selected_experts)
         return final_hidden_states, router_logits, aux_loss
 
-class LOLAAttention(GPT2Attention):
-    def __init__(self, config, is_cross_attention=False, layer_idx=None):
-        super(GPT2Attention, SequenceClassifierOutputWithPast).__init__()
-
-        max_positions = config.max_position_embeddings
-        self.register_buffer(
-            "bias",
-            torch.tril(torch.ones((max_positions, max_positions), dtype=torch.bool)).view(
-                1, 1, max_positions, max_positions
-            ),
-            #persistent=False,
-        )
-        self.register_buffer("masked_bias", torch.tensor(-1e4), 
-                             #persistent=False
-                             )
-
-        self.embed_dim = config.hidden_size
-        self.num_heads = config.num_attention_heads
-        self.head_dim = self.embed_dim // self.num_heads
-        self.split_size = self.embed_dim
-        if self.head_dim * self.num_heads != self.embed_dim:
-            raise ValueError(
-                f"embed_dim must be divisible by num_heads (got embed_dim: {self.embed_dim} and num_heads:"
-                f" {self.num_heads})."
-            )
-
-        self.scale_attn_weights = config.scale_attn_weights
-        self.is_cross_attention = is_cross_attention
-
-        # Layer-wise attention scaling, reordering, and upcasting
-        self.scale_attn_by_inverse_layer_idx = config.scale_attn_by_inverse_layer_idx
-        self.layer_idx = layer_idx
-        self.reorder_and_upcast_attn = config.reorder_and_upcast_attn
-
-        if self.is_cross_attention:
-            self.c_attn = Conv1D(2 * self.embed_dim, self.embed_dim)
-            self.q_attn = Conv1D(self.embed_dim, self.embed_dim)
-        else:
-            self.c_attn = Conv1D(3 * self.embed_dim, self.embed_dim)
-        self.c_proj = Conv1D(self.embed_dim, self.embed_dim)
-
-        self.attn_dropout = nn.Dropout(config.attn_pdrop)
-        self.resid_dropout = nn.Dropout(config.resid_pdrop)
-
-        self.pruned_heads = set()
-
-
 class LOLALMHeadModel(GPT2LMHeadModel):
     
     config_class = LOLAConfig
@@ -545,6 +496,9 @@ class LOLALMHeadModel(GPT2LMHeadModel):
         self.transformer = LOLAModel(config)
         self.lm_head = nn.Linear(config.n_embd, config.vocab_size, bias=False)
 
+        # To add aux loss or not
+        self.consider_aux_loss = config.consider_aux_loss
+        logger.debug(f'consider_aux_loss is set to {self.consider_aux_loss}')
         # Model parallel
         self.model_parallel = False
         self.device_map = None
@@ -595,7 +549,8 @@ class LOLALMHeadModel(GPT2LMHeadModel):
             # Flatten the tokens
             loss_fct = CrossEntropyLoss()
             loss = loss_fct(shift_logits.view(-1, shift_logits.size(-1)), shift_labels.view(-1))
-            if aux_loss is not None:
+            # We can avoid adding aux loss to the total loss if its not needed (e.g. LORA without targeting expert-gating)
+            if aux_loss is not None and self.consider_aux_loss:
                 loss += self.config.router_aux_loss_coef * aux_loss
 
         if not return_dict:
