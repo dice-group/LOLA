@@ -537,6 +537,12 @@ class LOLALMHeadModel(GPT2LMHeadModel):
             return_dict=True,  # Ensure we get a MoeModelOutputWithPast
         )
         hidden_states = transformer_outputs.last_hidden_state
+        
+        # Set device for model parallelism
+        if self.model_parallel:
+            torch.cuda.set_device(self.transformer.first_device)
+            hidden_states = hidden_states.to(self.lm_head.weight.device)
+        
         lm_logits = self.lm_head(hidden_states)
 
         aux_loss = transformer_outputs.aux_loss if hasattr(transformer_outputs, 'aux_loss') else None
