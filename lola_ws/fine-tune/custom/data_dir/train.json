@@ -1,0 +1,118 @@
+[    
+{
+    "input": "I'm not playing anymore.",
+    "output": "I/PRON 'm/AUX not/PART playing/VERB anymore/ADV ./PUNCT"
+},
+{
+    "input": "So you will be better off or I will do what ever it takes to have you in jail like me.",
+    "output": "So/INTJ you/PRON will/AUX be/AUX better/ADJ off/ADP or/CCONJ I/PRON will/AUX do/VERB what/PRON ever/X it/PRON takes/VERB to/PART have/VERB you/PRON in/ADP jail/NOUN like/ADP me/PRON ./PUNCT"
+},
+{
+    "input": "You can't take a charge.",
+    "output": "You/PRON ca/AUX n't/PART take/VERB a/DET charge/NOUN ./PUNCT"
+},
+{
+    "input": "You can't make it in here.",
+    "output": "You/PRON ca/AUX n't/PART make/VERB it/PRON in/ADP here/ADV ./PUNCT"
+},
+{
+    "input": "Ha Ha.",
+    "output": "Ha/INTJ Ha/INTJ ./PUNCT"
+},
+{
+    "input": "I can't tell you how bad it will be for you not to believe me.",
+    "output": "I/PRON ca/AUX n't/PART tell/VERB you/PRON how/ADV bad/ADJ it/PRON will/AUX be/AUX for/SCONJ you/PRON not/PART to/PART believe/VERB me/PRON ./PUNCT"
+},
+{
+    "input": "Mr. Patrick is in the cell here and a lawyer is on the top bunk or bed.",
+    "output": "Mr./PROPN Patrick/PROPN is/AUX in/ADP the/DET cell/NOUN here/ADV and/CCONJ a/DET lawyer/NOUN is/AUX on/ADP the/DET top/ADJ bunk/NOUN or/CCONJ bed/NOUN ./PUNCT"
+},
+{
+    "input": "You might think you might get out of it, but do you really want to try.",
+    "output": "You/PRON might/AUX think/VERB you/PRON might/AUX get/VERB out/ADP of/ADP it/PRON ,/PUNCT but/CCONJ do/AUX you/PRON really/ADV want/VERB to/PART try/VERB ./PUNCT"
+},
+{
+    "input": "Just drop the charges and I will go away from you and your little friend.",
+    "output": "Just/ADV drop/VERB the/DET charges/NOUN and/CCONJ I/PRON will/AUX go/VERB away/ADV from/ADP you/PRON and/CCONJ your/PRON little/ADJ friend/NOUN ./PUNCT"
+},
+{
+    "input": "Don't take your time.",
+    "output": "Do/AUX n't/PART take/VERB your/PRON time/NOUN ./PUNCT"
+},
+{
+    "input": "I am pissed.",
+    "output": "I/PRON am/AUX pissed/VERB ./PUNCT"
+},
+{
+    "input": "I do not know what this Court deem it is but unless this Case reverse it self as is justl due than a White Folks favor to my person upon my prison soon release two White American richly having jews money of 20 thousand dollars will become taken from them for you Jewish Judges action of unfairness in this Court",
+    "output": "I/PRON do/AUX not/PART know/VERB what/PRON this/DET Court/NOUN deem/VERB it/PRON is/AUX but/CCONJ unless/SCONJ this/DET Case/NOUN reverse/VERB it/PRON self/X as/SCONJ is/AUX justl/ADV due/ADJ than/ADV a/DET White/ADJ Folks/NOUN favor/NOUN to/ADP my/PRON person/NOUN upon/ADP my/PRON prison/NOUN soon/ADV release/NOUN two/NUM White/ADJ American/PROPN richly/ADV having/VERB jews/PROPN money/NOUN of/ADP 20/NUM thousand/NUM dollars/NOUN will/AUX become/VERB taken/VERB from/ADP them/PRON for/ADP you/PRON Jewish/ADJ Judges/NOUN action/NOUN of/ADP unfairness/NOUN in/ADP this/DET Court/NOUN"
+},
+{
+    "input": "My criminal rap sheet is no joke I'm know in prison for a store holdup on blacks or a black and if you White American Jewish Judges wanna act racially motivated with justice in a double sided way dropping the \"I\"; \"C\" and \"E\" of the Word Justice apparently raising the word \"Just\" well then so become it Ii'll play likewise with you judges from a Koranic and Torooh perspective thats an eye for an eye and life for a life which means if just treatment is not actioned in this case if I can arranged sooner than upon soon prison discharge two - American Jewish rich person will become armed robbed of 20 thousand cash dollars in replace for my case.",
+    "output": "My/PRON criminal/ADJ rap/NOUN sheet/NOUN is/AUX no/DET joke/NOUN I/PRON 'm/AUX know/VERB in/ADP prison/NOUN for/ADP a/DET store/NOUN holdup/NOUN on/ADP blacks/NOUN or/CCONJ a/DET black/NOUN and/CCONJ if/SCONJ you/PRON White/ADJ American/ADJ Jewish/ADJ Judges/NOUN wan/VERB na/PART act/VERB racially/ADV motivated/ADJ with/ADP justice/NOUN in/ADP a/DET double/ADJ sided/ADJ way/NOUN dropping/VERB the/DET \"/PUNCT I/NOUN \"/PUNCT ;/PUNCT \"/PUNCT C/NOUN \"/PUNCT and/CCONJ \"/PUNCT E/NOUN \"/PUNCT of/ADP the/DET Word/NOUN Justice/NOUN apparently/ADV raising/VERB the/DET word/NOUN \"/PUNCT Just/ADJ \"/PUNCT well/INTJ then/ADV so/ADV become/VERB it/PRON Ii/PRON 'll/AUX play/VERB likewise/ADV with/ADP you/PRON judges/NOUN from/ADP a/DET Koranic/ADJ and/CCONJ Torooh/PROPN perspective/NOUN that/PRON s/AUX an/DET eye/NOUN for/ADP an/DET eye/NOUN and/CCONJ life/NOUN for/ADP a/DET life/NOUN which/PRON means/VERB if/SCONJ just/ADJ treatment/NOUN is/AUX not/PART actioned/VERB in/ADP this/DET case/NOUN if/SCONJ I/PRON can/AUX arranged/VERB sooner/ADV than/ADP upon/ADP soon/ADV prison/NOUN discharge/NOUN two/NUM -/PUNCT American/ADJ Jewish/ADJ rich/ADJ person/NOUN will/AUX become/VERB armed/ADJ robbed/VERB of/ADP 20/NUM thousand/NUM cash/NOUN dollars/NOUN in/ADP replace/NOUN for/ADP my/PRON case/NOUN ./PUNCT"
+},
+{
+    "input": "Right Courts rob me I rob Court citizen sounds reasonable to me and just as wrong as Court in handling this case at issue wrongly.",
+    "output": "Right/ADJ Courts/NOUN rob/VERB me/PRON I/PRON rob/VERB Court/NOUN citizen/NOUN sounds/VERB reasonable/ADJ to/ADP me/PRON and/CCONJ just/ADV as/ADV wrong/ADJ as/ADP Court/NOUN in/SCONJ handling/VERB this/DET case/NOUN at/ADP issue/NOUN wrongly/ADV ./PUNCT"
+},
+{
+    "input": "If my case had no merit I 'ed have know objection to its dismissal treatment.",
+    "output": "If/SCONJ my/PRON case/NOUN had/VERB no/DET merit/NOUN I/PRON 'ed/AUX have/VERB know/DET objection/NOUN to/ADP its/PRON dismissal/NOUN treatment/NOUN ./PUNCT"
+},
+{
+    "input": "My case has merit so unless a just treatment is done by this Court with it in the name of principal of the case at issue two White American Jewish folks will become dealt with now take me lightly if the Court will an see won't justice become done even if you Judges never here of it.",
+    "output": "My/PRON case/NOUN has/VERB merit/NOUN so/ADV unless/SCONJ a/DET just/ADJ treatment/NOUN is/AUX done/VERB by/ADP this/DET Court/NOUN with/ADP it/PRON in/ADP the/DET name/NOUN of/ADP principal/NOUN of/ADP the/DET case/NOUN at/ADP issue/NOUN two/NUM White/ADJ American/ADJ Jewish/ADJ folks/NOUN will/AUX become/VERB dealt/VERB with/ADP now/INTJ take/VERB me/PRON lightly/ADV if/SCONJ the/DET Court/PROPN will/AUX an/CCONJ see/VERB wo/AUX n't/PART justice/NOUN become/VERB done/VERB even/ADV if/SCONJ you/PRON Judges/NOUN never/ADV here/VERB of/ADP it/PRON ./PUNCT"
+},
+{
+    "input": "And in the next two weeks my person is gonna submit 5 lawsuits in the Northern District Court although legitimate I really do not have 'ta do so but I will.",
+    "output": "And/CCONJ in/ADP the/DET next/ADJ two/NUM weeks/NOUN my/PRON person/NOUN is/AUX gon/VERB na/PART submit/VERB 5/NUM lawsuits/NOUN in/ADP the/DET Northern/ADJ District/PROPN Court/PROPN although/SCONJ legitimate/ADV I/PRON really/ADV do/AUX not/PART have/VERB 'ta/PART do/VERB so/ADV but/CCONJ I/PRON will/AUX ./PUNCT"
+},
+{
+    "input": "Call the Prison, F.B.I. Inspector General; Governor; Police Whoever my will shall become done whether this Court believe it or not thats up to Judges.",
+    "output": "Call/VERB the/DET Prison/NOUN ,/PUNCT F.B.I./PROPN Inspector/PROPN General/ADJ ;/PUNCT Governor/NOUN ;/PUNCT Police/NOUN Whoever/PRON my/PRON will/NOUN shall/AUX become/VERB done/VERB whether/SCONJ this/DET Court/NOUN believe/VERB it/PRON or/CCONJ not/PART that/PRON s/AUX up/ADP to/ADP Judges/NOUN ./PUNCT"
+},
+{
+    "input": "Pharoah and his clique Were intoxicated with pride of race and pride of material civilization and grievously oppressed the israelities",
+    "output": "Pharoah/PROPN and/CCONJ his/PRON clique/NOUN Were/AUX intoxicated/VERB with/ADP pride/NOUN of/ADP race/NOUN and/CCONJ pride/NOUN of/ADP material/ADJ civilization/NOUN and/CCONJ grievously/ADV oppressed/VERB the/DET israelities/PROPN"
+},
+{
+    "input": "What Pharoah Wished Was To Crush Them",
+    "output": "What/PRON Pharoah/PROPN Wished/VERB Was/AUX To/PART Crush/VERB Them/PRON"
+},
+{
+    "input": "Is That What You Folks Trying to Do Me As And My Cases",
+    "output": "Is/AUX That/PRON What/PRON You/PRON Folks/NOUN Trying/VERB to/PART Do/VERB Me/PRON As/ADV And/CCONJ My/PRON Cases/NOUN"
+},
+{
+    "input": "Be ware Of All Actions South Africanner Europeans",
+    "output": "Be/VERB ware/X Of/ADP All/DET Actions/NOUN South/PROPN Africanner/ADJ Europeans/PROPN"
+},
+{
+    "input": "I understand you think you're very tough and you think that by dragging this process out you have created me a lot of misery; that is an incorrect assessment, but I must admit I have run out of patience with you and your smug attitude.",
+    "output": "I/PRON understand/VERB you/PRON think/VERB you/PRON 're/AUX very/ADV tough/ADJ and/CCONJ you/PRON think/VERB that/SCONJ by/SCONJ dragging/VERB this/DET process/NOUN out/ADP you/PRON have/AUX created/VERB me/PRON a/DET lot/NOUN of/ADP misery/NOUN ;/PUNCT that/PRON is/AUX an/DET incorrect/ADJ assessment/NOUN ,/PUNCT but/CCONJ I/PRON must/AUX admit/VERB I/PRON have/AUX run/VERB out/ADP of/ADP patience/NOUN with/ADP you/PRON and/CCONJ your/PRON smug/ADJ attitude/NOUN ./PUNCT"
+},
+{
+    "input": "I hope the fact that I've obviously paid someone to find you conveys the seriousness with which I take your current attitude.",
+    "output": "I/PRON hope/VERB the/DET fact/NOUN that/SCONJ I/PRON 've/AUX obviously/ADV paid/VERB someone/PRON to/PART find/VERB you/PRON conveys/VERB the/DET seriousness/NOUN with/ADP which/PRON I/PRON take/VERB your/PRON current/ADJ attitude/NOUN ./PUNCT"
+},
+{
+    "input": "If you resolve this issue quickly and efficiently I can guarantee you will not hear from me again; if you don't, well, you will be well known to the Citibank customers you are currently in litigation with in a very short amount of time.",
+    "output": "If/SCONJ you/PRON resolve/VERB this/DET issue/NOUN quickly/ADV and/CCONJ efficiently/ADV I/PRON can/AUX guarantee/VERB you/PRON will/AUX not/PART hear/VERB from/ADP me/PRON again/ADV ;/PUNCT if/SCONJ you/PRON do/AUX n't/PART ,/PUNCT well/INTJ ,/PUNCT you/PRON will/AUX be/AUX well/ADV known/VERB to/ADP the/DET Citibank/PROPN customers/NOUN you/PRON are/AUX currently/ADV in/ADP litigation/NOUN with/ADP in/ADP a/DET very/ADV short/ADJ amount/NOUN of/ADP time/NOUN ./PUNCT"
+},
+{
+    "input": "Again, make my life easy, fax over the letter, and you will not be hearing from me again.",
+    "output": "Again/ADV ,/PUNCT make/VERB my/PRON life/NOUN easy/ADJ ,/PUNCT fax/VERB over/ADP the/DET letter/NOUN ,/PUNCT and/CCONJ you/PRON will/AUX not/PART be/AUX hearing/VERB from/ADP me/PRON again/ADV ./PUNCT"
+},
+{
+    "input": "PS: I took the liberty of buying the corporate phone directory and locating information on your outstanding disputed credit accounts from an internet dealer today, and can probably make you better known to your customers than the security measures you enact at your company indicate you would like.",
+    "output": "PS/X :/PUNCT I/PRON took/VERB the/DET liberty/NOUN of/SCONJ buying/VERB the/DET corporate/ADJ phone/NOUN directory/NOUN and/CCONJ locating/VERB information/NOUN on/ADP your/PRON outstanding/ADJ disputed/ADJ credit/NOUN accounts/NOUN from/ADP an/DET internet/NOUN dealer/NOUN today/NOUN ,/PUNCT and/CCONJ can/AUX probably/ADV make/VERB you/PRON better/ADV known/VERB to/ADP your/PRON customers/NOUN than/SCONJ the/DET security/NOUN measures/NOUN you/PRON enact/VERB at/ADP your/PRON company/NOUN indicate/VERB you/PRON would/AUX like/VERB ./PUNCT"
+},
+{
+    "input": "Consider this, as I'm sure, being in the collections business and having the attitude about it that you do, that you often make people upset.",
+    "output": "Consider/VERB this/PRON ,/PUNCT as/SCONJ I/PRON 'm/AUX sure/ADJ ,/PUNCT being/AUX in/ADP the/DET collections/NOUN business/NOUN and/CCONJ having/VERB the/DET attitude/NOUN about/ADP it/PRON that/PRON you/PRON do/VERB ,/PUNCT that/SCONJ you/PRON often/ADV make/VERB people/NOUN upset/ADJ ./PUNCT"
+},
+{
+    "input": "Lord knows that drawing too much publicity and making people upset is what did in Joan Lefkow.",
+    "output": "Lord/PROPN knows/VERB that/SCONJ drawing/VERB too/ADV much/ADJ publicity/NOUN and/CCONJ making/VERB people/NOUN upset/ADJ is/AUX what/PRON did/VERB in/ADP Joan/PROPN Lefkow/PROPN ./PUNCT"
+}
+]
