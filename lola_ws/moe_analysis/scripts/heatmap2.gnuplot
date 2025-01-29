@@ -1,11 +1,13 @@
 #!/usr/bin/env -S gnuplot -c
-set term pngcairo size 1600, 1220 font 'Times,20'
+#set term pngcairo size 1600, 1220 font 'Times,20'
+# Below is the config for 16:9
+set term pngcairo size 4000, 1700 font 'Times,45'
 # set rmargin at screen 1390.0/1600
 # set terminal pdfcairo size 16,12 enhanced font 'Times,10'
 set output ARG2 . '.png'
 #set title ARG3
-set xlabel "Experts" font 'Times,25'
-set ylabel "Languages" font 'Times,25'
+set xlabel "Experts" font 'Times,45'
+set ylabel "Languages" font 'Times,45'
 unset xtics
 #set ytics font ", 8"
 unset ytics
