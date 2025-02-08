@@ -36,17 +36,17 @@ If you plan to train your own model using frameworks like [Megatron](https://git
 ## Citation
 If you use this code or data in your research, please cite our work:
 ```bibtex
-@Proceedings{srivastava2024lolaopensourcemassively,
-  title         = {LOLA -- An Open-Source Massively Multilingual Large Language Model},
-  year          = {2025},
-  archiveprefix = {arXiv},
-  author        = {Nikit Srivastava and Denis Kuchelev and Tatiana Moteu Ngoli and Kshitij Shetty and Michael Röder and Hamada Zahera and Diego Moussallem and Axel-Cyrille Ngonga Ngomo},
-  eprint        = {2409.11272},
-  eprintclass   = {cs.CL},
-  eprinttype    = {arXiv},
-  journal       = {COLING 2025},
-  journaltitle  = {Proceedings of the 31st International Conference on Computational Linguistics (COLING 2025), "LOLA - An Open-Source Massively Multilingual Large Language Model", ACL Anthology, https://aclanthology.org/2025.coling-main.428/},
-  primaryclass  = {cs.CL},
-  url           = {https://arxiv.org/abs/2409.11272},
+@inproceedings{srivastava-etal-2025-lola,
+  author    = {Nikit Srivastava and Denis Kuchelev and Tatiana Moteu Ngoli and Kshitij Shetty and Michael Röder and Hamada Zahera and Diego Moussallem and Axel-Cyrille Ngonga Ngomo},
+  title     = {{LOLA} -- An Open-Source Massively Multilingual Large Language Model},
+  booktitle = {Proceedings of the 31st International Conference on Computational Linguistics},
+  editor    = {Owen Rambow and Leo Wanner and Marianna Apidianaki and Hend Al-Khalifa and Barbara Di Eugenio and Steven Schockaert},
+  month     = jan,
+  year      = {2025},
+  address   = {Abu Dhabi, UAE},
+  publisher = {Association for Computational Linguistics},
+  pages     = {6420--6446},
+  url       = {https://aclanthology.org/2025.coling-main.428/},
+  note      = {arXiv:2409.11272 [cs.CL]},
 }
 ```
