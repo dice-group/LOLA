@@ -36,13 +36,17 @@ If you plan to train your own model using frameworks like [Megatron](https://git
 ## Citation
 If you use this code or data in your research, please cite our work:
 ```bibtex
-@misc{srivastava2024lolaopensourcemassively,
-      title={LOLA -- An Open-Source Massively Multilingual Large Language Model}, 
-      author={Nikit Srivastava and Denis Kuchelev and Tatiana Moteu Ngoli and Kshitij Shetty and Michael Röder and Hamada Zahera and Diego Moussallem and Axel-Cyrille Ngonga Ngomo},
-      year={2024},
-      eprint={2409.11272},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL},
-      url={https://arxiv.org/abs/2409.11272}, 
+@Proceedings{srivastava2024lolaopensourcemassively,
+  title         = {LOLA -- An Open-Source Massively Multilingual Large Language Model},
+  year          = {2025},
+  archiveprefix = {arXiv},
+  author        = {Nikit Srivastava and Denis Kuchelev and Tatiana Moteu Ngoli and Kshitij Shetty and Michael Röder and Hamada Zahera and Diego Moussallem and Axel-Cyrille Ngonga Ngomo},
+  eprint        = {2409.11272},
+  eprintclass   = {cs.CL},
+  eprinttype    = {arXiv},
+  journal       = {COLING 2025},
+  journaltitle  = {Proceedings of the 31st International Conference on Computational Linguistics (COLING 2025), "LOLA - An Open-Source Massively Multilingual Large Language Model", ACL Anthology, https://aclanthology.org/2025.coling-main.428/},
+  primaryclass  = {cs.CL},
+  url           = {https://arxiv.org/abs/2409.11272},
 }
 ```
