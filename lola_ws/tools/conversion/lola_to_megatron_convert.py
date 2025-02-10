@@ -1,49 +1,22 @@
 # This code is originally from https://github.com/bigscience-workshop/Megatron-DeepSpeed
 # under the license https://huggingface.co/spaces/bigscience/license
 
-from functools import reduce
-from logging import logMultiprocessing
 import os
 import sys
 import gc
 from checkpoint_reshaping_and_interoperability import convert_checkpoint_from_megatron_to_transformers
-from transformers import GPT2Tokenizer, AutoTokenizer, AutoModelForCausalLM
 import types
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__),
                                              os.path.pardir,os.path.pardir)))
 
-from lm_eval.models.gpt2 import GPT2LM
-from lm_eval import evaluator, tasks, utils
-from lm_eval.base import CacheHook
-from tqdm import tqdm
-import torch.nn.functional as F
-
-from lm_eval.tasks import ALL_TASKS
 from pretrain_gpt import model_provider
-import numpy as np
-import time
 
 import torch
 from megatron import get_args
-from megatron import print_rank_0
-from megatron import get_tokenizer
 from megatron.core.enums import ModelType
 from megatron.core import mpu
 from megatron.training import setup_model_and_optimizer, get_model
-from megatron.core.tensor_parallel.mappings import gather_from_tensor_model_parallel_region
-
-from megatron.utils import get_ltor_masks_and_position_ids, unwrap_model
-from megatron.p2p_communication import recv_forward, send_forward
-import pickle
-import json
-
-from torch.nn.parallel.distributed import DistributedDataParallel as torchDDP
-from megatron.model.distributed import DistributedDataParallel as LocalDDP
-from megatron.model.module import Float16Module
-from deepspeed.runtime.pipe import schedule
-from deepspeed.accelerator import get_accelerator
-
 
 from megatron.initialize import initialize_megatron
 import megatron
@@ -53,8 +26,6 @@ from tools.convert_checkpoint.deepspeed_to_megatron import _create_rank_checkpoi
 
 
 from collections import OrderedDict
-
-from modeling_lola_gpt2 import LOLALMHeadModel
 
 MODEL_KEY = 'model'
 ARGS_KEY = 'args'
@@ -339,7 +310,7 @@ def main():
         'megatron_path': megatron_path,
         'load_path': load_path,
         'save_path': output_dir + '/lola_hf_model',
-        'tokenizer_name': 'ai-forever/mGPT',
+        'tokenizer_name': 'dice-research/lola_v1',
         'max_shard_size': '10GB',
         'print_checkpoint_structure': True
     }
@@ -349,23 +320,6 @@ def main():
     convert_checkpoint_from_megatron_to_transformers(conversion_args)
     
     print('LOLA: model conversion finished, model saved successfully.')
-
-
-    ### Step 3: Test the converted model
-
-    # Load the model and tokenizer
-    # model = LOLALMHeadModel.from_pretrained(conversion_args_dict['save_path']).to("cuda:0")
-    # # saving model
-    # # model.save_pretrained("/data/nikit_ws/lola_converted_model/lola_v1_huggingface", from_pt=True)
-    # #tokenizer = AutoTokenizer.from_pretrained('ai-forever/mGPT')
-    # tokenizer = AutoTokenizer.from_pretrained(conversion_args_dict['save_path'])
-    
-    # input_text = "The quick brown fox"
-
-    # generated_text = generate_hf_model_text(input_text, 100, tokenizer, model)
-
-    # print('Input text:', input_text)
-    # print('Generated text:', generated_text)
 
 if __name__ == '__main__':
     main()
