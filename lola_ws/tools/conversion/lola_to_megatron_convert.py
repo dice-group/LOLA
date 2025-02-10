@@ -295,18 +295,19 @@ def main():
     ### Step 2: Convert from Megatron to Huggingface
 
     # Find megatron path
-    current_file_path = os.path.abspath(__file__)
-    megatron_path = os.path.abspath(os.path.join(current_file_path, "../../../.."))
+    megatron_path = os.getenv('LOLA_PROJ_ROOT')
     # Find load path
-    load_path = output_dir + '/iter_0296000'
+    load_path = None
     for root, dirs, files in os.walk(output_dir):
         for dir_name in dirs:
             if dir_name.endswith(str(iteration)):
                 load_path = os.path.join(root, dir_name)
                 break
 
+    if load_path is None:
+        raise ValueError("Couldn't find Megatron model path, please check if the model was converted correctly in previous step.")
+    
     conversion_args_dict = {
-        #'megatron_path': '/data/nikit_ws/LOLA-Megatron-DeepSpeed',
         'megatron_path': megatron_path,
         'load_path': load_path,
         'save_path': output_dir + '/lola_hf_model',

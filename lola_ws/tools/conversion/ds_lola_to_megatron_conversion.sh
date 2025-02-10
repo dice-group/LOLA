@@ -1,20 +1,29 @@
-# This is an example zero-shot eval script. Please first read the readme_evalharness.md under the same directory.
+#!/bin/bash
+# Function to get the parent directory N steps up
+get_parent_dir() {
+    local path="$1"
+    local steps="$2"
 
-#CHECKPOINT_PATH=/scratch/hpc-prf-lola/nikit/repos/LOLA-Megatron-DeepSpeed/lola_ws/gpt/gpt-normal-16moe-output/checkpoint/noctua2-gpt-normal-16moe_ms-1.3B_bs-768_gpus-96_lr-2.0e-4_minlr-2.0e-5_ep-16_mlc-0.01_cap-1.0_drop-true/global_step296000
-#CONFIG_PATH=/scratch/hpc-prf-lola/nikit/repos/LOLA-Megatron-DeepSpeed/lola_ws/gpt/gpt-normal-16moe-output/eval_demo_config.json
-#RESULT_PATH=/scratch/hpc-prf-lola/nikit/repos/LOLA-Megatron-DeepSpeed/lola_ws/gpt/converted_model
+    for ((i=0; i<steps; i++)); do
+        path=$(dirname "$path")
+    done
+
+    echo "$path"
+}
+# Get the absolute path of the script
+SCRIPT_PATH=$(realpath "$0")
+
+# Get the LOLA project root directory
+export LOLA_PROJ_ROOT=$(get_parent_dir "$SCRIPT_PATH" "4")
 
 #CKPT_STEP=500
 #CKPT_STEP=74000
 #CKPT_STEP=148000
 CKPT_STEP=222000
+
 CHECKPOINT_PATH=/scratch/hpc-prf-lola/nikit/repos/LOLA-Megatron-DeepSpeed/lola_ws/gpt/gpt-normal-16moe-output/checkpoint/noctua2-gpt-normal-16moe_ms-1.3B_bs-768_gpus-96_lr-2.0e-4_minlr-2.0e-5_ep-16_mlc-0.01_cap-1.0_drop-true/global_step$CKPT_STEP
 CONFIG_PATH=/scratch/hpc-prf-lola/nikit/repos/LOLA-Megatron-DeepSpeed/lola_ws/gpt/gpt-normal-16moe-output/eval_demo_config.json
-RESULT_PATH=/scratch/hpc-prf-lola/models/lola/converted_model_ckpt$CKPT_STEP
-
-#CHECKPOINT_PATH=/data/lola-model/large/global_step296000
-#CONFIG_PATH=/data/lola-model/misc/eval_demo_config.json
-#RESULT_PATH=/data/nikit_ws/lola_converted_model
+RESULT_PATH=/scratch/hpc-prf-lola/models/lola_converted_model/converted_model_ckpt$CKPT_STEP
 
 PP_SIZE=1
 TP_SIZE=1
