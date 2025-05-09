@@ -20,6 +20,6 @@ pip install deepspeed==0.11.1
 # To download the models
 pip install hf_transfer
 ## Uncomment if wandb is needed
-# pip install wandb
+pip install wandb
 ## Uncomment if debugpy is needed
 # pip install debugpy
