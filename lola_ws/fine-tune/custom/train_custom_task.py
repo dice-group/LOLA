@@ -50,6 +50,10 @@ class TrainingArguments(transformers.TrainingArguments):
         default=512,
         metadata={"help": "Maximum sequence length. Sequences will be right padded (and possibly truncated)."},
     )
+    full_sft: bool = field(
+        default=False,
+        metadata={"help": "Enable full parameter training instead of PEFT."},
+    )
 
 
 def _tokenize_fn(strings: Sequence[str], tokenizer: transformers.PreTrainedTokenizer) -> Dict:
@@ -226,10 +230,14 @@ def train():
         target_modules=target_modules
     )
 
-    # Apply LoRA to the model
-    LOLA_MODEL = get_peft_model(LOLA_MODEL, peft_config)
-    LOLA_MODEL.print_trainable_parameters()
-    print_rank0(f'Target module names: {LOLA_MODEL.base_model.targeted_module_names}')
+    # If full SFT flag is not there, perform PEFT
+    if training_args.full_sft:
+        print_rank0('Full parameter training is enabled.')
+    else:
+        # Apply LoRA to the model
+        LOLA_MODEL = get_peft_model(LOLA_MODEL, peft_config)
+        LOLA_MODEL.print_trainable_parameters()
+        print_rank0(f'Target module names: {LOLA_MODEL.base_model.targeted_module_names}')
     
     data_module = make_supervised_data_module(tokenizer=LOLA_TOKENIZER, data_args=data_args)
     print_rank0('Setting up trainer')

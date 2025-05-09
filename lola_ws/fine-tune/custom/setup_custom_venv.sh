@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eu
 
-PEFT_VENV_NAME=venv-lola-custom-peft
+PEFT_VENV_NAME=venv-lola-custom-task
 PEFT_VENV_DIR=./$PEFT_VENV_NAME
 
 # Tested with python 3.12.3
