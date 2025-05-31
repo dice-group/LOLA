@@ -5,3 +5,5 @@ lola_alpaca_multilingual_peft*/
 alpaca_*.json
 *.out
 sample.json
+*_alpaca_dataset.json
+*_alpaca_multilingual_peft*/

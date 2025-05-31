@@ -197,13 +197,17 @@ def train():
         trust_remote_code=True
     )
     
+    target_modules = ['attn.c_attn', 'attn.c_proj']
+    if model_args.model_name_or_path.startswith('bigscience/bloom-'):
+        target_modules = ['self_attention.query_key_value', 'self_attention.dense']
+    
     peft_config = LoraConfig(
         task_type=TaskType.CAUSAL_LM,
         inference_mode=False,
         r=32,
         lora_alpha=32,
         lora_dropout=0.1,
-        target_modules=['attn.c_attn', 'attn.c_proj']  # Adjusted to match model's attention modules
+        target_modules=target_modules  # Adjusted to match model's attention modules
     )
 
     # Apply LoRA to the model
