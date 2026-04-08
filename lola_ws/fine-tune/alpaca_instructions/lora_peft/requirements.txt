@@ -1,5 +1,5 @@
 SPARQLWrapper==2.0.0
-transformers[torch]==4.47.0
+transformers[torch]==5.0.0rc3
 datasets==3.2.0
 peft==0.14.0
 bitsandbytes==0.45.4
